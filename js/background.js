@@ -1,3 +1,3 @@
-chrome.browserAction.onClicked.addListener(function (tab) {
-    console.log('ACTION:', tab);
+chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+    console.log('BS: message received:', message);
 });
