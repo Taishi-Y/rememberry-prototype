@@ -1,1 +1,33 @@
-/* Styles for translated word information */
+/* Rememberry Translate Popup */
+#rb-tr-popup {
+    position: absolute;
+    z-index: 1;
+
+    display: none;
+    min-width: 100px;
+    padding: 10px;
+
+    text-align: left;
+    color: black;
+
+    border: 2px solid black;
+    background-color: white;
+}
+
+#rb-tr-popup-source {
+    border-bottom: 1px solid black;
+}
+
+#rb-tr-popup-translation {
+    min-height: 30px;
+    margin-top: 15px;
+}
+
+#rb-tr-popup-translation[loading]:after {
+    content: 'Loading..';
+    color: #ccc;
+}
+
+.term-line-checkbox {
+    margin-right: 5px !important;
+}

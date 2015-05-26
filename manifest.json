@@ -30,11 +30,11 @@
         {
             "matches": [ "*://*/*" ],
 
-            "js": [ "js/content.js" ],
+            "js": [ "js/vendor/jquery-2.1.4.min.js", "js/content.js" ],
             "css": [ "css/content.css" ],
 
             "run_at": "document_start",
-            "all_frames": true
+            "all_frames": false
         }
     ],
 
