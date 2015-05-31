@@ -1,3 +1,4 @@
 Content script:
     - use "Shadow DOM" for Popup
     - use spinning loader instead of "Loading.." text
+    - use "source" and "target" languages preferences from options
