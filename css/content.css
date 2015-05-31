@@ -5,7 +5,7 @@
 
     display: none;
     min-width: 100px;
-    padding: 10px;
+    padding: 15px;
 
     text-align: left;
     color: black;
@@ -14,16 +14,29 @@
     background-color: white;
 }
 
-#rb-tr-popup-source {
-    border-bottom: 1px solid black;
+#rb-tr-popup-header {}
+
+#rb-tr-popup-close-btn {
+    position: absolute;
+    right: 5px;
+    top: 5px;
+
+    width: 10px;
+    height: 10px;
+
+    font-size: 16px;
+    text-align: center;
+    line-height: 10px; /* Remove after Shadow DOM implementation */
+
+    cursor: pointer;
 }
 
-#rb-tr-popup-translation {
+#rb-tr-popup-body {
     min-height: 30px;
-    margin-top: 15px;
+    margin-top: 5px;
 }
 
-#rb-tr-popup-translation[loading]:after {
+#rb-tr-popup-body[loading]:after {
     content: 'Loading..';
     color: #ccc;
 }
@@ -31,3 +44,9 @@
 #rb-tr-popup .term-line-checkbox {
     margin-right: 5px !important;
 }
+
+#rb-tr-popup-footer {
+    margin-top: 10px;
+}
+
+#rb-tr-popup-save-btn {}

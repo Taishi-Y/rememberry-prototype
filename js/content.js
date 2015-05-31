@@ -1,22 +1,106 @@
 document.addEventListener('DOMContentLoaded', function () {
     console.log('Loaded within', document.location.href);
 
-    var Popup, translateSelection;
-
-    Popup = (function () {
+    var Popup = (function () {
         // shortcuts
         var body = document.body;
 
         // private members
-        var Module,
-            BASE_ID     = 'rb-tr-popup',
+        var BASE_ID     = 'rb-tr-popup',
             is_created  = false,
             is_shown    = false,
 
             els = { // DOM elements
-                popup       : null,
-                source      : null,
-                translation : null
+                popup   : null,
+                header  : null,
+                body    : null,
+                footer  : null
+            },
+
+            state = {
+                orig: null,
+                translate: null
+            },
+
+            create = function () {
+                var popup_el    = document.createElement('div'),
+                    header_el   = createHeader(),
+                    body_el     = document.createElement('div'),
+                    footer_el   = createFooter();
+
+                popup_el.id = BASE_ID;
+                body_el.id  = BASE_ID + '-body';
+
+                popup_el.appendChild(header_el);
+                popup_el.appendChild(body_el);
+                popup_el.appendChild(footer_el);
+
+                body.appendChild(popup_el);
+
+                els.popup   = popup_el;
+                els.header  = header_el;
+                els.body    = body_el;
+                els.footer  = footer_el;
+
+                is_created = true;
+            },
+
+            show = function (pos) {
+                if (!is_shown) {
+                    els.popup.style.display = 'block';
+                    setPosition(pos);
+                    body.addEventListener('keyup', handleKeyUp, true);
+                    is_shown = true;
+                }
+            },
+
+            hide = function () {
+                if (is_shown) {
+                    els.popup.style.display = '';    // 'none' by default in content.css
+                    setPosition(null);
+                    body.removeEventListener('keyup', handleKeyUp, true);
+                    reset();
+                    is_shown = false;
+                }
+            },
+
+            setTranslatedVersion = function (data) {
+                var i, l,
+                    terms = [];
+
+                if (data.dict) {
+                    for (i = 0, l = data.dict.length; i < l; i++) {
+                        terms = terms.concat(data.dict[i].terms);
+                    }
+                }
+
+                if (data.sentences) {
+                    for (i = 0, l = data.sentences.length; i < l; i++) {
+                        terms.push(data.sentences[i].trans);
+                    }
+                }
+
+                state.translate = [];
+
+                terms.forEach(function (term, index) {
+                    var term_line = createTermLine(term, index === 0);
+
+                    state.translate.push(term_line);
+
+                    els.body.appendChild(term_line.el);
+                });
+
+                setLoader(false);
+            },
+
+            setLoader = function (set_active) {
+                var LOADING_ATTR_NAME = 'loading';
+
+                if (set_active) {
+                    els.body.setAttribute(LOADING_ATTR_NAME, '');
+                } else {
+                    els.body.removeAttribute(LOADING_ATTR_NAME);
+                }
             },
 
             setPosition = function (pos) {
@@ -28,18 +112,71 @@ document.addEventListener('DOMContentLoaded', function () {
                 els.popup.style.top  = pos.y;
             },
 
-            handleMouseDown = function (e) {
-                if (!els.popup.contains(e.target)) {
-                    Module.hide();
+            handleKeyUp = function (e) {
+                if (e.keyCode === 27) { // Escape key code
+                    hide();
                 }
             },
 
             reset = function () {
-                els.source.innerHTML = '';
-                els.translation.innerHTML = '';
+                els.body.innerHTML = '';
+
+                state = {
+                    orig: null,
+                    translate: null
+                };
             },
 
-            createTermLine = function (term) {
+            createHeader = function () {
+                var header_el = document.createElement('div'),
+                    close_btn = document.createElement('div');
+
+                header_el.id = BASE_ID + '-header';
+                close_btn.id = BASE_ID + '-close-btn';
+                close_btn.innerHTML = 'x';
+
+                close_btn.addEventListener('click', function () {
+                    hide();
+                });
+
+                header_el.appendChild(close_btn);
+
+                return header_el;
+            },
+
+            handleSave = function () {
+                var i, l,
+                    data = {
+                        orig: state.orig,
+                        translate: []
+                    };
+
+                for (i = 0, l = state.translate.length; i < l; i++) {
+                    if (state.translate[i].isChecked()) {
+                        data.translate.push(state.translate[i].text);
+                    }
+                }
+
+                chrome.runtime.sendMessage(data);
+                hide();
+            },
+
+            createFooter = function () {
+                var footer_el = document.createElement('div'),
+                    save_btn = document.createElement('button');
+
+                footer_el.id = BASE_ID + '-footer';
+                save_btn.id = BASE_ID + '-save-btn';
+                save_btn.innerHTML = 'Save';
+
+                save_btn.addEventListener('click', handleSave);
+
+                footer_el.appendChild(save_btn);
+
+                return footer_el;
+            },
+
+            createTermLine = function (term, is_checked) {
                 var line_el     = document.createElement('div'),
                     checkbox_el = document.createElement('input'),
                     text_el     = document.createTextNode(term);
@@ -47,142 +184,84 @@ document.addEventListener('DOMContentLoaded', function () {
                 line_el.className       = 'term-line';
                 checkbox_el.className   = 'term-line-checkbox';
                 checkbox_el.type        = 'checkbox';
+                checkbox_el.checked     = !!is_checked;
 
                 line_el.appendChild(checkbox_el);
                 line_el.appendChild(text_el);
 
-                return line_el;
+                return {
+                    el: line_el,
+                    text: term,
+
+                    isChecked: function () {
+                        return checkbox_el.checked;
+                    }
+                };
             };
 
         // privileged members
-        Module = {
+        return {
 
-            create: function () {
-                var popup_el, source_phrase_el, translation_el;
+            translateSelection: function () {
+                var text_range, rect, pos, translate,
+                    selection = document.getSelection(),
+                    selected_text = selection.toString().trim();
 
                 if (!is_created) {
-                    popup_el            = document.createElement('div');
-                    source_phrase_el    = document.createElement('div');
-                    translation_el      = document.createElement('div');
-
-                    popup_el.id         = BASE_ID;
-                    source_phrase_el.id = BASE_ID + '-source';
-                    translation_el.id   = BASE_ID + '-translation';
-
-                    popup_el.appendChild(source_phrase_el);
-                    popup_el.appendChild(translation_el);
-
-                    body.appendChild(popup_el);
-
-                    els.popup       = popup_el;
-                    els.source      = source_phrase_el;
-                    els.translation = translation_el;
-
-                    is_created = true;
-                } else {
-                    console.log('Popup was already created');
+                    create();
                 }
-            },
 
-            show: function (pos) {
-                if (is_created && !is_shown) {
-                    els.popup.style.display = 'block';
-                    setPosition(pos);
-                    body.addEventListener('mousedown', handleMouseDown, true);
-                    is_shown = true;
+                if (is_shown) {
+                    hide();
                 }
-            },
 
-            hide: function () {
-                if (is_created && is_shown) {
-                    els.popup.style.display = '';    // 'none' by default in content.css
-                    setPosition(null);
-                    body.removeEventListener('mousedown', handleMouseDown, true);
-                    reset();
-                    is_shown = false;
-                }
-            },
+                if (selected_text.length) {
+                    state.orig = selected_text;
 
-            setSourceText: function (phrase) {
-                els.source.innerHTML = phrase;
-            },
+                    text_range = selection.getRangeAt(0);
+                    rect = text_range.getBoundingClientRect();
 
-            setTranslatedVersion: function (translate_data) {
-                var terms = translate_data.dict[0].terms;
+                    pos = {
+                        x: window.scrollX + rect.left,
+                        y: window.scrollY + rect.bottom
+                    };
 
-                terms.forEach(function (term) {
-                    var term_line_el = createTermLine(term);
+                    translate = function (text, callback) {
+                        var xhr = new XMLHttpRequest(),
+                            params = [
+                                'client=mt',
+                                'text=' + text,
+                                'sl=en',
+                                'tl=uk'
+                            ].join('&'),
+                            url = 'http://translate.google.ru/translate_a/t?' + params;
 
-                    els.translation.appendChild(term_line_el);
-                });
+                        xhr.open('GET', url);
+                        xhr.setRequestHeader('Accept', 'application/json, text/javascript, */*; q=0.01');
 
+                        xhr.onreadystatechange = function () {
+                            if (xhr.readyState === 4 && xhr.status === 200) {
+                                callback(JSON.parse(xhr.responseText));
+                            }
+                        };
 
-                Module.setLoader(false);
-            },
+                        xhr.send();
+                    };
 
-            setLoader: function (set_active) {
-                var LOADING_ATTR_NAME = 'loading',
-                    translation = els.translation;
+                    show(pos);
+                    setLoader(true);
 
-                if (set_active) {
-                    translation.setAttribute(LOADING_ATTR_NAME, '');
-                } else {
-                    translation.removeAttribute(LOADING_ATTR_NAME);
+                    translate(selected_text, function (response) {
+                        setTranslatedVersion(response);
+                    });
                 }
             }
         };
-
-        return Module;
     }());
-
-    translateSelection = function () {
-        var text_range, rect, pos, translate,
-            selection = document.getSelection(),
-            selected_text = selection.toString();
-
-        if (selected_text.length) {
-            text_range = selection.getRangeAt(0);
-            rect = text_range.getBoundingClientRect();
-
-            pos = {
-                x: window.scrollX + rect.left + rect.width / 2,
-                y: window.scrollY + rect.top + rect.height / 2
-            };
-
-            translate = function (text, callback) {
-                var xhr = new XMLHttpRequest(),
-                    url = 'http://translate.google.ru/translate_a/t?client=mt&text=' +
-                            text + '&sl=en&tl=uk'
-
-                xhr.open('GET', url);
-                xhr.setRequestHeader('Accept', 'application/json, text/javascript, */*; q=0.01');
-
-                xhr.onreadystatechange = function () {
-                    if (xhr.readyState === 4 && xhr.status === 200) {
-                        callback(JSON.parse(xhr.responseText));
-                    }
-                };
-
-                xhr.send();
-            };
-
-            Popup.show(pos);
-            Popup.setSourceText(selected_text);
-            Popup.setLoader(true);
-
-            translate(selected_text, function (response) {
-                Popup.setTranslatedVersion(response);
-            });
-        }
-    };
-
-    Popup.create();
 
     document.addEventListener('dblclick', function (e) {
         if (e.altKey) {
-            translateSelection();
+            Popup.translateSelection();
         }
-
-        //chrome.runtime.sendMessage('Hello from CS!');
     });
 });
