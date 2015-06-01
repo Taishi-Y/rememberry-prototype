@@ -39,6 +39,6 @@
     ],
 
     "permissions": [
-        "https://translate.google.com/*"
+        "storage"
     ]
 }

@@ -7,4 +7,5 @@ Content script:
     - Save button should be disabled during translation loading
     - handle case when user haven't selected any term
     - add offline case (or too long response time from Google Translate API)
-    - dive into IndexedDB
++   - dive into IndexedDB - there is no built-in synchronization feature
+    - why do we need background page at all?

@@ -1,7 +1,9 @@
 document.addEventListener('DOMContentLoaded', function () {
     console.log('Loaded within', document.location.href);
 
-    var Popup = (function () {
+    var init, Popup, prefs;
+
+    Popup = (function () {
         // shortcuts
         var body = document.body;
 
@@ -45,6 +47,61 @@ document.addEventListener('DOMContentLoaded', function () {
                 is_created = true;
             },
 
+            createHeader = function () {
+                var header_el = document.createElement('div'),
+                    close_btn = document.createElement('div');
+
+                header_el.id = BASE_ID + '-header';
+                close_btn.id = BASE_ID + '-close-btn';
+                close_btn.innerHTML = 'x';
+
+                close_btn.addEventListener('click', function () {
+                    destroy();
+                });
+
+                header_el.appendChild(close_btn);
+
+                return header_el;
+            },
+
+            createFooter = function () {
+                var footer_el = document.createElement('div'),
+                    save_btn = document.createElement('button');
+
+                footer_el.id = BASE_ID + '-footer';
+                save_btn.id = BASE_ID + '-save-btn';
+                save_btn.innerHTML = 'Save';
+
+                save_btn.addEventListener('click', handleSave);
+
+                footer_el.appendChild(save_btn);
+
+                return footer_el;
+            },
+
+            createTermLine = function (term, is_checked) {
+                var line_el     = document.createElement('div'),
+                    checkbox_el = document.createElement('input'),
+                    text_el     = document.createTextNode(term);
+
+                line_el.className       = 'term-line';
+                checkbox_el.className   = 'term-line-checkbox';
+                checkbox_el.type        = 'checkbox';
+                checkbox_el.checked     = !!is_checked;
+
+                line_el.appendChild(checkbox_el);
+                line_el.appendChild(text_el);
+
+                return {
+                    el: line_el,
+                    text: term,
+
+                    isChecked: function () {
+                        return checkbox_el.checked;
+                    }
+                };
+            },
+
             show = function (pos) {
                 if (!is_shown) {
                     els.popup.style.display = 'block';
@@ -54,7 +111,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             },
 
-            hide = function () {
+            destroy = function () {
                 if (is_shown) {
                     els.popup.style.display = '';    // 'none' by default in content.css
                     setPosition(null);
@@ -114,7 +171,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             handleKeyUp = function (e) {
                 if (e.keyCode === 27) { // Escape key code
-                    hide();
+                    destroy();
                 }
             },
 
@@ -125,23 +182,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     orig: null,
                     translate: null
                 };
-            },
-
-            createHeader = function () {
-                var header_el = document.createElement('div'),
-                    close_btn = document.createElement('div');
-
-                header_el.id = BASE_ID + '-header';
-                close_btn.id = BASE_ID + '-close-btn';
-                close_btn.innerHTML = 'x';
-
-                close_btn.addEventListener('click', function () {
-                    hide();
-                });
-
-                header_el.appendChild(close_btn);
-
-                return header_el;
             },
 
             handleSave = function () {
@@ -158,45 +198,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 chrome.runtime.sendMessage(data);
-                hide();
-            },
-
-            createFooter = function () {
-                var footer_el = document.createElement('div'),
-                    save_btn = document.createElement('button');
-
-                footer_el.id = BASE_ID + '-footer';
-                save_btn.id = BASE_ID + '-save-btn';
-                save_btn.innerHTML = 'Save';
-
-                save_btn.addEventListener('click', handleSave);
-
-                footer_el.appendChild(save_btn);
-
-                return footer_el;
-            },
-
-            createTermLine = function (term, is_checked) {
-                var line_el     = document.createElement('div'),
-                    checkbox_el = document.createElement('input'),
-                    text_el     = document.createTextNode(term);
-
-                line_el.className       = 'term-line';
-                checkbox_el.className   = 'term-line-checkbox';
-                checkbox_el.type        = 'checkbox';
-                checkbox_el.checked     = !!is_checked;
-
-                line_el.appendChild(checkbox_el);
-                line_el.appendChild(text_el);
-
-                return {
-                    el: line_el,
-                    text: term,
-
-                    isChecked: function () {
-                        return checkbox_el.checked;
-                    }
-                };
+                destroy();
             };
 
         // privileged members
@@ -212,7 +214,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 if (is_shown) {
-                    hide();
+                    destroy();
                 }
 
                 if (selected_text.length) {
@@ -228,12 +230,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     translate = function (text, callback) {
                         var xhr = new XMLHttpRequest(),
-                            params = [
-                                'client=mt',
-                                'text=' + text,
-                                'sl=en',
-                                'tl=uk'
-                            ].join('&'),
+                            params =
+                                'client=mt&' +
+                                'text=' + text + '&' +
+                                    (prefs.source_lang === 'auto' ? '' : ('sl=' + prefs.source_lang + '&')) +
+                                'tl=' + prefs.target_lang,
                             url = 'http://translate.google.ru/translate_a/t?' + params;
 
                         xhr.open('GET', url);
@@ -259,9 +260,51 @@ document.addEventListener('DOMContentLoaded', function () {
         };
     }());
 
-    document.addEventListener('dblclick', function (e) {
-        if (e.altKey) {
-            Popup.translateSelection();
-        }
-    });
+    init = function () {
+        var area_name,
+
+            handleEvent = function (e) {
+                var modifier = prefs.trigger_action.modifier;
+
+                if (modifier === 'none' || e[modifier]) {
+                    Popup.translateSelection();
+                }
+            },
+
+            retrievePreferences = function () {
+                chrome.storage[area_name].get('prefs', function (data) {
+                    initPreferences(data.prefs);
+                });
+
+                listenForPreferencesChange();
+            },
+
+            listenForPreferencesChange = function () {
+                chrome.runtime.onMessage.addListener(function (message) {
+                    switch (message.type) {
+                        case 'preferences-update':
+                            initPreferences(message.prefs);
+                            break;
+                        default:
+                    }
+                });
+            },
+
+            initPreferences = function (new_prefs) {
+                if (prefs && prefs.trigger_action.event !== new_prefs.trigger_action.event) {
+                    document.removeEventListener(prefs.trigger_action.event, handleEvent);
+                }
+
+                document.addEventListener(new_prefs.trigger_action.event, handleEvent);
+
+                prefs = new_prefs;
+            };
+
+        chrome.runtime.sendMessage({ type: 'get-sync-status' }, function (sync_status) {
+            area_name = sync_status ? 'sync' : 'local';
+            retrievePreferences();
+        });
+    };
+
+    init();
 });
