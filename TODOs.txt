@@ -11,3 +11,4 @@ Content script:
     - why do we need background page at all?
     - move to "managed" storage
     - ensure unique terms
+    - disallow "ctrlKey" modifier on Mac platform

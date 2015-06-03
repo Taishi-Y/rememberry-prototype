@@ -197,7 +197,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 }
 
-                chrome.runtime.sendMessage(data);
+//                chrome.runtime.sendMessage(data);
                 destroy();
             };
 
@@ -264,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var storage_name,
 
             handleEvent = function (e) {
-                var modifier = prefs.trigger_action.modifier;
+                var modifier = prefs.action.modifier;
 
                 if (modifier === 'none' || e[modifier]) {
                     Popup.translateSelection();
@@ -291,16 +291,16 @@ document.addEventListener('DOMContentLoaded', function () {
             },
 
             initPreferences = function (new_prefs) {
-                if (prefs && prefs.trigger_action.event !== new_prefs.trigger_action.event) {
-                    document.removeEventListener(prefs.trigger_action.event, handleEvent);
+                if (prefs && prefs.action.name !== new_prefs.action.name) {
+                    document.removeEventListener(prefs.action.name, handleEvent);
                 }
 
-                document.addEventListener(new_prefs.trigger_action.event, handleEvent);
+                document.addEventListener(new_prefs.action.name, handleEvent);
 
                 prefs = new_prefs;
             };
 
-        chrome.runtime.sendMessage({ type: 'get-storage-name' }, function (response) {
+        BGAPI.receive('storage-name', function (response) {
             storage_name = response;
             retrievePreferences();
         });

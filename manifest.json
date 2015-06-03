@@ -30,7 +30,7 @@
         {
             "matches": [ "*://*/*" ],
 
-            "js": [ "js/vendor/jquery-2.1.4.min.js", "js/content.js" ],
+            "js": [ "js/BGAPI.js", "js/content.js" ],
             "css": [ "css/content.css" ],
 
             "run_at": "document_start",

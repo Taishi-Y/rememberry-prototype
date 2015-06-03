@@ -1,0 +1,8 @@
+{
+    "source_lang": "auto",
+    "target_lang": "uk",
+    "action": {
+        "name": "dblclick",
+        "modifier": "altKey"
+    }
+}

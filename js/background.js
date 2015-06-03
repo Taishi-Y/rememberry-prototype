@@ -21,24 +21,14 @@ var Preferences,
         });
     },
 
-    languages_pr = loadJSON('/data/languages.json'),
-    actions_pr = loadJSON('/data/actions.json');
+    Data = {
+        languages: loadJSON('/data/languages.json'),
+        actions: loadJSON('/data/actions.json'),
+        default_prefs: loadJSON('/data/default_prefs.json')
+    };
 
 Preferences = (function () {
-    var DEFAULT_PREFS = {
-            source_lang: 'auto',
-            target_lang: 'uk',
-            trigger_action: {
-                event: 'dblclick',
-                modifier: 'altKey'
-            }
-        },
-
-        getPrefs = function (cb) {
-            Storage.get('prefs', function (data) {
-                cb(data.prefs);
-            });
-        },
+    var Module,
 
         validatePrefs = function (prefs) {
             var action,
@@ -57,21 +47,21 @@ Preferences = (function () {
                     valid.target_lang = prefs.target_lang;
                 }
 
-                action = prefs.trigger_action;
+                action = prefs.action;
 
                 if (action && typeof action && Object.keys(action).length !== 0) {
-                    valid.trigger_action = {};
+                    valid.action = {};
 
-                    if (action.event && VALID_EVENTS.indexOf(action.event) !== -1) {
-                        valid.trigger_action.event = action.event;
+                    if (action.name && VALID_EVENTS.indexOf(action.name) !== -1) {
+                        valid.action.name = action.name;
                     }
 
                     if (action.modifier && VALID_MODIFIERS.indexOf(action.modifier) !== -1) {
-                        valid.trigger_action.modifier = action.modifier;
+                        valid.action.modifier = action.modifier;
                     }
 
-                    if (Object.keys(valid.trigger_action).length === 0) {
-                        delete valid.trigger_action;
+                    if (Object.keys(valid.action).length === 0) {
+                        delete valid.action;
                     }
                 }
             }
@@ -79,16 +69,31 @@ Preferences = (function () {
             return valid;
         };
 
-    return {
+    Module = {
 
         setPrefs: function (new_prefs) {
-            getPrefs(function (old_prefs) {
-                var valid_new_prefs, result_prefs;
+            Module.getPrefs(function (old_prefs) {
+                var valid_new_prefs, result_prefs,
+
+                    continueSet = function (prefs) {
+                        Storage.set({ prefs: prefs });
+
+                        chrome.tabs.query({}, function (tabs) {
+                            var i, l;
+
+                            for (i = 0, l = tabs.length; i < l; i++) {
+                                chrome.tabs.sendMessage(tabs[i].id, {
+                                    type: 'preferences-update',
+                                    prefs: result_prefs
+                                });
+                            }
+                        });
+                    };
 
                 old_prefs = old_prefs || {};
 
                 if (new_prefs === 'default') {
-                    result_prefs = DEFAULT_PREFS;
+                    Data.default_prefs.then(continueSet);
                 } else {
                     result_prefs = old_prefs;
                     valid_new_prefs = validatePrefs(new_prefs);
@@ -101,49 +106,38 @@ Preferences = (function () {
                         result_prefs.target_lang = valid_new_prefs.target_lang;
                     }
 
-                    if (valid_new_prefs.trigger_action) {
-                        if (valid_new_prefs.trigger_action.event) {
-                            result_prefs.trigger_action.event = valid_new_prefs.trigger_action.event;
+                    if (valid_new_prefs.action) {
+                        if (valid_new_prefs.action.name) {
+                            result_prefs.action.name = valid_new_prefs.action.name;
                         }
 
-                        if (valid_new_prefs.trigger_action.modifier) {
-                            result_prefs.trigger_action.modifier = valid_new_prefs.trigger_action.modifier;
+                        if (valid_new_prefs.action.modifier) {
+                            result_prefs.action.modifier = valid_new_prefs.action.modifier;
                         }
                     }
+
+                    continueSet(result_prefs);
                 }
+            });
+        },
 
-                Storage.set({
-                    prefs: result_prefs
-                });
-
-                chrome.tabs.query({}, function (tabs) {
-                    var i, l;
-
-                    for (i = 0, l = tabs.length; i < l; i++) {
-                        chrome.tabs.sendMessage(tabs[i].id, {
-                            type: 'preferences-update',
-                            prefs: result_prefs
-                        });
-                    }
-                });
+        getPrefs: function (cb) {
+            Storage.get('prefs', function (data) {
+                cb(data.prefs);
             });
         },
 
         init: function () {
-            getPrefs(function (prefs) {
+            Module.getPrefs(function (prefs) {
                 if (!prefs) {
-                    this.setPrefs('default');
-
+                    Module.setPrefs('default');
                 }
-            }.bind(this));
+            });
         }
     };
-}());
 
-Storage.set({
-    valid_actions: [ 'dblclick', 'click' ],
-    valid_modifiers: [ 'none', 'altKey', 'ctrlKey', 'shiftKey' ]
-});
+    return Module;
+}());
 
 Preferences.init();
 
@@ -154,21 +148,24 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         case 'get-storage-name':
             response = storage_name;
             break;
-        case 'update-preferences':
-            Preferences.setPrefs(message.prefs);
+        case 'get-preferences':
+            Preferences.getPrefs(sendResponse);
+            break;
+        case 'set-preferences':
+            Preferences.setPrefs(message.data);
             break;
         case 'get-languages':
-                sendResponse(languages_pr);
+            Data.languages.then(sendResponse);
             break;
         case 'get-actions':
-            actions_pr.then(sendResponse);
+            Data.actions.then(sendResponse);
             break;
         default:
     }
 
     if (response) {
         sendResponse(response);
+    } else {
+        return true;
     }
 });
-
-Storage.get(null, function (data) { console.log('ALL data:', data); });
