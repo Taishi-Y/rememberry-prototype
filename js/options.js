@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', function () {
-    var area_name,
+    var storage_name,
 
         initDropDownMenus = function () {
-            chrome.storage[area_name].get([ 'valid_actions', 'valid_modifiers', 'prefs' ], function (data) {
+            chrome.storage[storage_name].get([ 'valid_actions', 'valid_modifiers', 'prefs' ], function (data) {
                 var i, l, el, current,
                     actions_container = document.getElementById('trigger_action'),
                     modifiers_container = document.getElementById('modifier'),
@@ -68,8 +68,8 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         };
 
-    chrome.runtime.sendMessage({ type: 'get-sync-status' }, function (sync_status) {
-        area_name = sync_status ? 'sync' : 'local';
+    chrome.runtime.sendMessage({ type: 'get-storage-name' }, function (response) {
+        storage_name = response;
         initDropDownMenus();
     });
 });

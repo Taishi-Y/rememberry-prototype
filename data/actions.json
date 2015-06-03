@@ -1,0 +1,4 @@
+{
+    "names": [ "dblclick", "click" ],
+    "modifiers": [ "none", "altKey", "ctrlKey", "shiftKey" ]
+}

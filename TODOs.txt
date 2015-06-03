@@ -9,3 +9,5 @@ Content script:
     - add offline case (or too long response time from Google Translate API)
 +   - dive into IndexedDB - there is no built-in synchronization feature
     - why do we need background page at all?
+    - move to "managed" storage
+    - ensure unique terms

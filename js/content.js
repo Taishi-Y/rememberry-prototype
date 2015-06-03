@@ -261,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }());
 
     init = function () {
-        var area_name,
+        var storage_name,
 
             handleEvent = function (e) {
                 var modifier = prefs.trigger_action.modifier;
@@ -272,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
 
             retrievePreferences = function () {
-                chrome.storage[area_name].get('prefs', function (data) {
+                chrome.storage[storage_name].get('prefs', function (data) {
                     initPreferences(data.prefs);
                 });
 
@@ -300,8 +300,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 prefs = new_prefs;
             };
 
-        chrome.runtime.sendMessage({ type: 'get-sync-status' }, function (sync_status) {
-            area_name = sync_status ? 'sync' : 'local';
+        chrome.runtime.sendMessage({ type: 'get-storage-name' }, function (response) {
+            storage_name = response;
             retrievePreferences();
         });
     };

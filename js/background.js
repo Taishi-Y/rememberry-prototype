@@ -1,8 +1,28 @@
 console.log('Background Script (BS) started');
 
 var Preferences,
-    sync = true,
-    Storage = chrome.storage[ sync ? 'sync' : 'local' ];
+    storage_name = 'sync',
+    Storage = chrome.storage[storage_name],
+
+    loadJSON = function (path) {
+        return new Promise(function (resolve, reject) {
+            var xhr = new XMLHttpRequest();
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    resolve(JSON.parse(xhr.response));
+                } else if (xhr.status === 404) {
+                    reject(404);
+                }
+            };
+
+            xhr.open('GET', path);
+            xhr.send();
+        });
+    },
+
+    languages_pr = loadJSON('/data/languages.json'),
+    actions_pr = loadJSON('/data/actions.json');
 
 Preferences = (function () {
     var DEFAULT_PREFS = {
@@ -121,7 +141,6 @@ Preferences = (function () {
 }());
 
 Storage.set({
-    sync: sync,
     valid_actions: [ 'dblclick', 'click' ],
     valid_modifiers: [ 'none', 'altKey', 'ctrlKey', 'shiftKey' ]
 });
@@ -132,11 +151,17 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
     var response;
 
     switch (message.type) {
-        case 'get-sync-status':
-            response = sync;
+        case 'get-storage-name':
+            response = storage_name;
             break;
         case 'update-preferences':
             Preferences.setPrefs(message.prefs);
+            break;
+        case 'get-languages':
+                sendResponse(languages_pr);
+            break;
+        case 'get-actions':
+            actions_pr.then(sendResponse);
             break;
         default:
     }
