@@ -261,22 +261,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }());
 
     init = function () {
-        var storage_name,
-
-            handleEvent = function (e) {
+        var handleEvent = function (e) {
                 var modifier = prefs.action.modifier;
 
                 if (modifier === 'none' || e[modifier]) {
                     Popup.translateSelection();
                 }
-            },
-
-            retrievePreferences = function () {
-                chrome.storage[storage_name].get('prefs', function (data) {
-                    initPreferences(data.prefs);
-                });
-
-                listenForPreferencesChange();
             },
 
             listenForPreferencesChange = function () {
@@ -300,10 +290,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 prefs = new_prefs;
             };
 
-        BGAPI.receive('storage-name', function (response) {
-            storage_name = response;
-            retrievePreferences();
+        BGAPI.receive('preferences', function (prefs) {
+            initPreferences(prefs);
         });
+
+        listenForPreferencesChange();
     };
 
     init();
