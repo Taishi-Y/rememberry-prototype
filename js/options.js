@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', function () {
     var initLanguageMenu, initActionMenu;
 
     initLanguageMenu = function () {
-        BGAPI.receive([ 'preferences', 'languages' ], function (prefs, languages) {
+        bgAPI.receive([ 'preferences', 'languages' ], function (prefs, languages) {
             var fillMenusWithLanguages, listenOnChange,
                 source_lang_el = document.getElementById('source_lang'),
                 target_lang_el = document.getElementById('target_lang');
@@ -38,13 +38,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             listenOnChange = function () {
                 source_lang_el.addEventListener('change', function () {
-                    BGAPI.send('preferences', {
+                    bgAPI.send('preferences', {
                         source_lang: source_lang_el.children[source_lang_el.selectedIndex].value
                     });
                 });
 
                 target_lang_el.addEventListener('change', function () {
-                    BGAPI.send('preferences', {
+                    bgAPI.send('preferences', {
                         target_lang: target_lang_el.children[target_lang_el.selectedIndex].value
                     });
                 });
@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     initActionMenu = function () {
-        BGAPI.receive([ 'preferences', 'actions' ], function (prefs, actions) {
+        bgAPI.receive([ 'preferences', 'actions' ], function (prefs, actions) {
             var i, l, el, current,
                 names_container = document.getElementById('action'),
                 modifiers_container = document.getElementById('modifier'),
@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
             names_container.addEventListener('change', function () {
                 var new_name_value = names_container.children[names_container.selectedIndex].value;
 
-                BGAPI.send('preferences', {
+                bgAPI.send('preferences', {
                     action: {
                         name: new_name_value
                     }
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
             modifiers_container.addEventListener('change', function () {
                 var new_modifier_value = modifiers_container.children[modifiers_container.selectedIndex].value;
 
-                BGAPI.send('preferences', {
+                bgAPI.send('preferences', {
                     action: {
                         modifier: new_modifier_value
                     }

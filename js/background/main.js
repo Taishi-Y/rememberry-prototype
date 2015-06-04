@@ -78,16 +78,7 @@ Preferences = (function () {
                     continueSet = function (prefs) {
                         Storage.set({ prefs: prefs });
 
-                        chrome.tabs.query({}, function (tabs) {
-                            var i, l;
-
-                            for (i = 0, l = tabs.length; i < l; i++) {
-                                chrome.tabs.sendMessage(tabs[i].id, {
-                                    type: 'preferences-update',
-                                    prefs: result_prefs
-                                });
-                            }
-                        });
+                        contentAPI.send('preferences', result_prefs);
                     };
 
                 old_prefs = old_prefs || {};
