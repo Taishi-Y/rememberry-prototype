@@ -7,6 +7,8 @@ Content script:
     - handle case when user haven't selected any term
     - add offline case (or too long response time from Google Translate API)
     - move to "managed" storage
-    - ensure unique terms
+    - ensure unique terms (with case)
     - disallow "ctrlKey" modifier on Mac platform
-    - one letter can't be translated
+    - one and two letter(s) can't be translated. need some workaround
+    - add ability to set how many translations should be shown
+    - add limit to translated text size

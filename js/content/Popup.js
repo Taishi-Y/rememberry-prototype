@@ -13,7 +13,8 @@ var Popup = (function () {
 
         state = {
             orig: null,
-            translate: null
+            translate: null,
+            type: null  // possible values: 'word', 'sentence'
         },
 
         create = function () {
@@ -113,29 +114,13 @@ var Popup = (function () {
             }
         },
 
-        setTranslatedVersion = function (data) {
-            var i, l,
-                terms = [];
-
-            if (data.dict) {
-                for (i = 0, l = data.dict.length; i < l; i++) {
-                    terms = terms.concat(data.dict[i].terms);
-                }
-            }
-
-            if (data.sentences) {
-                for (i = 0, l = data.sentences.length; i < l; i++) {
-                    terms.push(data.sentences[i].trans);
-                }
-            }
-
+        setTranslatedVersion = function (terms) {
             state.translate = [];
 
             terms.forEach(function (term, index) {
                 var term_line = createTermLine(term, index === 0);
 
                 state.translate.push(term_line);
-
                 els.body.appendChild(term_line.el);
             });
 
@@ -191,6 +176,36 @@ var Popup = (function () {
 
             //chrome.runtime.sendMessage(data);
             destroy();
+        },
+        /**
+         * @param {Object}          response
+         * @param {Array<Object>}   response.sentences
+         * @param {String}          response.sentences.trans
+         * @param {Array<Object>}   response.dict
+         * @param {Array}           response.dict.terms
+         */
+        handleResponse = function (response) {
+            var i, l,
+                terms = [];
+
+            if (response.dict) {
+                for (i = 0, l = response.dict.length; i < l; i++) {
+                    terms = terms.concat(response.dict[i].terms);
+                }
+            }
+
+            if (state.type === 'sentence' && response.sentences) {
+                for (i = 0, l = response.sentences.length; i < l; i++) {
+                    terms.push(response.sentences[i].trans);
+                }
+            }
+
+            // ensure uniqueness
+            terms = terms.filter(function (value, index, self) {
+                return self.indexOf(value) === index;
+            });
+
+            setTranslatedVersion(terms);
         };
 
     // privileged members
@@ -210,16 +225,6 @@ var Popup = (function () {
             }
 
             if (selected_text.length) {
-                state.orig = selected_text;
-
-                text_range = selection.getRangeAt(0);
-                rect = text_range.getBoundingClientRect();
-
-                pos = {
-                    x: window.scrollX + rect.left,
-                    y: window.scrollY + rect.bottom
-                };
-
                 translate = function (text, callback) {
                     var xhr = new XMLHttpRequest(),
                         params =
@@ -241,12 +246,22 @@ var Popup = (function () {
                     xhr.send();
                 };
 
+                state.orig = selected_text;
+                state.type = selected_text.indexOf(' ') === -1 ? 'word' : 'sentence';
+
+                text_range = selection.getRangeAt(0);
+                rect = text_range.getBoundingClientRect();
+
+                pos = {
+                    x: window.scrollX + rect.left,
+                    y: window.scrollY + rect.bottom
+                };
+
+
                 show(pos);
                 setLoader(true);
 
-                translate(selected_text, function (response) {
-                    setTranslatedVersion(response);
-                });
+                translate(selected_text, handleResponse);
             }
         }
     };
