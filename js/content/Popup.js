@@ -12,9 +12,9 @@ var Popup = (function () {
         },
 
         state = {
-            orig: null,
-            translate: null,
-            type: null  // possible values: 'word', 'sentence'
+            orig        : null,
+            translate   : null,
+            type        : null  // possible values: 'word', 'sentence'
         },
 
         create = function () {
@@ -188,22 +188,34 @@ var Popup = (function () {
             var i, l,
                 terms = [];
 
-            if (response.dict) {
-                for (i = 0, l = response.dict.length; i < l; i++) {
-                    terms = terms.concat(response.dict[i].terms);
+            if (state.type === 'word') {
+                if (response.dict) {
+                    for (i = 0, l = response.dict.length; i < l; i++) {
+                        terms = terms.concat(response.dict[i].terms);
+                    }
+                }
+
+                if (response.sentences) {
+                    for (i = 0, l = response.sentences.length; i < l; i++) {
+                        terms.push(response.sentences[i].trans);
+                    }
+                }
+
+                terms = terms.map(function (value) {
+                    return value.toLowerCase();
+                });
+
+                // ensure uniqueness
+                terms = terms.filter(function (value, index, self) {
+                    return self.indexOf(value) === index;
+                });
+            } else {
+                if (response.sentences) {
+                    terms = [ response.sentences.map(function (item) {
+                        return item.trans;
+                    }).join('') ];
                 }
             }
-
-            if (state.type === 'sentence' && response.sentences) {
-                for (i = 0, l = response.sentences.length; i < l; i++) {
-                    terms.push(response.sentences[i].trans);
-                }
-            }
-
-            // ensure uniqueness
-            terms = terms.filter(function (value, index, self) {
-                return self.indexOf(value) === index;
-            });
 
             setTranslatedVersion(terms);
         };
@@ -212,7 +224,7 @@ var Popup = (function () {
     return {
 
         translateSelection: function () {
-            var text_range, rect, pos, translate,
+            var text_range, rect, pos,
                 selection = document.getSelection(),
                 selected_text = selection.toString().trim();
 
@@ -225,27 +237,6 @@ var Popup = (function () {
             }
 
             if (selected_text.length) {
-                translate = function (text, callback) {
-                    var xhr = new XMLHttpRequest(),
-                        params =
-                            'client=mt&' +
-                            'text=' + text + '&' +
-                            (prefs.source_lang === 'auto' ? '' : ('sl=' + prefs.source_lang + '&')) +
-                            'tl=' + prefs.target_lang,
-                        url = 'http://translate.google.ru/translate_a/t?' + params;
-
-                    xhr.open('GET', url);
-                    xhr.setRequestHeader('Accept', 'application/json, text/javascript, */*; q=0.01');
-
-                    xhr.onreadystatechange = function () {
-                        if (xhr.readyState === 4 && xhr.status === 200) {
-                            callback(JSON.parse(xhr.responseText));
-                        }
-                    };
-
-                    xhr.send();
-                };
-
                 state.orig = selected_text;
                 state.type = selected_text.indexOf(' ') === -1 ? 'word' : 'sentence';
 
@@ -261,7 +252,8 @@ var Popup = (function () {
                 show(pos);
                 setLoader(true);
 
-                translate(selected_text, handleResponse);
+                AJAX.translate(selected_text, page_prefs.source_lang, page_prefs.target_lang)
+                        .then(handleResponse);
             }
         }
     };

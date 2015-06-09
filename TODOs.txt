@@ -7,9 +7,8 @@ Content script:
     - handle case when user haven't selected any term
     - add offline case (or too long response time from Google Translate API)
     - move to "managed" storage
-    - ensure unique terms (with case)
     - one and two letter(s) can't be translated. need some workaround
-    - add ability to set how many translations should be shown
+    - add limit to possible translation variants
     - add limit to translated text size
     - add ability to create custom pairs
     - check if selection doesn't contain non-text data (?)

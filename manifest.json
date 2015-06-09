@@ -8,7 +8,7 @@
     "description": "Remember words translation easily",
 
     "background": {
-        "scripts": [ "js/content/API.js", "js/background/Preferences.js", "js/background/main.js" ],
+        "scripts": [ "js/content/API.js", "js/background/Preferences.js", "js/AJAX.js", "js/background/main.js" ],
         "persistent": false
     },
 
@@ -30,7 +30,7 @@
         {
             "matches": [ "*://*/*" ],
 
-            "js": [ "js/background/API.js", "js/content/Popup.js", "js/content/main.js" ],
+            "js": [ "js/background/API.js", "js/AJAX.js", "js/content/Popup.js", "js/content/main.js" ],
             "css": [ "css/content.css" ],
 
             "run_at": "document_start",
