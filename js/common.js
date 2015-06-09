@@ -7,7 +7,7 @@ var rb = {
      * @param {Function}            cb          Callback function, that will be called afterwards
      */
     when: function (promises, cb) {
-        Promise.all(promises).then(function (results) {
+        return Promise.all(promises).then(function (results) {
              return cb.apply(null, results);
         });
     },
