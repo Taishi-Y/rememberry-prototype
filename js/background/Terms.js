@@ -23,9 +23,7 @@ var Terms = (function () {
                     existed_translation = terms[term];
                     translation = existed_translation.concat(translation);
 
-                    translation = translation.filter(function (value, index, self) {
-                        return self.indexOf(value) === index;
-                    });
+                    translation = rb.unique(translation);
                 }
 
                 terms[term] = translation;

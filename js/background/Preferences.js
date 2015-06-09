@@ -2,10 +2,8 @@ var Preferences = (function () {
     var Module,
 
         validatePrefs = function (prefs) {
-            return Promise.all([ Data.actions, Data.languages ]).then(function (data) {
+            return rb.when([ Data.actions, Data.languages ], function (actions, languages) {
                 var action,
-                    actions = data[0],
-                    languages = data[1],
                     valid = {};
 
                 if (prefs && typeof prefs === 'object' && Object.keys(prefs).length !== 0) {

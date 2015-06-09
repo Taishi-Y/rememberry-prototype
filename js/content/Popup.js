@@ -215,9 +215,7 @@ var Popup = (function () {
                 });
 
                 // ensure uniqueness
-                terms = terms.filter(function (value, index, self) {
-                    return self.indexOf(value) === index;
-                });
+                terms = rb.unique(terms);
             } else {
                 if (response.sentences) {
                     terms = [ response.sentences.map(function (item) {

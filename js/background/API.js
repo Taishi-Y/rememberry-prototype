@@ -16,9 +16,7 @@ var bgAPI = {
                 });
             });
 
-            Promise.all(promises).then(function (results) {
-                cb.apply(null, results);
-            });
+            rb.when(promises, cb);
         }
     }
 };
