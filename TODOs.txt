@@ -14,7 +14,7 @@ Content script:
     - check if selection doesn't contain non-text data (?)
 
 Background script:
-    - do we need preferences validation at all?
+    - do we need config validation at all?
 
 Options script:
     - disallow "ctrlKey" modifier on Mac platform

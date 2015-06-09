@@ -1,13 +1,13 @@
-document.addEventListener('DOMContentLoaded', function () {
+rb.onDomReady.then(function () {
     (function initLanguageMenu() {
-        bgAPI.receive([ 'preferences', 'languages' ], function (prefs, languages) {
+        bgAPI.receive([ 'config', 'languages' ], function (config, languages) {
             var source_lang_el = document.getElementById('source_lang'),
                 target_lang_el = document.getElementById('target_lang');
 
             (function fillMenusWithLanguages() {
                 var code, language, appendOption,
-                    source_lang = prefs.source_lang,
-                    target_lang = prefs.target_lang;
+                    source_lang = config.source_lang,
+                    target_lang = config.target_lang;
 
                 appendOption = function (parent, value, text, active_value) {
                     var option_el = document.createElement('option');
@@ -33,13 +33,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
             (function listenOnChange() {
                 source_lang_el.addEventListener('change', function () {
-                    bgAPI.send('preferences', {
+                    bgAPI.send('config', {
                         source_lang: source_lang_el.children[source_lang_el.selectedIndex].value
                     });
                 });
 
                 target_lang_el.addEventListener('change', function () {
-                    bgAPI.send('preferences', {
+                    bgAPI.send('config', {
                         target_lang: target_lang_el.children[target_lang_el.selectedIndex].value
                     });
                 });
@@ -48,7 +48,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }());
 
     (function initActionMenu() {
-        bgAPI.receive([ 'preferences', 'actions' ], function (prefs, actions) {
+        bgAPI.receive([ 'config', 'actions' ], function (config, actions) {
             var names_el = document.getElementById('action'),
                 modifiers_el = document.getElementById('modifier');
 
@@ -56,8 +56,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 var i, l, appendOption,
                     event_names = actions.names,
                     modifiers = actions.modifiers,
-                    selected_event_name = prefs.action.name,
-                    selected_modifier = prefs.action.modifier;
+                    selected_event_name = config.action.name,
+                    selected_modifier = config.action.modifier;
 
                 appendOption = function (parent, value, active_value) {
                     var el = document.createElement('option');
@@ -83,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             (function listenOnChange() {
                 names_el.addEventListener('change', function () {
-                    bgAPI.send('preferences', {
+                    bgAPI.send('config', {
                         action: {
                             name: names_el.children[names_el.selectedIndex].value
                         }
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
 
                 modifiers_el.addEventListener('change', function () {
-                    bgAPI.send('preferences', {
+                    bgAPI.send('config', {
                         action: {
                             modifier: modifiers_el.children[modifiers_el.selectedIndex].value
                         }

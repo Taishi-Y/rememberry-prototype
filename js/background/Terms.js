@@ -9,10 +9,9 @@ var Terms = (function () {
                     resolve(data.terms || {});
                 })
             });
-        };
+        },
 
-    return {
-        addTerm: function (info) {
+        addTerm = function (info) {
             var term = info.orig,
                 translation = info.translation;
 
@@ -30,6 +29,11 @@ var Terms = (function () {
 
                 setTerms(terms);
             });
-        }
+        };
+
+    // public API
+    return {
+        addTerm: addTerm,
+        getTerms: getTerms
     };
 }());

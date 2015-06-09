@@ -20,5 +20,13 @@ var rb = {
         return array.filter(function (value, index, self) {
             return self.indexOf(value) === index;
         })
-    }
+    },
+
+    onDomReady: new Promise(function (resolve) {
+        if (document.readyState !== 'loading') {
+            resolve();
+        } else {
+            document.addEventListener('DOMContentLoaded', resolve);
+        }
+    })
 };

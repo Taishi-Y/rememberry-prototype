@@ -11,7 +11,7 @@
         "scripts": [
             "js/common.js",
             "js/content/API.js",
-            "js/background/Preferences.js",
+            "js/background/Config.js",
             "js/background/Terms.js",
             "js/AJAX.js",
             "js/background/main.js"

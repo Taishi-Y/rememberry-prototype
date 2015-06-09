@@ -1,41 +1,42 @@
 console.log('Loaded within', document.location.href);
 
-var init, page_prefs;
+var init, page_config;
 
 init = function () {
     var handleEvent = function (e) {
-            var modifier = page_prefs.action.modifier;
+            var modifier = page_config.action.modifier;
 
             if (modifier === 'none' || e[modifier]) {
                 Popup.show();
             }
         },
 
-        initPreferences = function (new_prefs) {
-            if (page_prefs && page_prefs.action.name !== new_prefs.action.name) {
-                document.removeEventListener(page_prefs.action.name, handleEvent);
+        initConfig = function (new_config) {
+            if (page_config && page_config.action.name !== new_config.action.name) {
+                document.removeEventListener(page_config.action.name, handleEvent);
             }
 
-            document.addEventListener(new_prefs.action.name, handleEvent);
+            document.addEventListener(new_config.action.name, handleEvent);
 
-            page_prefs = new_prefs;
+            page_config = new_config;
         };
 
-    bgAPI.receive('preferences', initPreferences);
+    bgAPI.receive('config', initConfig);
 
     chrome.runtime.onMessage.addListener(function (message) {
         switch (message.method) {
             case 'set':
                 switch (message.type) {
-                    case 'preferences':
-                        initPreferences(message.data);
+                    case 'config':
+                        initConfig(message.data);
                         break;
                     default:
                 }
+
                 break;
             default:
         }
     });
 };
 
-document.addEventListener('DOMContentLoaded', init);
+rb.onDomReady.then(init);
