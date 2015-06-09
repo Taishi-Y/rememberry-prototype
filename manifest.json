@@ -40,7 +40,6 @@
             "js": [
                 "js/common.js",
                 "js/background/API.js",
-                "js/AJAX.js",
                 "js/content/Popup.js",
                 "js/content/main.js"
             ],
