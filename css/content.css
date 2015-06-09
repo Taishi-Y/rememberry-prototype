@@ -42,6 +42,10 @@
     color: #ccc;
 }
 
+#rb-tr-popup .term-line {
+    cursor: pointer;
+}
+
 #rb-tr-popup .term-line-checkbox {
     margin-right: 5px !important;
 }

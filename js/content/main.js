@@ -7,7 +7,7 @@ init = function () {
             var modifier = page_prefs.action.modifier;
 
             if (modifier === 'none' || e[modifier]) {
-                Popup.translateSelection();
+                Popup.show();
             }
         },
 

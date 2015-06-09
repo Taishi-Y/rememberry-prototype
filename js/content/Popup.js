@@ -82,8 +82,16 @@ var Popup = (function () {
             checkbox_el.type        = 'checkbox';
             checkbox_el.checked     = !!is_checked;
 
+            checkbox_el.addEventListener('click', function (e) {
+                e.stopPropagation();
+            });
+
             line_el.appendChild(checkbox_el);
             line_el.appendChild(text_el);
+
+            line_el.addEventListener('click', function () {
+                checkbox_el.checked = !checkbox_el.checked;
+            });
 
             return {
                 el: line_el,
@@ -155,10 +163,7 @@ var Popup = (function () {
         reset = function () {
             els.body.innerHTML = '';
 
-            state = {
-                orig: null,
-                translate: null
-            };
+            state = {};
         },
 
         handleSave = function () {
@@ -185,7 +190,7 @@ var Popup = (function () {
          * @param {Array}           response.dict.terms
          */
         handleResponse = function (response) {
-            var i, l,
+            var i, l, term,
                 terms = [];
 
             if (state.type === 'word') {
@@ -197,7 +202,11 @@ var Popup = (function () {
 
                 if (response.sentences) {
                     for (i = 0, l = response.sentences.length; i < l; i++) {
-                        terms.push(response.sentences[i].trans);
+                        term = response.sentences[i].trans.replace(/\s|\./g, '');
+
+                        if (term.length) {
+                            terms.push(term);
+                        }
                     }
                 }
 
@@ -223,7 +232,7 @@ var Popup = (function () {
     // privileged members
     return {
 
-        translateSelection: function () {
+        show: function () {
             var text_range, rect, pos,
                 selection = document.getSelection(),
                 selected_text = selection.toString().trim();
@@ -251,6 +260,10 @@ var Popup = (function () {
 
                 show(pos);
                 setLoader(true);
+
+                if (selected_text.length < 3) {
+                    selected_text += '..';
+                }
 
                 AJAX.translate(selected_text, page_prefs.source_lang, page_prefs.target_lang)
                         .then(handleResponse);
