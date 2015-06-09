@@ -8,7 +8,7 @@
     "description": "Remember words translation easily",
 
     "background": {
-        "scripts": [ "js/content/API.js", "js/background/main.js" ],
+        "scripts": [ "js/content/API.js", "js/background/Preferences.js", "js/background/main.js" ],
         "persistent": false
     },
 

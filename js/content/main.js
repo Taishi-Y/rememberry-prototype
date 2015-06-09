@@ -1,10 +1,10 @@
 console.log('Loaded within', document.location.href);
 
-var init, prefs;
+var init, page_prefs;
 
 init = function () {
     var handleEvent = function (e) {
-            var modifier = prefs.action.modifier;
+            var modifier = page_prefs.action.modifier;
 
             if (modifier === 'none' || e[modifier]) {
                 Popup.translateSelection();
@@ -12,18 +12,16 @@ init = function () {
         },
 
         initPreferences = function (new_prefs) {
-            if (prefs && prefs.action.name !== new_prefs.action.name) {
-                document.removeEventListener(prefs.action.name, handleEvent);
+            if (page_prefs && page_prefs.action.name !== new_prefs.action.name) {
+                document.removeEventListener(page_prefs.action.name, handleEvent);
             }
 
             document.addEventListener(new_prefs.action.name, handleEvent);
 
-            prefs = new_prefs;
+            page_prefs = new_prefs;
         };
 
-    bgAPI.receive('preferences', function (prefs) {
-        initPreferences(prefs);
-    });
+    bgAPI.receive('preferences', initPreferences);
 
     chrome.runtime.onMessage.addListener(function (message) {
         switch (message.method) {
@@ -40,6 +38,4 @@ init = function () {
     });
 };
 
-document.addEventListener('DOMContentLoaded', function () {
-    init();
-});
+document.addEventListener('DOMContentLoaded', init);

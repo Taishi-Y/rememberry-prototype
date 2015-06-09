@@ -1,15 +1,10 @@
-console.log('Options page loaded');
-
 document.addEventListener('DOMContentLoaded', function () {
-    var initLanguageMenu, initActionMenu;
-
-    initLanguageMenu = function () {
+    (function initLanguageMenu() {
         bgAPI.receive([ 'preferences', 'languages' ], function (prefs, languages) {
-            var fillMenusWithLanguages, listenOnChange,
-                source_lang_el = document.getElementById('source_lang'),
+            var source_lang_el = document.getElementById('source_lang'),
                 target_lang_el = document.getElementById('target_lang');
 
-            fillMenusWithLanguages = function () {
+            (function fillMenusWithLanguages() {
                 var code, language, appendOption,
                     source_lang = prefs.source_lang,
                     target_lang = prefs.target_lang;
@@ -34,9 +29,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     appendOption(source_lang_el, code, language, source_lang);
                     appendOption(target_lang_el, code, language, target_lang);
                 }
-            };
+            }());
 
-            listenOnChange = function () {
+            (function listenOnChange() {
                 source_lang_el.addEventListener('change', function () {
                     bgAPI.send('preferences', {
                         source_lang: source_lang_el.children[source_lang_el.selectedIndex].value
@@ -48,73 +43,61 @@ document.addEventListener('DOMContentLoaded', function () {
                         target_lang: target_lang_el.children[target_lang_el.selectedIndex].value
                     });
                 });
-            };
-
-            fillMenusWithLanguages();
-            listenOnChange();
+            }());
         });
-    };
+    }());
 
-    initActionMenu = function () {
+    (function initActionMenu() {
         bgAPI.receive([ 'preferences', 'actions' ], function (prefs, actions) {
-            var i, l, el, current,
-                names_container = document.getElementById('action'),
-                modifiers_container = document.getElementById('modifier'),
-                event_names = actions.names,
-                modifiers = actions.modifiers,
-                selected_action = prefs.action.name,
-                selected_modifier = prefs.action.modifier;
+            var names_el = document.getElementById('action'),
+                modifiers_el = document.getElementById('modifier');
 
-            for (i = 0, l = event_names.length; i < l; i++) {
-                current = event_names[i];
+            (function fillMenusWithActions() {
+                var i, l, appendOption,
+                    event_names = actions.names,
+                    modifiers = actions.modifiers,
+                    selected_event_name = prefs.action.name,
+                    selected_modifier = prefs.action.modifier;
 
-                el = document.createElement('option');
-                el.value = current;
-                el.innerHTML = current;
+                appendOption = function (parent, value, active_value) {
+                    var el = document.createElement('option');
 
-                names_container.appendChild(el);
+                    el.value = value;
+                    el.innerHTML = value;
 
-                if (current === selected_action) {
-                    names_container.selectedIndex = i;
-                }
-            }
+                    parent.appendChild(el);
 
-            for (i = 0, l = modifiers.length; i < l; i++) {
-                current = modifiers[i];
-
-                el = document.createElement('option');
-                el.value = current;
-                el.innerHTML = current;
-
-                modifiers_container.appendChild(el);
-
-                if (current === selected_modifier) {
-                    modifiers_container.selectedIndex = i;
-                }
-            }
-
-            names_container.addEventListener('change', function () {
-                var new_name_value = names_container.children[names_container.selectedIndex].value;
-
-                bgAPI.send('preferences', {
-                    action: {
-                        name: new_name_value
+                    if (value === active_value) {
+                        parent.selectedIndex = i;
                     }
-                });
-            });
+                };
 
-            modifiers_container.addEventListener('change', function () {
-                var new_modifier_value = modifiers_container.children[modifiers_container.selectedIndex].value;
+                for (i = 0, l = event_names.length; i < l; i++) {
+                    appendOption(names_el, event_names[i], selected_event_name);
+                }
 
-                bgAPI.send('preferences', {
-                    action: {
-                        modifier: new_modifier_value
-                    }
+                for (i = 0, l = modifiers.length; i < l; i++) {
+                    appendOption(modifiers_el, modifiers[i], selected_modifier);
+                }
+            }());
+
+            (function listenOnChange() {
+                names_el.addEventListener('change', function () {
+                    bgAPI.send('preferences', {
+                        action: {
+                            name: names_el.children[names_el.selectedIndex].value
+                        }
+                    });
                 });
-            });
+
+                modifiers_el.addEventListener('change', function () {
+                    bgAPI.send('preferences', {
+                        action: {
+                            modifier: modifiers_el.children[modifiers_el.selectedIndex].value
+                        }
+                    });
+                });
+            }());
         });
-    };
-
-    initLanguageMenu();
-    initActionMenu();
+    }())
 });
