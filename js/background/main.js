@@ -10,7 +10,7 @@ var storage_name = 'sync',
 Preferences.init();
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-    var response;
+    var response, data;
 
     switch (message.method) {
         case 'get':
@@ -31,15 +31,21 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             }
             break;
         case 'set':
+            data = message.data;
+
             switch (message.type) {
                 case 'preferences':
-                    Preferences.setPrefs(message.data);
+                    Preferences.setPrefs(data);
                     break;
                 case 'term':
-                    Terms.addTerm(message.data);
+                    Terms.addTerm(data);
                     break;
                 default:
             }
+            break;
+        case 'translate':
+            data = message.data;
+            AJAX.translate(data.text, data.source, data.target).then(sendResponse);
             break;
         default:
     }

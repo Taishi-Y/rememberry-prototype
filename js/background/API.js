@@ -18,5 +18,18 @@ var bgAPI = {
 
             rb.when(promises, cb);
         }
+    },
+
+    translate: function (text, source, target) {
+        return new Promise(function (resolve) {
+            chrome.runtime.sendMessage({
+                    method: 'translate',
+                    data: {
+                        text: text,
+                        source: source,
+                        target: target
+                    }
+                }, resolve);
+        });
     }
 };

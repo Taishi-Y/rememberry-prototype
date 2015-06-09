@@ -263,7 +263,7 @@ var Popup = (function () {
                     selected_text += '..';
                 }
 
-                AJAX.translate(selected_text, page_prefs.source_lang, page_prefs.target_lang)
+                bgAPI.translate(selected_text, page_prefs.source_lang, page_prefs.target_lang)
                         .then(handleResponse);
             }
         }
