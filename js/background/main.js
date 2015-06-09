@@ -35,6 +35,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
                 case 'preferences':
                     Preferences.setPrefs(message.data);
                     break;
+                case 'term':
+                    Terms.addTerm(message.data);
+                    break;
                 default:
             }
             break;

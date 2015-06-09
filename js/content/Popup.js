@@ -13,7 +13,7 @@ var Popup = (function () {
 
         state = {
             orig        : null,
-            translate   : null,
+            translation : null,
             type        : null  // possible values: 'word', 'sentence'
         },
 
@@ -123,12 +123,12 @@ var Popup = (function () {
         },
 
         setTranslatedVersion = function (terms) {
-            state.translate = [];
+            state.translation = [];
 
             terms.forEach(function (term, index) {
                 var term_line = createTermLine(term, index === 0);
 
-                state.translate.push(term_line);
+                state.translation.push(term_line);
                 els.body.appendChild(term_line.el);
             });
 
@@ -170,16 +170,16 @@ var Popup = (function () {
             var i, l,
                 data = {
                     orig: state.orig,
-                    translate: []
+                    translation: []
                 };
 
-            for (i = 0, l = state.translate.length; i < l; i++) {
-                if (state.translate[i].isChecked()) {
-                    data.translate.push(state.translate[i].text);
+            for (i = 0, l = state.translation.length; i < l; i++) {
+                if (state.translation[i].isChecked()) {
+                    data.translation.push(state.translation[i].text);
                 }
             }
 
-            //chrome.runtime.sendMessage(data);
+            bgAPI.send('term', data);;
             destroy();
         },
         /**
