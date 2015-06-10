@@ -7,16 +7,13 @@ rb.onDomReady.then(function () {
         mark_area       = document.getElementById('mark-area');
 
     bgAPI.receive('cards', function (cards) {
-        var getCardInfo, showNextCard, init, handleResponse, reset, saveChanges, finished, current;
+        var getCardInfo, showNextCard, init, handleResponse, saveChanges, setState, current;
 
         init = function () {
-            rb.hide([ message_el, mark_area ]);
+            rb.hide(message_el);
             rb.show(test_el);
 
-            show_answer_btn.addEventListener('click', function () {
-                rb.hide(show_answer_btn);
-                rb.show([ mark_area, translation_el ]);
-            });
+            show_answer_btn.addEventListener('click', setState.bind(null, 'assess'));
 
             mark_area.addEventListener('click', function (e) {
                 var quality = e.target.dataset.quality;
@@ -27,9 +24,25 @@ rb.onDomReady.then(function () {
             });
         };
 
-        reset = function () {
-            source_el.innerHTML = '';
-            translation_el.innerHTML = '';
+        setState = function (state) {
+            switch (state) {
+                case 'answer':
+                    rb.show(show_answer_btn);
+                    rb.hide([ mark_area, translation_el ]);
+                    break;
+                case 'assess':
+                    rb.hide(show_answer_btn);
+                    rb.show([ mark_area, translation_el ]);
+                    break;
+                case 'complete':
+                    source_el.innerHTML         = '';
+                    translation_el.innerHTML    = '';
+                    message_el.innerHTML        = 'Nothing to learn';
+                    rb.hide(test_el);
+                    rb.show(message_el);
+                    break;
+                default:
+            }
         };
 
         handleResponse = function (quality) {
@@ -55,23 +68,17 @@ rb.onDomReady.then(function () {
             }
         };
 
-        finished = function () {
-            reset();
-            message_el.innerHTML = 'Nothing to learn';
-            rb.hide(test_el);
-            rb.show(message_el);
-        };
-
         showNextCard = function () {
             var card_info = getCardInfo();
 
             if (card_info) {
+                setState('answer');
                 source_el.innerHTML = card_info.name;
                 translation_el.innerHTML = card_info.card.t.join(', ');
 
                 current = card_info;
             } else {
-                finished();
+                setState('complete');
             }
         };
 

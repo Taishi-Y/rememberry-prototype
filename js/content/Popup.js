@@ -190,41 +190,47 @@ var Popup = (function () {
          * @param {Array}           response.dict.terms
          */
         handleResponse = function (response) {
-            var i, l, term,
-                terms = [];
+            var i, l, term, terms;
 
-            if (state.type === 'word') {
-                if (response.dict) {
-                    for (i = 0, l = response.dict.length; i < l; i++) {
-                        terms = terms.concat(response.dict[i].terms);
-                    }
-                }
+            if (response.name !== 'Error') {
+                terms = []
 
-                if (response.sentences) {
-                    for (i = 0, l = response.sentences.length; i < l; i++) {
-                        term = response.sentences[i].trans.replace(/\s|\./g, '');
-
-                        if (term.length) {
-                            terms.push(term);
+                if (state.type === 'word') {
+                    if (response.dict) {
+                        for (i = 0, l = response.dict.length; i < l; i++) {
+                            terms = terms.concat(response.dict[i].terms);
                         }
                     }
+
+                    if (response.sentences) {
+                        for (i = 0, l = response.sentences.length; i < l; i++) {
+                            term = response.sentences[i].trans.replace(/\s|\./g, '');
+
+                            if (term.length) {
+                                terms.push(term);
+                            }
+                        }
+                    }
+
+                    terms = terms.map(function (value) {
+                        return value.toLowerCase();
+                    });
+
+                    // ensure uniqueness
+                    terms = rb.unique(terms);
+                } else {
+                    if (response.sentences) {
+                        terms = [ response.sentences.map(function (item) {
+                            return item.trans;
+                        }).join('') ];
+                    }
                 }
 
-                terms = terms.map(function (value) {
-                    return value.toLowerCase();
-                });
-
-                // ensure uniqueness
-                terms = rb.unique(terms);
+                setTranslatedVersion(terms);
             } else {
-                if (response.sentences) {
-                    terms = [ response.sentences.map(function (item) {
-                        return item.trans;
-                    }).join('') ];
-                }
+                els.body.innerHTML = 'ERROR. Reload this page';
+                setLoader(false);
             }
-
-            setTranslatedVersion(terms);
         };
 
     // privileged members

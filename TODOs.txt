@@ -12,6 +12,7 @@ Content script:
     - add limit to translated text size
     - add ability to create custom pairs
     - check if selection doesn't contain non-text data (?)
+    - handle case when extension is been reinstalled (content script is broken)
 
 Background script:
     - do we need config validation at all?
