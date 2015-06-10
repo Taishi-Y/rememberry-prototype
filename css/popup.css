@@ -1,11 +1,19 @@
+[hidden] {
+    display: none !important;
+}
+
 body {
     width: 300px;
     height: 300px;
 }
 
-#container {
-    width: 100%;
+#message {
+    display: flex;
     height: 100%;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.7em;
 }
 
 #source {
@@ -18,7 +26,7 @@ body {
     border-bottom: 1px solid #000;
 }
 
-#translation {
+#translation-area {
     height: 230px;
     padding: 50px 30px;
 
@@ -26,6 +34,10 @@ body {
     text-align: center;
 
     box-sizing: border-box;
+}
+
+#translation {
+
 }
 
 #btns-area {
@@ -57,5 +69,5 @@ body {
 }
 
 #mark-area {
-    display: none;
+
 }

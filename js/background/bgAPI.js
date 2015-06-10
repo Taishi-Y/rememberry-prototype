@@ -20,6 +20,10 @@ var bgAPI = {
         }
     },
 
+    add: function (type, data) {
+        chrome.runtime.sendMessage({ method: 'add', type: type, data: data });
+    },
+
     translate: function (text, source, target) {
         return new Promise(function (resolve) {
             chrome.runtime.sendMessage({

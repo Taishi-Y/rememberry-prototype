@@ -10,7 +10,8 @@ var storage_name = 'sync',
 Config.init();
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-    var response, data;
+    var response,
+        data = message.data;
 
     switch (message.method) {
         case 'get':
@@ -27,29 +28,35 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
                 case 'actions':
                     Data.actions.then(sendResponse);
                     break;
-                case 'terms':
-                    Terms.getTerms().then(sendResponse);
+                case 'cards':
+                    CardsStorage.getCards().then(sendResponse);
                     break;
                 default:
             }
 
             break;
         case 'set':
-            data = message.data;
-
             switch (message.type) {
                 case 'config':
                     Config.setConfig(data);
                     break;
-                case 'term':
-                    Terms.addTerm(data);
+                case 'cards':
+                    CardsStorage.setCards(data);
+                    break;
+                default:
+            }
+
+            break;
+        case 'add':
+            switch (message.type) {
+                case 'card':
+                    CardsStorage.addCard(data);
                     break;
                 default:
             }
 
             break;
         case 'translate':
-            data = message.data;
             AJAX.translate(data.text, data.source, data.target).then(sendResponse);
             break;
         default:

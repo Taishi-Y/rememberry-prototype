@@ -9,12 +9,12 @@
 
     "background": {
         "scripts": [
-            "js/common.js",
-            "js/content/API.js",
+            "js/utils/common.js",
+            "js/utils/AJAX.js",
+            "js/content/contentAPI.js",
             "js/background/Config.js",
-            "js/background/Terms.js",
-            "js/AJAX.js",
-            "js/background/main.js"
+            "js/background/CardsStorage.js",
+            "js/background/background.js"
         ],
         "persistent": false
     },
@@ -38,10 +38,10 @@
             "matches": [ "*://*/*" ],
 
             "js": [
-                "js/common.js",
-                "js/background/API.js",
+                "js/utils/common.js",
+                "js/background/bgAPI.js",
                 "js/content/Popup.js",
-                "js/content/main.js"
+                "js/content/content.js"
             ],
             "css": [ "css/content.css" ],
 

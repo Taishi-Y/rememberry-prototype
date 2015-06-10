@@ -179,7 +179,7 @@ var Popup = (function () {
                 }
             }
 
-            bgAPI.send('term', data);;
+            bgAPI.add('card', data);;
             destroy();
         },
         /**
