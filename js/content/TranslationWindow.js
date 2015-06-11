@@ -194,6 +194,10 @@ var TranslationWindow = (function () {
                     all_terms = [];
 
                     if (response.dict) {
+                        response.dict.sort(function (a, b) {
+                            return a.pos_enum > b.pos_enum;
+                        });
+
                         response.dict.forEach(function (entry) {
                             var pos_name,
 
