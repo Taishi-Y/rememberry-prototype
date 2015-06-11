@@ -49,7 +49,8 @@ var TranslationWindow = (function () {
 
         createFooter = function () {
             var footer_el = rb.node('<div id="' + BASE_ID + '-footer"></div>'),
-                save_btn = rb.node('<button id="' + BASE_ID +'-save-btn">Save</button>');
+                save_btn = rb.node(
+                    '<button id="' + BASE_ID +'-save-btn">' + chrome.i18n.getMessage('Save') + '</button>');
 
             save_btn.addEventListener('click', handleSave);
             footer_el.appendChild(save_btn);
@@ -105,15 +106,16 @@ var TranslationWindow = (function () {
         },
 
         setTranslatedVersion = function (translation) {
-            var type, terms,
+            var type, data, terms,
                 checked = true;
 
             state.translation = [];
 
             for (type in translation) {
                 if (translation.hasOwnProperty(type)) {
-                    els.body.appendChild(rb.node('<div class="tr-type">' + type + '</div>'));
-                    terms = translation[type];
+                    data = translation[type];
+                    els.body.appendChild(rb.node('<div class="tr-type">' + data.name + '</div>'));
+                    terms = data.terms;
 
                     terms.forEach(function (term) {
                         var term_line = createTermLine(term, checked);
@@ -188,65 +190,72 @@ var TranslationWindow = (function () {
         handleResponse = function (response) {
             var term, translation, all_terms, sentences;
 
-            if (response.name !== 'Error') {
-                if (state.type === 'word') {
-                    translation = {};
-                    all_terms = [];
+            if (state.type === 'word') {
+                translation = {};
+                all_terms = [];
 
-                    if (response.dict) {
-                        response.dict.sort(function (a, b) {
-                            return a.pos_enum > b.pos_enum;
-                        });
+                if (response.dict) {
+                    response.dict.sort(function (a, b) {
+                        return a.pos_enum > b.pos_enum;
+                    });
 
-                        response.dict.forEach(function (entry) {
-                            var pos_name,
+                    response.dict.forEach(function (entry) {
+                        var pos_name,
 
-                                terms = entry.terms.map(function (term) {
-                                    return term.toLowerCase();
-                                });
-
-                            terms.filter(function (term) {
-                                return all_terms.indexOf(term) === -1;
+                            terms = entry.terms.map(function (term) {
+                                return term.toLowerCase();
                             });
 
-                            if (terms.length) {
-                                pos_name = parts_of_speech_enum[entry.pos_enum - 1];
-                                translation[pos_name] = terms;
-                                all_terms = all_terms.concat(terms);
-                            }
-                        });
-                    }
-
-                    if (response.sentences) {
-                        sentences = [];
-
-                        response.sentences.forEach(function (sentence) {
-                            term = sentence.trans.toLowerCase().replace(/\s|\./g, '');
-
-                            if (term.length && all_terms.indexOf(term) === -1) {
-                                sentences.push(term);
-                            }
+                        terms.filter(function (term) {
+                            return all_terms.indexOf(term) === -1;
                         });
 
-                        if (sentences.length) {
-                            translation.sentence = sentences;
+                        if (terms.length) {
+                            pos_name = parts_of_speech_enum[entry.pos_enum - 1];
+
+                            translation[pos_name] = {
+                                name: pos_name.trim().length ?
+                                        chrome.i18n.getMessage(pos_name.replace(/\s/g, '_')) : '',
+                                terms: terms
+                            };
+
+                            all_terms = all_terms.concat(terms);
                         }
-                    }
-                } else {
-                    if (response.sentences) {
-                        translation = {
-                            sentence: [ response.sentences.map(function (item) {
-                                return item.trans;
-                            }).join('') ]
+                    });
+                }
+
+                if (response.sentences) {
+                    sentences = [];
+
+                    response.sentences.forEach(function (sentence) {
+                        term = sentence.trans.toLowerCase().replace(/\s|\./g, '');
+
+                        if (term.length && all_terms.indexOf(term) === -1) {
+                            sentences.push(term);
+                        }
+                    });
+
+                    if (sentences.length) {
+                        translation.sentence = {
+                            name: chrome.i18n.getMessage('sentence'),
+                            terms: sentences
                         };
                     }
                 }
-
-                setTranslatedVersion(translation);
             } else {
-                destroy();
-                alert('There is no connection to Rememberry extension. Please try to reload this page.');
+                if (response.sentences) {
+                    translation = {
+                        sentence: {
+                            name: chrome.i18n.getMessage('sentence'),
+                            terms: [ response.sentences.map(function (item) {
+                                return item.trans;
+                            }).join('') ]
+                        }
+                    };
+                }
             }
+
+            setTranslatedVersion(translation);
         };
 
     // privileged members
@@ -286,7 +295,7 @@ var TranslationWindow = (function () {
                 }
 
                 bgAPI.translate(selected_text, page_config.source_lang, page_config.target_lang)
-                        .then(handleResponse);
+                        .then(handleResponse, destroy);
             }
         }
     };

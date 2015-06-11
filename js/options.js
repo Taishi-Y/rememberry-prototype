@@ -1,4 +1,14 @@
 rb.onDomReady.then(function () {
+    (function provideLocalization() {
+        document.querySelector('#languages-menu h3').innerHTML = chrome.i18n.getMessage('languages');
+        document.querySelector('#source-lang-desc').innerHTML = chrome.i18n.getMessage('Source_language');
+        document.querySelector('#target-lang-desc').innerHTML = chrome.i18n.getMessage('Target_language');
+
+        document.querySelector('#action-menu h3').innerHTML = chrome.i18n.getMessage('Modifiers');
+        document.querySelector('#trigger-action-desc').innerHTML = chrome.i18n.getMessage('Trigger_action');
+        document.querySelector('#modifier-desc').innerHTML = chrome.i18n.getMessage('Key_modifier');
+    }());
+
     (function initLanguageMenu() {
         bgAPI.receive([ 'config', 'languages' ]).spread(function (config, languages) {
             var source_lang_el = document.getElementById('source_lang'),
@@ -19,7 +29,7 @@ rb.onDomReady.then(function () {
                     }
                 };
 
-                appendOption(source_lang_el, 'auto', 'Detect', source_lang);
+                appendOption(source_lang_el, 'auto', chrome.i18n.getMessage('Detect'), source_lang);
 
                 for (code in languages) {
                     language = languages[code];

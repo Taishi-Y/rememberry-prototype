@@ -29,7 +29,7 @@ var bgAPI = {
     },
 
     translate: function (text, source, target) {
-        return new Promise(function (resolve) {
+        return new Promise(function (resolve, reject) {
             try {
                 chrome.runtime.sendMessage({
                     method: 'translate',
@@ -40,7 +40,8 @@ var bgAPI = {
                     }
                 }, resolve);
             } catch (e) {
-                resolve(e);
+                reject();
+                showError();
             }
         });
     }

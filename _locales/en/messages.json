@@ -1,0 +1,73 @@
+{
+    "author": {
+        "message": "Myroslava Yurchyshyn"
+    },
+    "ext_name": {
+        "message": "Rememberry"
+    },
+    "ext_description": {
+        "message": "Remember words translation easily"
+    },
+    "Languages": {
+        "message": "Languages"
+    },
+    "Source_language": {
+        "message": "Source language"
+    },
+    "Target_language": {
+        "message": "Target language"
+    },
+    "Modifiers": {
+        "message": "Modifiers"
+    },
+    "Trigger_action": {
+        "message": "Trigger action"
+    },
+    "Key_modifier": {
+        "message": "Key modifier"
+    },
+    "Detect": {
+        "message": "Detect"
+    },
+    "Save": {
+        "message": "Save"
+    },
+    "no_connection_to_extension": {
+        "message": "There is no connection to $1 extension. Please try to reload this page.",
+        "placeholders": {
+            "ext_name": {
+                "content": "$1"
+            }
+        }
+    },
+    "noun": {
+        "message": "noun"
+    },
+    "verb": {
+        "message": "verb"
+    },
+    "adjective": {
+        "message": "adjective"
+    },
+    "adverb": {
+        "message": "adverb"
+    },
+    "preposition": {
+        "message": "preposition"
+    },
+    "conjunction": {
+        "message": "conjunction"
+    },
+    "pronoun": {
+        "message": "pronoun"
+    },
+    "article": {
+        "message": "article"
+    },
+    "auxiliary_verb": {
+        "message": "auxiliary verb"
+    },
+    "sentence": {
+        "message": "sentence"
+    }
+}

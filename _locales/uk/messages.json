@@ -1,0 +1,73 @@
+{
+    "author": {
+        "message": "Юрчишин Мирослава"
+    },
+    "ext_name": {
+        "message": "Rememberry"
+    },
+    "ext_description": {
+        "message": "Запам'ятовуйте переклад слів з легкістю"
+    },
+    "Languages": {
+        "message": "Мови"
+    },
+    "Source_language": {
+        "message": "Вихідна мова"
+    },
+    "Target_language": {
+        "message": "Мова перекладу"
+    },
+    "Modifiers": {
+        "message": "Модифікатори"
+    },
+    "Trigger_action": {
+        "message": "Тип запуску"
+    },
+    "Key_modifier": {
+        "message": "Клавіша модифікатор"
+    },
+    "Detect": {
+        "message": "Автовизначення"
+    },
+    "Save": {
+        "message": "Зберегти"
+    },
+    "no_connection_to_extension": {
+        "message": "Відсутнє з'єднання з розширенням $1. Перезавантажте цю сторінку.",
+        "placeholders": {
+            "ext_name": {
+                "content": "$1"
+            }
+        }
+    },
+    "noun": {
+        "message": "іменник"
+    },
+    "verb": {
+        "message": "дієслово"
+    },
+    "adjective": {
+        "message": "прикметник"
+    },
+    "adverb": {
+        "message": "прислівник"
+    },
+    "preposition": {
+        "message": "прийменник"
+    },
+    "conjunction": {
+        "message": "сполучник"
+    },
+    "pronoun": {
+        "message": "займенник"
+    },
+    "article": {
+        "message": "артикль"
+    },
+    "auxiliary_verb": {
+        "message": "допоміжне дієслово"
+    },
+    "sentence": {
+        "message": "речення"
+    }
+}
