@@ -34,6 +34,15 @@ init = function () {
                 }
 
                 break;
+            case 'translate':
+                switch (message.type) {
+                    case 'selection':
+                        Popup.show();
+                        break;
+                    default:
+                }
+
+                break;
             default:
         }
     });

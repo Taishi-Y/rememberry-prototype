@@ -68,3 +68,12 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         return true;
     }
 });
+
+chrome.contextMenus.create({
+    title: 'Translate with Rememberry',
+    contexts: [ 'selection' ],
+
+    onclick: function (info, tab) {
+        chrome.tabs.sendMessage(tab.id, { method: 'translate', type: 'selection' });
+    }
+});

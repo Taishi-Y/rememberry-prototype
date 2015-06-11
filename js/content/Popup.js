@@ -228,8 +228,8 @@ var Popup = (function () {
 
                 setTranslatedVersion(terms);
             } else {
-                els.body.innerHTML = 'ERROR. Reload this page';
-                setLoader(false);
+                destroy();
+                alert('There is no connection to Rememberry extension. Please try to reload this page.');
             }
         };
 
