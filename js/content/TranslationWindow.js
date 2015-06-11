@@ -195,16 +195,19 @@ var TranslationWindow = (function () {
 
                     if (response.dict) {
                         response.dict.forEach(function (entry) {
-                            var terms = entry.terms.map(function (term) {
-                                return term.toLowerCase();
-                            });
+                            var pos_name,
+
+                                terms = entry.terms.map(function (term) {
+                                    return term.toLowerCase();
+                                });
 
                             terms.filter(function (term) {
                                 return all_terms.indexOf(term) === -1;
                             });
 
                             if (terms.length) {
-                                translation[entry.pos] = terms;
+                                pos_name = parts_of_speech_enum[entry.pos_enum - 1];
+                                translation[pos_name] = terms;
                                 all_terms = all_terms.concat(terms);
                             }
                         });
@@ -222,15 +225,15 @@ var TranslationWindow = (function () {
                         });
 
                         if (sentences.length) {
-                            translation.sentences = sentences;
+                            translation.sentence = sentences;
                         }
                     }
                 } else {
                     if (response.sentences) {
                         translation = {
-                            sentences: response.sentences.map(function (item) {
+                            sentence: [ response.sentences.map(function (item) {
                                 return item.trans;
-                            }).join('')
+                            }).join('') ]
                         };
                     }
                 }

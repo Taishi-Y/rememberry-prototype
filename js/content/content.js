@@ -1,6 +1,6 @@
 console.log('Loaded within', document.location.href);
 
-var init, page_config;
+var init, page_config, parts_of_speech_enum;
 
 init = function () {
     var handleEvent = function (e) {
@@ -21,7 +21,9 @@ init = function () {
             page_config = new_config;
         };
 
-    bgAPI.receive('config', initConfig);
+    bgAPI.receive([ 'config', 'PoS' ], function (new_config) {
+        initConfig(new_config);
+    });
 
     chrome.runtime.onMessage.addListener(function (message) {
         switch (message.method) {
@@ -47,5 +49,9 @@ init = function () {
         }
     });
 };
+
+bgAPI.receive('PoS', function (PoS) {
+    parts_of_speech_enum = PoS.enum;
+});
 
 rb.onDomReady.then(init);

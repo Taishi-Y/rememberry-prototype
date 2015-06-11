@@ -4,7 +4,8 @@ var storage_name = 'sync',
     Data = {
         languages       : AJAX.getJSON('/data/languages.json'),
         actions         : AJAX.getJSON('/data/actions.json'),
-        default_config  : AJAX.getJSON('/data/default_config.json')
+        default_config  : AJAX.getJSON('/data/default_config.json'),
+        PoS             : AJAX.getJSON('/data/PoS_enum.json')
     };
 
 Config.init();
@@ -27,6 +28,9 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
                     break;
                 case 'actions':
                     Data.actions.then(sendResponse);
+                    break;
+                case 'PoS':
+                    Data.PoS.then(sendResponse);
                     break;
                 case 'cards':
                     CardsStorage.getCards().then(sendResponse);

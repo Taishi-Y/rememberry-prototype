@@ -1,0 +1,20 @@
+{
+    "enum": [
+        "noun",
+        "verb",
+        "adjective",
+        "adverb",
+        "preposition",
+        "",
+        "conjunction",
+        "pronoun",
+        "",
+        "",
+        "",
+        "",
+        "article",
+        "",
+        " ",
+        "auxiliary verb"
+    ]
+}
