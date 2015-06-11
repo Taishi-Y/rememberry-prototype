@@ -21,7 +21,7 @@ init = function () {
             page_config = new_config;
         };
 
-    bgAPI.receive([ 'config', 'PoS' ], function (new_config) {
+    bgAPI.receive([ 'config', 'PoS' ]).spread(function (new_config) {
         initConfig(new_config);
     });
 
@@ -50,7 +50,7 @@ init = function () {
     });
 };
 
-bgAPI.receive('PoS', function (PoS) {
+bgAPI.receive('PoS').then(function (PoS) {
     parts_of_speech_enum = PoS.enum;
 });
 

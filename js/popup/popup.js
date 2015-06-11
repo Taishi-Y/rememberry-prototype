@@ -6,7 +6,7 @@ rb.onDomReady.then(function () {
         show_answer_btn = document.getElementById('show-answer-btn'),
         mark_area       = document.getElementById('mark-area');
 
-    bgAPI.receive('cards', function (cards) {
+    bgAPI.receive('cards').then(function (cards) {
         var getCardInfo, showNextCard, init, handleResponse, saveChanges, setState, current;
 
         init = function () {

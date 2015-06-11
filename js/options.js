@@ -1,6 +1,6 @@
 rb.onDomReady.then(function () {
     (function initLanguageMenu() {
-        bgAPI.receive([ 'config', 'languages' ], function (config, languages) {
+        bgAPI.receive([ 'config', 'languages' ]).spread(function (config, languages) {
             var source_lang_el = document.getElementById('source_lang'),
                 target_lang_el = document.getElementById('target_lang');
 
@@ -45,7 +45,7 @@ rb.onDomReady.then(function () {
     }());
 
     (function initActionMenu() {
-        bgAPI.receive([ 'config', 'actions' ], function (config, actions) {
+        bgAPI.receive([ 'config', 'actions' ]).spread(function (config, actions) {
             var names_el = document.getElementById('action'),
                 modifiers_el = document.getElementById('modifier');
 

@@ -2,7 +2,7 @@ var Config = (function () {
     var Module,
 
         validateConfig = function (config) {
-            return rb.when([ Data.actions, Data.languages ], function (actions, languages) {
+            return Promise.all([ Data.actions, Data.languages ]).spread(function (actions, languages) {
                 var action,
                     valid = {};
 

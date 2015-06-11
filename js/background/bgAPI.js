@@ -4,20 +4,24 @@ var bgAPI = {
         chrome.runtime.sendMessage({ method: 'set', type: type, data: data });
     },
 
-    receive: function (type, cb) {
-        var promises;
+    receive: function (type) {
+        var promise, promises;
 
         if (!Array.isArray(type)) {
-            chrome.runtime.sendMessage({ method: 'get', type: type }, cb);
+            promise = new Promise(function (resolve) {
+                chrome.runtime.sendMessage({ method: 'get', type: type }, resolve);
+            });
         } else {
             promises = type.map(function (curr_type) {
                 return new Promise(function (resolve) {
-                    bgAPI.receive(curr_type, resolve);
+                    bgAPI.receive(curr_type).then(resolve);
                 });
             });
 
-            rb.when(promises, cb);
+            promise = Promise.all(promises);
         }
+
+        return promise;
     },
 
     add: function (type, data) {
