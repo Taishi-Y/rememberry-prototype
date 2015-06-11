@@ -57,6 +57,14 @@ var rb = (function () {
         },
 
         show: visible.bind(null, true),
-        hide: visible.bind(null, false)
+        hide: visible.bind(null, false),
+
+        node: function (html_value) {
+            var container_el = document.createElement('div');
+
+            container_el.innerHTML = html_value;
+
+            return container_el.children[0];
+        }
     };
 }());

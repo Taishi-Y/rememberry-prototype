@@ -39,7 +39,7 @@
             "js": [
                 "js/utils/common.js",
                 "js/background/bgAPI.js",
-                "js/content/Popup.js",
+                "js/content/TranslationWindow.js",
                 "js/content/content.js"
             ],
             "css": [ "css/content.css" ],

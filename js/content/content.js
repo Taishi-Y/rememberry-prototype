@@ -7,7 +7,7 @@ init = function () {
             var modifier = page_config.action.modifier;
 
             if (modifier === 'none' || e[modifier]) {
-                Popup.show();
+                TranslationWindow.translateSelection();
             }
         },
 
@@ -37,7 +37,7 @@ init = function () {
             case 'translate':
                 switch (message.type) {
                     case 'selection':
-                        Popup.show();
+                        TranslationWindow.translateSelection();
                         break;
                     default:
                 }

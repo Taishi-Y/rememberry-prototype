@@ -15,8 +15,6 @@
     background-color: white;
 }
 
-#rb-tr-popup-header {}
-
 #rb-tr-popup-close-btn {
     position: absolute;
     right: 5px;
@@ -25,6 +23,7 @@
     width: 10px;
     height: 10px;
 
+    font-family: fantasy;
     font-size: 16px;
     text-align: center;
     line-height: 10px; /* Remove after Shadow DOM implementation */
@@ -40,6 +39,21 @@
 #rb-tr-popup-body[loading]:after {
     content: 'Loading..';
     color: #ccc;
+}
+
+#rb-tr-popup .tr-type {
+    margin-bottom: 5px;
+
+    color: grey;
+    font-size: .9em;
+    font-style: italic;
+    text-align: right;
+
+    border-bottom: 1px dotted #ccc;
+}
+
+#rb-tr-popup .tr-type:not(:first-child) {
+    margin-top: 5px;
 }
 
 #rb-tr-popup .term-line {

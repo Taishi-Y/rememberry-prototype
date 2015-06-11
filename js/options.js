@@ -10,10 +10,7 @@ rb.onDomReady.then(function () {
                     target_lang = config.target_lang;
 
                 appendOption = function (parent, value, text, active_value) {
-                    var option_el = document.createElement('option');
-
-                    option_el.value = value;
-                    option_el.innerHTML = text;
+                    var option_el = rb.node('<option value="' + value + '">' + text + '</option>');
 
                     parent.appendChild(option_el);
 
@@ -60,10 +57,7 @@ rb.onDomReady.then(function () {
                     selected_modifier = config.action.modifier;
 
                 appendOption = function (parent, value, active_value) {
-                    var el = document.createElement('option');
-
-                    el.value = value;
-                    el.innerHTML = value;
+                    var el = rb.node('<option value="' + value + '">' + value + '</option>');
 
                     parent.appendChild(el);
 

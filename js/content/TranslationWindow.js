@@ -1,4 +1,4 @@
-var Popup = (function () {
+var TranslationWindow = (function () {
     // private members
     var BASE_ID     = 'rb-tr-popup',
         is_created  = false,
@@ -18,13 +18,10 @@ var Popup = (function () {
         },
 
         create = function () {
-            var popup_el    = document.createElement('div'),
+            var popup_el    = rb.node('<div id="' + BASE_ID + '"></div>'),
                 header_el   = createHeader(),
-                body_el     = document.createElement('div'),
+                body_el     = rb.node('<div id="' + BASE_ID + '-body"></div>'),
                 footer_el   = createFooter();
-
-            popup_el.id = BASE_ID;
-            body_el.id  = BASE_ID + '-body';
 
             popup_el.appendChild(header_el);
             popup_el.appendChild(body_el);
@@ -41,46 +38,31 @@ var Popup = (function () {
         },
 
         createHeader = function () {
-            var header_el = document.createElement('div'),
-                close_btn = document.createElement('div');
+            var header_el = rb.node('<div id="' + BASE_ID + '-header"></div>'),
+                close_btn = rb.node('<div id="' + BASE_ID + '-close-btn">x</div>');
 
-            header_el.id = BASE_ID + '-header';
-            close_btn.id = BASE_ID + '-close-btn';
-            close_btn.innerHTML = 'x';
-
-            close_btn.addEventListener('click', function () {
-                destroy();
-            });
-
+            close_btn.addEventListener('click', destroy);
             header_el.appendChild(close_btn);
 
             return header_el;
         },
 
         createFooter = function () {
-            var footer_el = document.createElement('div'),
-                save_btn = document.createElement('button');
-
-            footer_el.id = BASE_ID + '-footer';
-            save_btn.id = BASE_ID + '-save-btn';
-            save_btn.innerHTML = 'Save';
+            var footer_el = rb.node('<div id="' + BASE_ID + '-footer"></div>'),
+                save_btn = rb.node('<button id="' + BASE_ID +'-save-btn">Save</button>');
 
             save_btn.addEventListener('click', handleSave);
-
             footer_el.appendChild(save_btn);
 
             return footer_el;
         },
 
         createTermLine = function (term, is_checked) {
-            var line_el     = document.createElement('div'),
-                checkbox_el = document.createElement('input'),
-                text_el     = document.createTextNode(term);
+            var line_el     = rb.node('<div class="term-line"></div>'),
+                checkbox_el = rb.node('<input type="checkbox" class="term-line-checkbox"/>'),
+                text_el     = rb.node('<span>' + term + '</span>');
 
-            line_el.className       = 'term-line';
-            checkbox_el.className   = 'term-line-checkbox';
-            checkbox_el.type        = 'checkbox';
-            checkbox_el.checked     = !!is_checked;
+            checkbox_el.checked = !!is_checked;
 
             checkbox_el.addEventListener('click', function (e) {
                 e.stopPropagation();
@@ -122,15 +104,29 @@ var Popup = (function () {
             }
         },
 
-        setTranslatedVersion = function (terms) {
+        setTranslatedVersion = function (translation) {
+            var type, terms,
+                checked = true;
+
             state.translation = [];
 
-            terms.forEach(function (term, index) {
-                var term_line = createTermLine(term, index === 0);
+            for (type in translation) {
+                if (translation.hasOwnProperty(type)) {
+                    els.body.appendChild(rb.node('<div class="tr-type">' + type + '</div>'));
+                    terms = translation[type];
 
-                state.translation.push(term_line);
-                els.body.appendChild(term_line.el);
-            });
+                    terms.forEach(function (term) {
+                        var term_line = createTermLine(term, checked);
+
+                        state.translation.push(term_line);
+                        els.body.appendChild(term_line.el);
+
+                        if (checked) {
+                            checked = false;
+                        }
+                    });
+                }
+            }
 
             setLoader(false);
         },
@@ -190,43 +186,56 @@ var Popup = (function () {
          * @param {Array}           response.dict.terms
          */
         handleResponse = function (response) {
-            var i, l, term, terms;
+            var term, translation, all_terms, sentences;
 
             if (response.name !== 'Error') {
-                terms = []
-
                 if (state.type === 'word') {
+                    translation = {};
+                    all_terms = [];
+
                     if (response.dict) {
-                        for (i = 0, l = response.dict.length; i < l; i++) {
-                            terms = terms.concat(response.dict[i].terms);
-                        }
+                        response.dict.forEach(function (entry) {
+                            var terms = entry.terms.map(function (term) {
+                                return term.toLowerCase();
+                            });
+
+                            terms.filter(function (term) {
+                                return all_terms.indexOf(term) === -1;
+                            });
+
+                            if (terms.length) {
+                                translation[entry.pos] = terms;
+                                all_terms = all_terms.concat(terms);
+                            }
+                        });
                     }
 
                     if (response.sentences) {
-                        for (i = 0, l = response.sentences.length; i < l; i++) {
-                            term = response.sentences[i].trans.replace(/\s|\./g, '');
+                        sentences = [];
 
-                            if (term.length) {
-                                terms.push(term);
+                        response.sentences.forEach(function (sentence) {
+                            term = sentence.trans.toLowerCase().replace(/\s|\./g, '');
+
+                            if (term.length && all_terms.indexOf(term) === -1) {
+                                sentences.push(term);
                             }
+                        });
+
+                        if (sentences.length) {
+                            translation.sentences = sentences;
                         }
                     }
-
-                    terms = terms.map(function (value) {
-                        return value.toLowerCase();
-                    });
-
-                    // ensure uniqueness
-                    terms = rb.unique(terms);
                 } else {
                     if (response.sentences) {
-                        terms = [ response.sentences.map(function (item) {
-                            return item.trans;
-                        }).join('') ];
+                        translation = {
+                            sentences: response.sentences.map(function (item) {
+                                return item.trans;
+                            }).join('')
+                        };
                     }
                 }
 
-                setTranslatedVersion(terms);
+                setTranslatedVersion(translation);
             } else {
                 destroy();
                 alert('There is no connection to Rememberry extension. Please try to reload this page.');
@@ -236,7 +245,7 @@ var Popup = (function () {
     // privileged members
     return {
 
-        show: function () {
+        translateSelection: function () {
             var text_range, rect, pos,
                 selection = document.getSelection(),
                 selected_text = selection.toString().trim();

@@ -4,15 +4,11 @@ Content script:
     - position adjustment in case when popup doesn't fit into window view-port
     - handle possible issue while new translation requested before previous was received
     - Save button should be disabled during translation loading
-    - handle case when user haven't selected any term
     - add offline case (or too long response time from Google Translate API)
     - move to "managed" storage
-    - one and two letter(s) can't be translated. need some workaround
-    - add limit to possible translation variants
-    - add limit to translated text size
+    - add ability to set limit to possible translation variants
+    - add ability to set limit to translated text size
     - add ability to create custom pairs
-    - check if selection doesn't contain non-text data (?)
-    - handle case when extension is been reinstalled (content script is broken)
 
 Background script:
     - do we need config validation at all?
