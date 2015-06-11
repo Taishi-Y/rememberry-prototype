@@ -9,6 +9,7 @@ Content script:
     - add ability to set limit to possible translation variants
     - add ability to set limit to translated text size
     - add ability to create custom pairs
+    - add localization (en, ua, ru)
 
 Background script:
     - do we need config validation at all?
