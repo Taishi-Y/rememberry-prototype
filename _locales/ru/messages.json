@@ -1,76 +1,79 @@
 {
-  "author": {
-    "message": "Юрчишин Мирослава"
-  },
-  "ext_name": {
-    "message": "Rememberry"
-  },
-  "ext_description": {
-    "message": "Запоминайте перевод слов с легкостью"
-  },
-  "Languages": {
-    "message": "Языки"
-  },
-  "Source_language": {
-    "message": "Исходный язык"
-  },
-  "Target_language": {
-    "message": "Язык перевода"
-  },
-  "Modifiers": {
-    "message": "Модификаторы"
-  },
-  "Trigger_action": {
-    "message": "Тип запуска"
-  },
-  "Key_modifier": {
-    "message": "Клавиша модификатор"
-  },
-  "Detect": {
-    "message": "Автоопределение"
-  },
-  "Save": {
-    "message": "Сохранить"
-  },
-  "no_connection_to_extension": {
-    "message": "Отсутствует соединение с расширением $1. Перезагрузите эту страницу.",
-    "placeholders": {
-      "ext_name": {
-        "content": "$1"
-      }
+    "author": {
+        "message": "Р®СЂС‡РёС€РёРЅ РњРёСЂРѕСЃР»Р°РІР°"
+    },
+    "ext_name": {
+        "message": "Rememberry"
+    },
+    "ext_description": {
+        "message": "Р—Р°РїРѕРјРёРЅР°Р№С‚Рµ РїРµСЂРµРІРѕРґ СЃР»РѕРІ СЃ Р»РµРіРєРѕСЃС‚СЊСЋ"
+    },
+    "Languages": {
+        "message": "РЇР·С‹РєРё"
+    },
+    "Source_language": {
+        "message": "РСЃС…РѕРґРЅС‹Р№ СЏР·С‹Рє"
+    },
+    "Target_language": {
+        "message": "РЇР·С‹Рє РїРµСЂРµРІРѕРґР°"
+    },
+    "Modifiers": {
+        "message": "РњРѕРґРёС„РёРєР°С‚РѕСЂС‹"
+    },
+    "Trigger_action": {
+        "message": "РўРёРї Р·Р°РїСѓСЃРєР°"
+    },
+    "Key_modifier": {
+        "message": "РљР»Р°РІРёС€Р° РјРѕРґРёС„РёРєР°С‚РѕСЂ"
+    },
+    "Detect": {
+        "message": "РђРІС‚РѕРѕРїСЂРµРґРµР»РµРЅРёРµ"
+    },
+    "Save": {
+        "message": "РЎРѕС…СЂР°РЅРёС‚СЊ"
+    },
+    "no_connection_to_extension": {
+        "message": "РћС‚СЃСѓС‚СЃС‚РІСѓРµС‚ СЃРѕРµРґРёРЅРµРЅРёРµ СЃ СЂР°СЃС€РёСЂРµРЅРёРµРј $1. РџРµСЂРµР·Р°РіСЂСѓР·РёС‚Рµ СЌС‚Сѓ СЃС‚СЂР°РЅРёС†Сѓ.",
+        "placeholders": {
+            "ext_name": {
+                "content": "$1"
+            }
+        }
+    },
+    "noun": {
+        "message": "СЃСѓС‰РµСЃС‚РІРёС‚РµР»СЊРЅРѕРµ"
+    },
+    "verb": {
+        "message": "РіР»Р°РіРѕР»"
+    },
+    "adjective": {
+        "message": "РїСЂРёР»Р°РіР°С‚РµР»СЊРЅРѕРµ"
+    },
+    "adverb": {
+        "message": "РЅР°СЂРµС‡РёРµ"
+    },
+    "preposition": {
+        "message": "РїСЂРµРґР»РѕРі"
+    },
+    "conjunction": {
+        "message": "СЃРѕСЋР·"
+    },
+    "pronoun": {
+        "message": "РјРµСЃС‚РѕРёРјРµРЅРёРµ"
+    },
+    "article": {
+        "message": "Р°СЂС‚РёРєР»СЊ"
+    },
+    "auxiliary_verb": {
+        "message": "РІСЃРїРѕРјРѕРіР°С‚РµР»СЊРЅС‹Р№ РіР»Р°РіРѕР»"
+    },
+    "sentence": {
+        "message": "РїСЂРµРґР»РѕР¶РµРЅРёСЏ"
+    },
+    "Custom": {
+        "message": "Р”СЂСѓРіРѕРµ"
+    },
+    "Translation": {
+        "message": "РџРµСЂРµРІРѕРґ"
     }
-  },
-  "noun": {
-    "message": "существительное"
-  },
-  "verb": {
-    "message": "глагол"
-  },
-  "adjective": {
-    "message": "прилагательное"
-  },
-  "adverb": {
-    "message": "наречие"
-  },
-  "preposition": {
-    "message": "предлог"
-  },
-  "conjunction": {
-    "message": "союз"
-  },
-  "pronoun": {
-    "message": "местоимение"
-  },
-  "article": {
-    "message": "артикль"
-  },
-  "auxiliary_verb": {
-    "message": "вспомогательный глагол"
-  },
-  "sentence": {
-    "message": "предложения"
-  },
-  "Custom": {
-    "message": "Другое"
-  }
 }

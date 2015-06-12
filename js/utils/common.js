@@ -62,6 +62,6 @@ var rb = (function () {
 
 Promise.prototype.spread = Promise.prototype.spread || function (fn) {
     return this.then(function (args) {
-        fn.apply(this, Array.prototype.slice.call(args));
+        fn.apply(this, args);
     });
 };

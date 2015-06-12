@@ -2,14 +2,10 @@ Content script:
     - use "Shadow DOM" for Popup
     - use spinning loader instead of "Loading.." text
     - position adjustment in case when popup doesn't fit into window view-port
-    - handle possible issue while new translation requested before previous was received
-    - Save button should be disabled during translation loading
     - add offline case (or too long response time from Google Translate API)
     - move to "managed" storage
     - add ability to set limit to possible translation variants
     - add ability to set limit to translated text size
-    - add ability to create custom pairs
-    - add localization (en, ua, ru)
 
 Background script:
     - do we need config validation at all?

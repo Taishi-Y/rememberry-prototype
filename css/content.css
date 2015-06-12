@@ -35,17 +35,20 @@
     margin-top: 5px;
 }
 
-#rb-tr-popup-body[loading]:after {
-    content: 'Loading..';
-    color: #ccc;
+#rb-tr-popup-body[loading] {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#rb-tr-popup .pos-container {
-    margin-bottom: 5px;
+#rb-tr-popup-body[loading]:after {
+    color: #ccc;
+
+    content: '__MSG_Translation__..';
 }
 
 #rb-tr-popup .pos-container:not(:first-child) {
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 #rb-tr-popup .pos-container .header {
@@ -62,6 +65,8 @@
 }
 
 #rb-tr-popup .term-line {
+    margin: 4px 0;
+
     cursor: pointer;
 }
 
@@ -75,4 +80,8 @@
 
 #rb-tr-popup-footer button:focus {
     color: blue;
+}
+
+#rb-tr-popup-footer button:not(:last-child) {
+    margin-right: 5px;
 }

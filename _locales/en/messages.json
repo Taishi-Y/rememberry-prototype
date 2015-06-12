@@ -72,5 +72,8 @@
     },
     "Custom": {
         "message": "Custom"
+    },
+    "Translation": {
+        "message": "Loading"
     }
 }

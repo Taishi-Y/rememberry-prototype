@@ -1,6 +1,7 @@
 var TranslationWindow = (function () {
     // private members
     var BASE_ID     = 'rb-tr-popup',
+        tr_id       = 0,    // used to provide translation-response validation (use only latest response)
         is_created  = false,
         is_shown    = false,
 
@@ -15,8 +16,7 @@ var TranslationWindow = (function () {
 
         state = {
             orig        : null,
-            translation : null,
-            type        : null  // possible values: 'word', 'sentence'
+            translation : null
         },
 
         create = function () {
@@ -51,7 +51,7 @@ var TranslationWindow = (function () {
         },
 
         createFooter = function () {
-            var footer_el = rb.node('<div id="' + BASE_ID + '-footer"></div>'),
+            var footer_el = rb.node('<div id="' + BASE_ID + '-footer" hidden></div>'),
                 save_btn = rb.node(
                         '<button id="' + BASE_ID +'-save-btn">' + chrome.i18n.getMessage('Save') + '</button>'),
                 add_custom_btn = rb.node(
@@ -127,7 +127,7 @@ var TranslationWindow = (function () {
 
         destroy = function () {
             if (is_shown) {
-                rb.hide(els.popup);
+                rb.hide([ els.popup, els.footer ]);
                 setPosition(null);
                 document.body.removeEventListener('keyup', handleKeyUp, true);
                 reset();
@@ -147,7 +147,7 @@ var TranslationWindow = (function () {
             return els.sections[type];
         },
 
-        setTranslatedVersion = function (translation) {
+        handleResponse = function (translation) {
             var type, data, terms, section_el,
                 checked = true;
 
@@ -173,6 +173,7 @@ var TranslationWindow = (function () {
             }
 
             setLoader(false);
+            rb.show(els.footer);
             els.save_btn.focus();
         },
 
@@ -224,83 +225,6 @@ var TranslationWindow = (function () {
             bgAPI.add('card', data);;
             destroy();
         },
-        /**
-         * @param {Object}          response
-         * @param {Array<Object>}   response.sentences
-         * @param {String}          response.sentences.trans
-         * @param {Array<Object>}   response.dict
-         * @param {Array}           response.dict.terms
-         */
-        handleResponse = function (response) {
-            var term, translation, all_terms, sentences;
-
-            if (state.type === 'word') {
-                translation = {};
-                all_terms = [];
-
-                if (response.dict) {
-                    response.dict.sort(function (a, b) {
-                        return a.pos_enum > b.pos_enum;
-                    });
-
-                    response.dict.forEach(function (entry) {
-                        var pos_name,
-
-                            terms = entry.terms.map(function (term) {
-                                return term.toLowerCase();
-                            });
-
-                        terms.filter(function (term) {
-                            return all_terms.indexOf(term) === -1;
-                        });
-
-                        if (terms.length) {
-                            pos_name = parts_of_speech_enum[entry.pos_enum - 1];
-
-                            translation[pos_name] = {
-                                name: pos_name.trim().length ?
-                                        chrome.i18n.getMessage(pos_name.replace(/\s/g, '_')) : '',
-                                terms: terms
-                            };
-
-                            all_terms = all_terms.concat(terms);
-                        }
-                    });
-                }
-
-                if (response.sentences) {
-                    sentences = [];
-
-                    response.sentences.forEach(function (sentence) {
-                        term = sentence.trans.toLowerCase().replace(/\s|\./g, '');
-
-                        if (term.length && all_terms.indexOf(term) === -1) {
-                            sentences.push(term);
-                        }
-                    });
-
-                    if (sentences.length) {
-                        translation.sentence = {
-                            name: chrome.i18n.getMessage('sentence'),
-                            terms: sentences
-                        };
-                    }
-                }
-            } else {
-                if (response.sentences) {
-                    translation = {
-                        sentence: {
-                            name: chrome.i18n.getMessage('sentence'),
-                            terms: [ response.sentences.map(function (item) {
-                                return item.trans;
-                            }).join('') ]
-                        }
-                    };
-                }
-            }
-
-            setTranslatedVersion(translation);
-        },
 
         addCustomTranslation = function () {
             var term = createTermLine('', true, true);
@@ -328,7 +252,6 @@ var TranslationWindow = (function () {
 
             if (selected_text.length) {
                 state.orig = selected_text;
-                state.type = selected_text.indexOf(' ') === -1 ? 'word' : 'sentence';
 
                 text_range = selection.getRangeAt(0);
                 rect = text_range.getBoundingClientRect();
@@ -338,7 +261,6 @@ var TranslationWindow = (function () {
                     y: window.scrollY + rect.bottom
                 };
 
-
                 show(pos);
                 setLoader(true);
 
@@ -346,8 +268,20 @@ var TranslationWindow = (function () {
                     selected_text += '..';
                 }
 
-                bgAPI.translate(selected_text, page_config.source_lang, page_config.target_lang)
-                        .then(handleResponse, destroy);
+                (function (id) {
+                    //setTimeout(function () {
+                    bgAPI.translate(selected_text, page_config.source_lang, page_config.target_lang)
+                        .then(function () {
+                                  if (id === tr_id) {
+                                      handleResponse.apply(null, arguments);
+                                  }
+                              }, function () {
+                                  if (id === tr_id) {
+                                      destroy.apply(null, arguments);
+                                  }
+                              });
+                    //}, 2000);
+                }(++tr_id));
             }
         }
     };

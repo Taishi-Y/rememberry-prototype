@@ -72,5 +72,8 @@
     },
     "Custom": {
         "message": "Інший"
+    },
+    "Translation": {
+        "message": "Переклад"
     }
 }

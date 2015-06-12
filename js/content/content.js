@@ -1,6 +1,6 @@
 console.log('Loaded within', document.location.href);
 
-var init, page_config, parts_of_speech_enum, showError,
+var init, page_config, showError,
     ERROR_MESSAGE = chrome.i18n.getMessage('no_connection_to_extension', [ chrome.i18n.getMessage('ext_name') ]);
 
 showError = function (e) {
@@ -60,9 +60,5 @@ init = function () {
 };
 
 window.addEventListener('error', showError);
-
-bgAPI.receive('PoS').then(function (PoS) {
-    parts_of_speech_enum = PoS.enum;
-});
 
 rb.onDomReady.then(init);
