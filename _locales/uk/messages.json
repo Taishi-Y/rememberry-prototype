@@ -69,5 +69,8 @@
     },
     "sentence": {
         "message": "речення"
+    },
+    "Custom": {
+        "message": "Інший"
     }
 }

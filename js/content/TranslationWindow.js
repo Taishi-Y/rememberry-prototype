@@ -8,7 +8,9 @@ var TranslationWindow = (function () {
             popup   : null,
             header  : null,
             body    : null,
-            footer  : null
+            footer  : null,
+            save_btn: null,
+            sections: null
         },
 
         state = {
@@ -18,7 +20,7 @@ var TranslationWindow = (function () {
         },
 
         create = function () {
-            var popup_el    = rb.node('<div id="' + BASE_ID + '"></div>'),
+            var popup_el    = rb.node('<div id="' + BASE_ID + '" hidden></div>'),
                 header_el   = createHeader(),
                 body_el     = rb.node('<div id="' + BASE_ID + '-body"></div>'),
                 footer_el   = createFooter();
@@ -33,6 +35,7 @@ var TranslationWindow = (function () {
             els.header  = header_el;
             els.body    = body_el;
             els.footer  = footer_el;
+            els.sections = [];
 
             is_created = true;
         },
@@ -50,20 +53,36 @@ var TranslationWindow = (function () {
         createFooter = function () {
             var footer_el = rb.node('<div id="' + BASE_ID + '-footer"></div>'),
                 save_btn = rb.node(
-                    '<button id="' + BASE_ID +'-save-btn">' + chrome.i18n.getMessage('Save') + '</button>');
+                        '<button id="' + BASE_ID +'-save-btn">' + chrome.i18n.getMessage('Save') + '</button>'),
+                add_custom_btn = rb.node(
+                        '<button id="' + BASE_ID + '-custom-btn">' + chrome.i18n.getMessage('Custom') + '</button>');
 
+            els.save_btn = save_btn;
             save_btn.addEventListener('click', handleSave);
+            add_custom_btn.addEventListener('click', addCustomTranslation);
             footer_el.appendChild(save_btn);
+            footer_el.appendChild(add_custom_btn);
 
             return footer_el;
         },
 
-        createTermLine = function (term, is_checked) {
+        createTermLine = function (term, is_checked, editable) {
             var line_el     = rb.node('<div class="term-line"></div>'),
                 checkbox_el = rb.node('<input type="checkbox" class="term-line-checkbox"/>'),
-                text_el     = rb.node('<span>' + term + '</span>');
+                text_el     = rb.node('<span class="term">' + term + '</span>');
 
             checkbox_el.checked = !!is_checked;
+
+            if (editable) {
+                text_el.setAttribute('contenteditable', 'true');
+
+                text_el.addEventListener('keypress', function (e) {
+                    if (e.keyCode === 13) { // Enter key-code
+                        e.preventDefault();
+                        els.save_btn.focus();
+                    }
+                });
+            }
 
             checkbox_el.addEventListener('click', function (e) {
                 e.stopPropagation();
@@ -73,12 +92,23 @@ var TranslationWindow = (function () {
             line_el.appendChild(text_el);
 
             line_el.addEventListener('click', function () {
-                checkbox_el.checked = !checkbox_el.checked;
+                if (!editable) {
+                    checkbox_el.checked = !checkbox_el.checked;
+                } else {
+                    text_el.focus();
+                }
             });
 
             return {
                 el: line_el,
-                text: term,
+
+                getText: function () {
+                    return text_el.innerText;
+                },
+
+                focus: function () {
+                    text_el.focus();
+                },
 
                 isChecked: function () {
                     return checkbox_el.checked;
@@ -88,7 +118,7 @@ var TranslationWindow = (function () {
 
         show = function (pos) {
             if (!is_shown) {
-                els.popup.style.display = 'block';
+                rb.show(els.popup);
                 setPosition(pos);
                 document.body.addEventListener('keyup', handleKeyUp, true);
                 is_shown = true;
@@ -97,7 +127,7 @@ var TranslationWindow = (function () {
 
         destroy = function () {
             if (is_shown) {
-                els.popup.style.display = '';    // 'none' by default in content.css
+                rb.hide(els.popup);
                 setPosition(null);
                 document.body.removeEventListener('keyup', handleKeyUp, true);
                 reset();
@@ -105,8 +135,20 @@ var TranslationWindow = (function () {
             }
         },
 
+        getSection = function (type) {
+            if (!els.sections[type]) {
+                els.sections[type] = rb.node('<div class="pos-container">' +
+                                                '<div class="header">' + type + '</div>' +
+                                             '</div>');
+
+                els.body.appendChild(els.sections[type]);
+            }
+
+            return els.sections[type];
+        },
+
         setTranslatedVersion = function (translation) {
-            var type, data, terms,
+            var type, data, terms, section_el,
                 checked = true;
 
             state.translation = [];
@@ -114,14 +156,14 @@ var TranslationWindow = (function () {
             for (type in translation) {
                 if (translation.hasOwnProperty(type)) {
                     data = translation[type];
-                    els.body.appendChild(rb.node('<div class="tr-type">' + data.name + '</div>'));
+                    section_el = getSection(data.name);
                     terms = data.terms;
 
                     terms.forEach(function (term) {
                         var term_line = createTermLine(term, checked);
 
                         state.translation.push(term_line);
-                        els.body.appendChild(term_line.el);
+                        section_el.appendChild(term_line.el);
 
                         if (checked) {
                             checked = false;
@@ -131,6 +173,7 @@ var TranslationWindow = (function () {
             }
 
             setLoader(false);
+            els.save_btn.focus();
         },
 
         setLoader = function (set_active) {
@@ -160,22 +203,23 @@ var TranslationWindow = (function () {
 
         reset = function () {
             els.body.innerHTML = '';
+            els.sections = [];
 
+            setLoader(false);
             state = {};
         },
 
         handleSave = function () {
-            var i, l,
-                data = {
-                    orig: state.orig,
-                    translation: []
-                };
+            var data = {
+                orig: state.orig,
+                translation: []
+            };
 
-            for (i = 0, l = state.translation.length; i < l; i++) {
-                if (state.translation[i].isChecked()) {
-                    data.translation.push(state.translation[i].text);
+            state.translation.forEach(function (term) {
+                if (term.isChecked() && term.getText().trim().length) {
+                    data.translation.push(term.getText());
                 }
-            }
+            });
 
             bgAPI.add('card', data);;
             destroy();
@@ -256,6 +300,14 @@ var TranslationWindow = (function () {
             }
 
             setTranslatedVersion(translation);
+        },
+
+        addCustomTranslation = function () {
+            var term = createTermLine('', true, true);
+
+            getSection(chrome.i18n.getMessage('Custom').toLowerCase()).appendChild(term.el);
+            term.focus();
+            state.translation.push(term);
         };
 
     // privileged members

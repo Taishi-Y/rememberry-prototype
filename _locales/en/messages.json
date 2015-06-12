@@ -69,5 +69,8 @@
     },
     "sentence": {
         "message": "sentence"
+    },
+    "Custom": {
+        "message": "Custom"
     }
 }

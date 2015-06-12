@@ -3,7 +3,6 @@
     position: absolute;
     z-index: 1;
 
-    display: none;
     min-width: 100px;
     max-width: 300px;
     padding: 15px;
@@ -41,9 +40,15 @@
     color: #ccc;
 }
 
-#rb-tr-popup .tr-type {
+#rb-tr-popup .pos-container {
     margin-bottom: 5px;
+}
 
+#rb-tr-popup .pos-container:not(:first-child) {
+    margin-top: 5px;
+}
+
+#rb-tr-popup .pos-container .header {
     color: grey;
     font-size: .9em;
     font-style: italic;
@@ -52,8 +57,8 @@
     border-bottom: 1px dotted #ccc;
 }
 
-#rb-tr-popup .tr-type:not(:first-child) {
-    margin-top: 5px;
+#rb-tr-popup .pos-container .term[contenteditable] {
+    outline: none;
 }
 
 #rb-tr-popup .term-line {
@@ -68,4 +73,6 @@
     margin-top: 10px;
 }
 
-#rb-tr-popup-save-btn {}
+#rb-tr-popup-footer button:focus {
+    color: blue;
+}
