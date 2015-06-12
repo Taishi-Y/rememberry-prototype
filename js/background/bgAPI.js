@@ -41,7 +41,7 @@ var bgAPI = {
                 }, resolve);
             } catch (e) {
                 reject();
-                showError();
+                showError(e);
             }
         });
     }

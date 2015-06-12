@@ -3,10 +3,12 @@ console.log('Loaded within', document.location.href);
 var init, page_config, parts_of_speech_enum, showError,
     ERROR_MESSAGE = chrome.i18n.getMessage('no_connection_to_extension', [ chrome.i18n.getMessage('ext_name') ]);
 
-showError = function () {
-    setTimeout(function () {
-        alert(ERROR_MESSAGE);
-    }, 0);
+showError = function (e) {
+    if (e.message.indexOf('Error connecting to extension') !== -1) {
+        setTimeout(function () {
+            alert(ERROR_MESSAGE);
+        }, 0);
+    }
 };
 
 init = function () {
