@@ -1,0 +1,76 @@
+{
+  "author": {
+    "message": "Юрчишин Мирослава"
+  },
+  "ext_name": {
+    "message": "Rememberry"
+  },
+  "ext_description": {
+    "message": "Запоминайте перевод слов с легкостью"
+  },
+  "Languages": {
+    "message": "Языки"
+  },
+  "Source_language": {
+    "message": "Исходный язык"
+  },
+  "Target_language": {
+    "message": "Язык перевода"
+  },
+  "Modifiers": {
+    "message": "Модификаторы"
+  },
+  "Trigger_action": {
+    "message": "Тип запуска"
+  },
+  "Key_modifier": {
+    "message": "Клавиша модификатор"
+  },
+  "Detect": {
+    "message": "Автоопределение"
+  },
+  "Save": {
+    "message": "Сохранить"
+  },
+  "no_connection_to_extension": {
+    "message": "Отсутствует соединение с расширением $1. Перезагрузите эту страницу.",
+    "placeholders": {
+      "ext_name": {
+        "content": "$1"
+      }
+    }
+  },
+  "noun": {
+    "message": "существительное"
+  },
+  "verb": {
+    "message": "глагол"
+  },
+  "adjective": {
+    "message": "прилагательное"
+  },
+  "adverb": {
+    "message": "наречие"
+  },
+  "preposition": {
+    "message": "предлог"
+  },
+  "conjunction": {
+    "message": "союз"
+  },
+  "pronoun": {
+    "message": "местоимение"
+  },
+  "article": {
+    "message": "артикль"
+  },
+  "auxiliary_verb": {
+    "message": "вспомогательный глагол"
+  },
+  "sentence": {
+    "message": "предложения"
+  },
+  "Custom": {
+    "message": "Другое"
+  }
+}
