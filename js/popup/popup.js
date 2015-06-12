@@ -6,6 +6,14 @@ rb.onDomReady.then(function () {
         show_answer_btn = document.getElementById('show-answer-btn'),
         mark_area       = document.getElementById('mark-area');
 
+    (function provideLocalization() {
+        message_el.innerHTML = chrome.i18n.getMessage('Loading');
+        show_answer_btn.innerHTML = chrome.i18n.getMessage('Show_answer');
+        document.querySelector('#mark-area [data-quality="5"]').innerHTML = chrome.i18n.getMessage('Easy');
+        document.querySelector('#mark-area [data-quality="4"]').innerHTML = chrome.i18n.getMessage('Good');
+        document.querySelector('#mark-area [data-quality="3"]').innerHTML = chrome.i18n.getMessage('Hard');
+    }());
+
     bgAPI.receive('cards').then(function (cards) {
         var getCardInfo, showNextCard, init, handleResponse, saveChanges, setState, current;
 
@@ -35,9 +43,9 @@ rb.onDomReady.then(function () {
                     rb.show([ mark_area, translation_el ]);
                     break;
                 case 'complete':
-                    source_el.innerHTML         = '';
-                    translation_el.innerHTML    = '';
-                    message_el.innerHTML        = 'Nothing to learn';
+                    source_el.innerHTML = '';
+                    translation_el.innerHTML = '';
+                    message_el.innerHTML = chrome.i18n.getMessage('Nothing_to_learn');
                     rb.hide(test_el);
                     rb.show(message_el);
                     break;

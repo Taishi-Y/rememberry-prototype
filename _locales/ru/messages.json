@@ -75,5 +75,26 @@
     },
     "Translation": {
         "message": "Перевод"
+    },
+    "Make_your_choice": {
+        "message": "Сделайте свой выбор"
+    },
+    "Loading": {
+        "message": "Загрузка"
+    },
+    "Show_answer": {
+        "message": "Показать ответ"
+    },
+    "Easy": {
+        "message": "Легко"
+    },
+    "Good": {
+        "message": "Хорошо"
+    },
+    "Hard": {
+        "message": "Сложно"
+    },
+    "Nothing_to_learn": {
+        "message": "Нечего учить"
     }
 }

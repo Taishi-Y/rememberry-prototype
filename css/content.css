@@ -80,6 +80,8 @@
 
 #rb-tr-popup-footer button:focus {
     color: blue;
+
+    outline: none;
 }
 
 #rb-tr-popup-footer button:not(:last-child) {

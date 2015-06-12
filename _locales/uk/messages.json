@@ -75,5 +75,26 @@
     },
     "Translation": {
         "message": "Переклад"
+    },
+    "Make_your_choice": {
+        "message": "Зробіть свій вибір"
+    },
+    "Loading": {
+        "message": "Завантаження"
+    },
+    "Show_answer": {
+        "message": "Показати відповідь"
+    },
+    "Easy": {
+        "message": "Легко"
+    },
+    "Good": {
+        "message": "Добре"
+    },
+    "Hard": {
+        "message": "Складно"
+    },
+    "Nothing_to_learn": {
+        "message": "Немає що вчити"
     }
 }

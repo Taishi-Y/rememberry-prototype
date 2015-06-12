@@ -75,5 +75,26 @@
     },
     "Translation": {
         "message": "Translation"
+    },
+    "Make_your_choice": {
+        "message": "Make your choice"
+    },
+    "Loading": {
+        "message": "Loading"
+    },
+    "Show_answer": {
+        "message": "Show answer"
+    },
+    "Easy": {
+        "message": "Easy"
+    },
+    "Good": {
+        "message": "Good"
+    },
+    "Hard": {
+        "message": "Hard"
+    },
+    "Nothing_to_learn": {
+        "message": "Nothing to learn"
     }
 }

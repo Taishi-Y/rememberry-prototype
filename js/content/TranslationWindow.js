@@ -211,19 +211,24 @@ var TranslationWindow = (function () {
         },
 
         handleSave = function () {
-            var data = {
-                orig: state.orig,
-                translation: []
-            };
+            var checked_terms = [];
 
             state.translation.forEach(function (term) {
                 if (term.isChecked() && term.getText().trim().length) {
-                    data.translation.push(term.getText());
+                    checked_terms.push(term.getText());
                 }
             });
 
-            bgAPI.add('card', data);;
-            destroy();
+            if (checked_terms.length) {
+                bgAPI.add('card', {
+                    orig: state.orig,
+                    translation: checked_terms
+                });
+
+                destroy();
+            } else {
+                alert(chrome.i18n.getMessage('Make_your_choice'));
+            }
         },
 
         addCustomTranslation = function () {
