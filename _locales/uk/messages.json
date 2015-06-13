@@ -98,34 +98,34 @@
         "message": "Немає що вчити"
     },
     "Decks": {
-        "message": "Decks"
+        "message": "Колоди"
     },
     "Deck": {
-        "message": "Deck"
+        "message": "Колода"
     },
     "Make_active": {
-        "message": "Make active"
+        "message": "Зробити активнию"
     },
     "Add": {
-        "message": "Add"
+        "message": "Додати колоду"
     },
     "Remove": {
-        "message": "Remove"
+        "message": "Видалити"
     },
     "Clear": {
-        "message": "Clear"
+        "message": "Очистити"
     },
     "Export_to_Anki": {
-        "message": "Export to Anki"
+        "message": "Експортувати в Anki"
     },
     "Cards_count": {
-        "message": "Cards count"
+        "message": "Кількість карток"
     },
     "Deck_name": {
-        "message": "Deck name"
+        "message": "Назва колоди"
     },
     "Deck_description": {
-        "message": "Deck description"
+        "message": "Опис колоди"
     },
     "Translate_with": {
         "message": "Translate with $1",
@@ -136,6 +136,6 @@
         }
     },
     "Update": {
-        "message": "Update"
+        "message": "Оновити"
     }
 }
