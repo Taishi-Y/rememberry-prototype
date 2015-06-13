@@ -4,5 +4,9 @@
     "action": {
         "name": "dblclick",
         "modifier": "altKey"
+    },
+    "decks": {
+        "names": [],
+        "active_name": null
     }
 }

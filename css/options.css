@@ -1,3 +1,63 @@
-div {
+.menu {
+    padding-top: 5px;
+}
+
+.menu:not(:last-child) {
+    padding-bottom: 15px;
+
+    border-bottom: 1px solid grey;
+}
+
+h3 {
+    margin: 0;
+
+    font-weight: bold;
+}
+
+label {
+    display: inline-block;
+    width: 120px;
+    padding-right: 10px;
+
     text-align: right;
+}
+
+select {
+    width: 150px;
+}
+
+input {
+
+}
+
+textarea {
+    resize: none;
+}
+
+#btn-area {
+    text-align: center;
+}
+
+button {
+    width: 100px;
+    cursor: pointer;
+}
+
+button:nth-child(3n-1) {
+    margin: 5px 5px;
+}
+
+#deck-info {
+    margin: 10px 0;
+}
+
+#desc-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+#cards-count {
+    font-family: monospace;
+    font-size: 16px;
 }

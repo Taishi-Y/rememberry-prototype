@@ -96,5 +96,46 @@
     },
     "Nothing_to_learn": {
         "message": "Нечего учить"
+    },
+    "Decks": {
+        "message": "Decks"
+    },
+    "Deck": {
+        "message": "Deck"
+    },
+    "Make_active": {
+        "message": "Make active"
+    },
+    "Add": {
+        "message": "Add"
+    },
+    "Remove": {
+        "message": "Remove"
+    },
+    "Clear": {
+        "message": "Clear"
+    },
+    "Export_to_Anki": {
+        "message": "Export to Anki"
+    },
+    "Cards_count": {
+        "message": "Cards count"
+    },
+    "Deck_name": {
+        "message": "Deck name"
+    },
+    "Deck_description": {
+        "message": "Deck description"
+    },
+    "Translate_with": {
+        "message": "Translate with $1",
+        "placeholders": {
+            "ext_name": {
+                "content": "$1"
+            }
+        }
+    },
+    "Update": {
+        "message": "Update"
     }
 }

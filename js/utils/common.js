@@ -35,12 +35,25 @@ var rb = (function () {
             }
         }),
 
-        assign: function (source, target) {
-            var prop;
+        extend: function (source, target) {
+            var prop, t, s, res;
 
             for (prop in target) {
                 if (target.hasOwnProperty(prop)) {
-                    source[prop] = target[prop];
+                    s = source[prop];
+                    t = target[prop];
+
+                    if (typeof t === 'object' && typeof s === 'object') {
+                        if (Array.isArray(s) && Array.isArray(t)) {
+                            s = s.concat(t);
+                        } else {
+                            s = rb.extend(s, t);
+                        }
+                    } else {
+                        s = t;
+                    }
+
+                    source[prop] = s;
                 }
             }
 
@@ -56,12 +69,20 @@ var rb = (function () {
             container_el.innerHTML = html_value;
 
             return container_el.children[0];
+        },
+
+        selectByValue: function (select_el, value) {
+            var values = Array.prototype.map.call(select_el.children, function (option_el) {
+                return option_el.value;
+            });
+
+            select_el.selectedIndex = values.indexOf(value);
         }
     };
 }());
 
 Promise.prototype.spread = Promise.prototype.spread || function (fn) {
     return this.then(function (args) {
-        fn.apply(this, args);
+        return fn.apply(this, args);
     });
 };

@@ -1,15 +1,16 @@
 var CardsStorage = (function () {
     var setCards = function (cards) {
-            Storage.set({ cards: cards });
-        },
-
-        getCards = function () {
-            return new Promise(function (resolve) {
-                Storage.get('cards', function (data) {
-                    resolve(data.cards || {});
-                })
+            DeckStorage.getActiveDeck().then(function (active_deck) {
+                active_deck.cards = cards;
+                DeckStorage.updateDeck(active_deck);
             });
         },
+
+        getCards = function () { return new Promise(function (resolve) {
+            DeckStorage.getActiveDeck().then(function (active_deck) {
+                resolve(active_deck.cards);
+            });
+        })},
 
         addCard = function (info) {
             getCards().then(function (cards) {

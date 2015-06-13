@@ -1,39 +1,50 @@
-var storage_name = 'sync',
-    Storage = chrome.storage[storage_name],
+var JSON_data = (function () {
+    var closure = function (file_name) {
+        var data = AJAX.getJSON('/data/' + file_name + '.json');
 
-    Data = {
-        languages       : AJAX.getJSON('/data/languages.json'),
-        actions         : AJAX.getJSON('/data/actions.json'),
-        default_config  : AJAX.getJSON('/data/default_config.json'),
-        PoS             : AJAX.getJSON('/data/PoS_enum.json')
+        return function () {
+            return data;
+        };
     };
 
-Config.init();
+    return {
+        getLanguages    : closure('languages'),
+        getActions      : closure('actions'),
+        getDefaultConfig: closure('default_config'),
+        getPartsOfSpeech: closure('PoS_enum')
+    };
+}());
+
+Config.init().then(function () {
+    DeckStorage.init();
+});
 
 chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-    var response,
-        data = message.data;
+    var data = message.data;
 
     switch (message.method) {
         case 'get':
             switch (message.type) {
-                case 'storage-name':
-                    response = storage_name;
-                    break;
                 case 'config':
                     Config.getConfig().then(sendResponse);
                     break;
                 case 'languages':
-                    Data.languages.then(sendResponse);
+                    JSON_data.getLanguages().then(sendResponse);
                     break;
                 case 'actions':
-                    Data.actions.then(sendResponse);
+                    JSON_data.getActions().then(sendResponse);
                     break;
                 case 'PoS':
-                    Data.PoS.then(sendResponse);
+                    JSON_data.getPartsOfSpeech().then(sendResponse);
                     break;
                 case 'cards':
                     CardsStorage.getCards().then(sendResponse);
+                    break;
+                case 'deck':
+                    DeckStorage.getDeck(data).then(sendResponse);
+                    break;
+                case 'decks':
+                    DeckStorage.getDecks().then(sendResponse);
                     break;
                 default:
             }
@@ -42,10 +53,16 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         case 'set':
             switch (message.type) {
                 case 'config':
-                    Config.setConfig(data);
+                    Config.extendConfig(data);
                     break;
                 case 'cards':
                     CardsStorage.setCards(data);
+                    break;
+                case 'active-deck':
+                    DeckStorage.selectDeck(data);
+                    break;
+                case 'deck':
+                    DeckStorage.updateDeck(data);
                     break;
                 default:
             }
@@ -55,6 +72,18 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             switch (message.type) {
                 case 'card':
                     CardsStorage.addCard(data);
+                    break;
+                case 'deck':
+                    DeckStorage.createDeck(data.name, data.desc).then(sendResponse);
+                    break;
+                default:
+            }
+
+            break;
+        case 'remove':
+            switch (message.type) {
+                case 'deck':
+                    DeckStorage.removeDeck(data).then(sendResponse);
                     break;
                 default:
             }
@@ -66,15 +95,11 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         default:
     }
 
-    if (response) {
-        sendResponse(response);
-    } else {
-        return true;
-    }
+    return true;
 });
 
 chrome.contextMenus.create({
-    title: 'Translate with Rememberry',
+    title: chrome.i18n.getMessage('Translate_with', [ chrome.i18n.getMessage('ext_name') ]),
     contexts: [ 'selection' ],
 
     onclick: function (info, tab) {

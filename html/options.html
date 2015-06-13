@@ -7,17 +7,37 @@
     <script src="/js/options.js"></script>
 </head>
 <body>
-    <div id="languages-menu">
+    <div class="menu" id="languages-menu">
         <h3></h3>
-        <span id="source-lang-desc"></span>: <select id="source_lang"></select>
+        <label for="source-lang"></label><select id="source-lang"></select>
         <br/><br/>
-        <span id="target-lang-desc"></span>: <select id="target_lang"></select>
+        <label for="target-lang"></label><select id="target-lang"></select>
     </div>
-    <div id="action-menu">
+    <div class="menu" id="action-menu">
         <h3></h3>
-        <span id="trigger-action-desc"></span>: <select id="action"></select>
+        <label for="action"></label><select id="action"></select>
         <br/><br/>
-        <span id="modifier-desc"></span>: <select id="modifier"></select>
+        <label for="modifier"></label><select id="modifier"></select>
+    </div>
+    <div class="menu" id="deck-menu">
+        <h3></h3>
+        <label for="selected-deck"></label><select id="selected-deck"></select>
+        <div id="deck-info">
+            <label for="deck-name"></label><input type="text" id="deck-name"/>
+            <br/><br/>
+            <div id="desc-container">
+                <label for="deck-desc"></label><textarea id="deck-desc"></textarea>
+            </div>
+            <label for="cards-count"></label><span id="cards-count"></span>
+        </div>
+        <div id="btn-area">
+            <button data-action="add"></button>
+            <button data-action="remove"></button>
+            <button data-action="clear"></button>
+            <button data-action="activate"></button>
+            <button data-action="export"></button>
+            <button data-action="update"></button>
+        </div>
     </div>
 </body>
 </html>
