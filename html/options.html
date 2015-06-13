@@ -4,9 +4,11 @@
     <link rel="stylesheet" type="text/css" href="/css/options.css"/>
     <script src="/js/utils/common.js"></script>
     <script src="/js/background/bgAPI.js"></script>
-    <script src="/js/options.js"></script>
+    <script src="/js/options/Anki.js"></script>
+    <script src="/js/options/options.js"></script>
 </head>
 <body>
+<div id="menu-container">
     <div class="menu" id="languages-menu">
         <h3></h3>
         <label for="source-lang"></label><select id="source-lang"></select>
@@ -39,5 +41,9 @@
             <button data-action="update"></button>
         </div>
     </div>
+</div>
+<div id="anki-export-container" hidden>
+    Export to anki
+</div>
 </body>
 </html>

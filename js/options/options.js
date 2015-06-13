@@ -214,7 +214,24 @@ rb.onDomReady.then(function () {
                             bgAPI.send('deck', selected_deck);
                             break;
                         case 'export':
+                            (function () {
+                                var card_name, card,
+                                    cards = selected_deck.cards,
+                                    cards_to_export = [];
 
+                                for (card_name in cards) {
+                                    if (cards.hasOwnProperty(card_name)) {
+                                        card = cards[card_name];
+
+                                        cards_to_export.push({
+                                            orig: card_name,
+                                            translation: card.t.join(', ')
+                                        });
+                                    }
+                                }
+
+                                Anki.exportCards(cards_to_export);
+                            }());
                             break;
                         case 'update':
                             (function () {
