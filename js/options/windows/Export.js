@@ -23,24 +23,34 @@ rb.onDomReady.then(function () {
         exportData = function () {
             var anki_model_id = models_dropdown.selectedOptions[0].value,
                 anki_deck_name = decks_dropdown.selectedOptions[0].value,
-                promises = [];
+                cards = Windows.cards_to_export.slice(),
+
+                finish = function () {
+                    Message.show(chrome.i18n.getMessage('Successfully_exported'));
+                    Windows.show('options');
+                },
+
+                saveNext = function () {
+                    var next, data;
+
+                    if (cards.length) {
+                        next = cards.shift();
+
+                        data = {
+                            data: JSON.stringify([ [ next.orig, next.translation ], '' ]),
+                            mid : anki_model_id,
+                            deck: anki_deck_name
+                        };
+
+                        AJAX.request('get', 'https://ankiweb.net/edit/save', data).then(saveNext);
+                    } else {
+                        finish();
+                    }
+                };
 
             Message.show(chrome.i18n.getMessage('Exporting'), false);
 
-            Windows.cards_to_export.forEach(function (card) {
-                var data = {
-                    data: JSON.stringify([ [ card.orig, card.translation ], '' ]),
-                    mid : anki_model_id,
-                    deck: anki_deck_name
-                };
-
-                promises.push(AJAX.request('get', 'https://ankiweb.net/edit/save', data));
-            });
-
-            Promise.all(promises).then(function () {
-                Message.show(chrome.i18n.getMessage('Successfully_exported'));
-                Windows.show('options');
-            });
+            saveNext();
         };
 
     (function provideLocalization() {
