@@ -1,15 +1,10 @@
 Content script:
     - use "Shadow DOM" for Popup
-    - use spinning loader instead of "Loading.." text
     - position adjustment in case when popup doesn't fit into window view-port
-    - add offline case (or too long response time from Google Translate API)
+    - handle too long response time from Google Translate API
     - move to "managed" storage
     - add ability to set limit to possible translation variants
-    - add ability to set limit to translated text size
-
-Background script:
-    - do we need config validation at all?
+    - limit to translated text size
 
 Options script:
     - disallow "ctrlKey" modifier on Mac platform
-    - use label tags for descriptions

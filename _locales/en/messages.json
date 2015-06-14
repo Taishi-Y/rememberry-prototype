@@ -182,5 +182,8 @@
     },
     "Export": {
         "message": "Export"
+    },
+    "You_are_offline": {
+        "message": "You are offline"
     }
 }

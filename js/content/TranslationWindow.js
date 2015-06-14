@@ -243,50 +243,55 @@ var TranslationWindow = (function () {
     return {
 
         translateSelection: function () {
-            var text_range, rect, pos,
-                selection = document.getSelection(),
+            var text_range, rect, pos, selection, selected_text;
+
+            if (navigator.onLine) {
+                selection = document.getSelection();
                 selected_text = selection.toString().trim();
 
-            if (!is_created) {
-                create();
-            }
-
-            if (is_shown) {
-                destroy();
-            }
-
-            if (selected_text.length) {
-                state.orig = selected_text;
-
-                text_range = selection.getRangeAt(0);
-                rect = text_range.getBoundingClientRect();
-
-                pos = {
-                    x: window.scrollX + rect.left,
-                    y: window.scrollY + rect.bottom
-                };
-
-                show(pos);
-                setLoader(true);
-
-                if (selected_text.length < 3) {
-                    selected_text += '..';
+                if (!is_created) {
+                    create();
                 }
 
-                (function (id) {
-                    //setTimeout(function () {
-                    bgAPI.translate(selected_text, page_config.source_lang, page_config.target_lang)
-                        .then(function () {
-                                  if (id === tr_id) {
-                                      handleResponse.apply(null, arguments);
-                                  }
-                              }, function () {
-                                  if (id === tr_id) {
-                                      destroy.apply(null, arguments);
-                                  }
-                              });
-                    //}, 2000);
-                }(++tr_id));
+                if (is_shown) {
+                    destroy();
+                }
+
+                if (selected_text.length) {
+                    state.orig = selected_text;
+
+                    text_range = selection.getRangeAt(0);
+                    rect = text_range.getBoundingClientRect();
+
+                    pos = {
+                        x: window.scrollX + rect.left,
+                        y: window.scrollY + rect.bottom
+                    };
+
+                    show(pos);
+                    setLoader(true);
+
+                    if (selected_text.length < 3) {
+                        selected_text += '..';
+                    }
+
+                    (function (id) {
+                        //setTimeout(function () {
+                        bgAPI.translate(selected_text, page_config.source_lang, page_config.target_lang)
+                            .then(function () {
+                                if (id === tr_id) {
+                                    handleResponse.apply(null, arguments);
+                                }
+                            }, function () {
+                                if (id === tr_id) {
+                                    destroy.apply(null, arguments);
+                                }
+                            });
+                        //}, 2000);
+                    }(++tr_id));
+                }
+            } else {
+                alert(chrome.i18n.getMessage('You_are_offline'));
             }
         }
     };

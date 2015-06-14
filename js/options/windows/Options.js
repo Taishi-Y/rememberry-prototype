@@ -2,25 +2,25 @@ rb.onDomReady.then(function () {
     var window_el = document.getElementById('options-window');
 
     (function provideLocalization() {
-        window_el.querySelector('#languages-menu h3').innerHTML = chrome.i18n.getMessage('Languages');
-        window_el.querySelector('label[for="source-lang"]').innerHTML = chrome.i18n.getMessage('Source_language');
-        window_el.querySelector('label[for="target-lang"]').innerHTML = chrome.i18n.getMessage('Target_language');
+        window_el.querySelector('#languages-menu h3').innerHTML         = chrome.i18n.getMessage('Languages');
+        window_el.querySelector('label[for="source-lang"]').innerHTML   = chrome.i18n.getMessage('Source_language');
+        window_el.querySelector('label[for="target-lang"]').innerHTML   = chrome.i18n.getMessage('Target_language');
 
-        window_el.querySelector('#action-menu h3').innerHTML = chrome.i18n.getMessage('Modifiers');
-        window_el.querySelector('label[for="action"]').innerHTML = chrome.i18n.getMessage('Trigger_action');
-        window_el.querySelector('label[for="modifier"]').innerHTML = chrome.i18n.getMessage('Key_modifier');
+        window_el.querySelector('#action-menu h3').innerHTML        = chrome.i18n.getMessage('Modifiers');
+        window_el.querySelector('label[for="action"]').innerHTML    = chrome.i18n.getMessage('Trigger_action');
+        window_el.querySelector('label[for="modifier"]').innerHTML  = chrome.i18n.getMessage('Key_modifier');
 
-        window_el.querySelector('#deck-menu h3').innerHTML = chrome.i18n.getMessage('Decks');
-        window_el.querySelector('#deck-menu label[for="selected-deck"]').innerHTML = chrome.i18n.getMessage('Deck');
-        window_el.querySelector('.btn-area button[data-action="activate"]').innerHTML = chrome.i18n.getMessage('Make_active');
-        window_el.querySelector('.btn-area button[data-action="add"]').innerHTML = chrome.i18n.getMessage('Add');
-        window_el.querySelector('.btn-area button[data-action="remove"]').innerHTML = chrome.i18n.getMessage('Remove');
-        window_el.querySelector('.btn-area button[data-action="clear"]').innerHTML = chrome.i18n.getMessage('Clear');
-        window_el.querySelector('.btn-area button[data-action="export"]').innerHTML = chrome.i18n.getMessage('Export_to_Anki');
-        window_el.querySelector('.btn-area button[data-action="update"]').innerHTML = chrome.i18n.getMessage('Update');
-        window_el.querySelector('#deck-info label[for="cards-count"]').innerHTML = chrome.i18n.getMessage('Cards_count');
-        window_el.querySelector('#deck-info label[for="deck-name"]').innerHTML = chrome.i18n.getMessage('Deck_name');
-        window_el.querySelector('#deck-info label[for="deck-desc"]').innerHTML = chrome.i18n.getMessage('Deck_description');
+        window_el.querySelector('#deck-menu h3').innerHTML                              = chrome.i18n.getMessage('Decks');
+        window_el.querySelector('#deck-menu label[for="selected-deck"]').innerHTML      = chrome.i18n.getMessage('Deck');
+        window_el.querySelector('.btn-area button[data-action="activate"]').innerHTML   = chrome.i18n.getMessage('Make_active');
+        window_el.querySelector('.btn-area button[data-action="add"]').innerHTML        = chrome.i18n.getMessage('Add');
+        window_el.querySelector('.btn-area button[data-action="remove"]').innerHTML     = chrome.i18n.getMessage('Remove');
+        window_el.querySelector('.btn-area button[data-action="clear"]').innerHTML      = chrome.i18n.getMessage('Clear');
+        window_el.querySelector('.btn-area button[data-action="export"]').innerHTML     = chrome.i18n.getMessage('Export_to_Anki');
+        window_el.querySelector('.btn-area button[data-action="update"]').innerHTML     = chrome.i18n.getMessage('Update');
+        window_el.querySelector('#deck-info label[for="cards-count"]').innerHTML        = chrome.i18n.getMessage('Cards_count');
+        window_el.querySelector('#deck-info label[for="deck-name"]').innerHTML          = chrome.i18n.getMessage('Deck_name');
+        window_el.querySelector('#deck-info label[for="deck-desc"]').innerHTML          = chrome.i18n.getMessage('Deck_description');
     }());
 
     (function initLanguageMenu() {
@@ -219,25 +219,30 @@ rb.onDomReady.then(function () {
                             bgAPI.send('deck', selected_deck);
                             break;
                         case 'export':
-                            (function () {
-                                var card_name, card,
-                                    cards = selected_deck.cards,
-                                    cards_to_export = [];
+                            if (navigator.onLine) {
+                                (function () {
+                                    var card_name, card,
+                                        cards = selected_deck.cards,
+                                        cards_to_export = [];
 
-                                for (card_name in cards) {
-                                    if (cards.hasOwnProperty(card_name)) {
-                                        card = cards[card_name];
+                                    for (card_name in cards) {
+                                        if (cards.hasOwnProperty(card_name)) {
+                                            card = cards[card_name];
 
-                                        cards_to_export.push({
-                                            orig: card_name,
-                                            translation: card.t.join(', ')
-                                        });
+                                            cards_to_export.push({
+                                                orig: card_name,
+                                                translation: card.t.join(', ')
+                                            });
+                                        }
                                     }
-                                }
 
-                                Windows.cards_to_export = cards_to_export;
-                                Windows.show('login');
-                            }());
+                                    Windows.cards_to_export = cards_to_export;
+                                    Windows.show('login');
+                                }());
+                            } else {
+                                Message.show(chrome.i18n.getMessage('You_are_offline'));
+                            }
+
                             break;
                         case 'update':
                             (function () {
