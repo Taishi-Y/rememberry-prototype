@@ -1,5 +1,36 @@
 var AJAX = {
 
+    request: function (type, url, data) { return new Promise(function (resolve) {
+        var URI_data,key,
+            xhr = new XMLHttpRequest();
+
+        xhr.open(type.toUpperCase(), url);
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                resolve(xhr.response);
+            }
+        };
+
+        if (type === 'get') {
+            xhr.send();
+        } else if (type === 'post') {
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.setRequestHeader('Accept', '*/*');
+
+            URI_data = [];
+
+            for (key in data) {
+                if (data.hasOwnProperty(key)) {
+                    URI_data.push(key + '=' + decodeURIComponent(data[key]));
+                }
+            }
+
+            data = URI_data.join('&');
+            xhr.send(data);
+        }
+    })},
+
     getJSON: function (path) {
         return new Promise(function (resolve, reject) {
             var xhr = new XMLHttpRequest();

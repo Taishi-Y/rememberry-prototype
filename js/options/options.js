@@ -155,7 +155,11 @@ rb.onDomReady.then(function () {
                                                 create(name_el.value);
                                                 name_el.blur();
                                                 desc_el.focus();
+                                            } else {
+                                                name_el.blur();
+                                                Message.show('Deck with this name already exists');
                                             }
+
                                         }
                                     },
 
@@ -230,7 +234,7 @@ rb.onDomReady.then(function () {
                                     }
                                 }
 
-                                Anki.exportCards(cards_to_export);
+                                Anki.showWindow(cards_to_export);
                             }());
                             break;
                         case 'update':

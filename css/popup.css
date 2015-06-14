@@ -1,6 +1,4 @@
-[hidden] {
-    display: none !important;
-}
+@import 'common.css';
 
 body {
     width: 300px;
