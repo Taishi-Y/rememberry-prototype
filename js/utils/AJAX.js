@@ -1,33 +1,44 @@
 var AJAX = {
 
-    request: function (type, url, data) { return new Promise(function (resolve) {
-        var URI_data,key,
-            xhr = new XMLHttpRequest();
+    request: function (type, url, data) { return new Promise(function (resolve, reject) {
+        var xhr = new XMLHttpRequest(),
 
-        xhr.open(type.toUpperCase(), url);
+            toURI = function (obj) {
+                var key,
+                    URI_data = [];
+
+                for (key in obj) {
+                    if (obj.hasOwnProperty(key)) {
+                        URI_data.push(key + '=' + encodeURIComponent(obj[key]));
+                    }
+                }
+
+                return URI_data.join('&');
+            };
 
         xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4 && xhr.status === 200) {
-                resolve(xhr.response);
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    resolve(xhr.response);
+                } else if (xhr.status === 403) {
+                    reject(xhr.response);
+                }
             }
         };
 
         if (type === 'get') {
-            xhr.send();
-        } else if (type === 'post') {
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-            xhr.setRequestHeader('Accept', '*/*');
-
-            URI_data = [];
-
-            for (key in data) {
-                if (data.hasOwnProperty(key)) {
-                    URI_data.push(key + '=' + decodeURIComponent(data[key]));
-                }
+            if (data) {
+                data = toURI(data);
+                url += '?' + data;
             }
 
-            data = URI_data.join('&');
-            xhr.send(data);
+            xhr.open('GET', url);
+            xhr.send();
+        } else if (type === 'post') {
+            xhr.open('POST', url);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+            xhr.setRequestHeader('Accept', '*/*');
+            xhr.send(toURI(data));
         }
     })},
 

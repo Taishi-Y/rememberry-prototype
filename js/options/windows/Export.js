@@ -1,0 +1,72 @@
+rb.onDomReady.then(function () {
+    var window_el       = document.getElementById('export-window'),
+        models_dropdown = document.getElementById('model'),
+        decks_dropdown  = document.getElementById('deck'),
+        export_btn      = document.getElementById('export-btn'),
+        back_btn        = window_el.getElementsByClassName('back')[0],
+
+        initWithData = function (data) {
+            var models = data.models,
+                decks = data.decks;
+
+            models.forEach(function (model) {
+                models_dropdown.appendChild(
+                    rb.node('<option value="' + model.id + '">' + model.name +'</option>'));
+            });
+
+            decks.forEach(function (deck) {
+                decks_dropdown.appendChild(
+                    rb.node('<option value="' + deck + '">' + deck + '</option>'));
+            });
+        },
+
+        exportData = function () {
+            var anki_model_id = models_dropdown.selectedOptions[0].value,
+                anki_deck_name = decks_dropdown.selectedOptions[0].value,
+                promises = [];
+
+            Message.show(chrome.i18n.getMessage('Exporting'), false);
+
+            Windows.cards_to_export.forEach(function (card) {
+                var data = {
+                    data: JSON.stringify([ [ card.orig, card.translation ], '' ]),
+                    mid : anki_model_id,
+                    deck: anki_deck_name
+                };
+
+                promises.push(AJAX.request('get', 'https://ankiweb.net/edit/save', data));
+            });
+
+            Promise.all(promises).then(function () {
+                Message.show(chrome.i18n.getMessage('Successfully_exported'));
+                Windows.show('options');
+            });
+        };
+
+    (function provideLocalization() {
+        window_el.querySelector('h3').innerHTML                 = chrome.i18n.getMessage('Choose_Anki_model_and_deck');
+        window_el.querySelector('label[for="model"]').innerHTML = chrome.i18n.getMessage('Model');
+        window_el.querySelector('label[for="deck"]').innerHTML  = chrome.i18n.getMessage('Deck');
+        window_el.querySelector('#export-btn').innerHTML        = chrome.i18n.getMessage('Export');
+        window_el.querySelector('.back').innerHTML              = chrome.i18n.getMessage('Back');
+    }());
+
+    export_btn.addEventListener('click', exportData);
+
+    back_btn.addEventListener('click', function () {
+        Windows.show('login');
+    });
+
+    Windows.add('export', {
+        show: function (anki_data) {
+            rb.show(window_el);
+            models_dropdown.focus();
+
+            initWithData(anki_data);
+        },
+
+        hide: function () {
+            rb.hide(window_el);
+        }
+    });
+});

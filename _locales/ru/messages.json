@@ -137,5 +137,50 @@
     },
     "Update": {
         "message": "Обновить"
+    },
+    "Exporting": {
+        "message": "Exporting"
+    },
+    "Successfully_exported": {
+        "message": "Successfully exported"
+    },
+    "Log_in_limit_reached_Please_try_again_later_or_you_another_credentials": {
+        "message": "Log in limit reached. Please try again later or you another credentials."
+    },
+    "Trying_to_log_in": {
+        "message": "Trying to log in"
+    },
+    "Incorrect_credentials": {
+        "message": "Incorrect credentials"
+    },
+    "Enter_login_and_password": {
+        "message": "Enter login and password"
+    },
+    "Deck_with_this_name_already_exists": {
+        "message": "Deck with this name already exists"
+    },
+    "Enter_your_Anki_credentials": {
+        "message": "Enter your Anki credentials"
+    },
+    "Login": {
+        "message": "Login"
+    },
+    "Password": {
+        "message": "Password"
+    },
+    "Log_in": {
+        "message": "Log in"
+    },
+    "Back": {
+        "message": "Back"
+    },
+    "Choose_Anki_model_and_deck": {
+        "message": "Choose Anki model and deck"
+    },
+    "Model": {
+        "message": "Model"
+    },
+    "Export": {
+        "message": "Export"
     }
 }
