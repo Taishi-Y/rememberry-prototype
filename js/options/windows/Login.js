@@ -55,7 +55,7 @@ rb.onDomReady.then(function () {
 
                         if (auth_limit_error) {
                             Message.show(chrome.i18n.getMessage(
-                                'Log_in_limit_reached_Please_try_again_later_or_you_another_credentials'));
+                                'Log_in_limit_reached_Please_try_again_later_or_your_another_credentials'));
                         }
                     });
             });

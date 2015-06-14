@@ -128,7 +128,7 @@
         "message": "Описание колоды"
     },
     "Translate_with": {
-        "message": "Translate with $1",
+        "message": "Перевести с помощью $1",
         "placeholders": {
             "ext_name": {
                 "content": "$1"
@@ -139,48 +139,48 @@
         "message": "Обновить"
     },
     "Exporting": {
-        "message": "Exporting"
+        "message": "Экспортирование"
     },
     "Successfully_exported": {
-        "message": "Successfully exported"
+        "message": "Успешно экспортирован"
     },
     "Log_in_limit_reached_Please_try_again_later_or_you_another_credentials": {
-        "message": "Log in limit reached. Please try again later or you another credentials."
+        "message": "Количество возможных попыток авторизации превышено. Пожалуйста повторите попытку позже или введите другие данные авторизаци."
     },
     "Trying_to_log_in": {
-        "message": "Trying to log in"
+        "message": "Попытка аутентификации"
     },
     "Incorrect_credentials": {
-        "message": "Incorrect credentials"
+        "message": "Некоректные данные авторизации"
     },
     "Enter_login_and_password": {
-        "message": "Enter login and password"
+        "message": "Введите логин и пароль"
     },
     "Deck_with_this_name_already_exists": {
-        "message": "Deck with this name already exists"
+        "message": "Колода с таким именем уже существует"
     },
     "Enter_your_Anki_credentials": {
-        "message": "Enter your Anki credentials"
+        "message": "Введите свои данные авторизации Anki"
     },
     "Login": {
-        "message": "Login"
+        "message": "Логин"
     },
     "Password": {
-        "message": "Password"
+        "message": "Пароль"
     },
     "Log_in": {
-        "message": "Log in"
+        "message": "Вход"
     },
     "Back": {
-        "message": "Back"
+        "message": "Назад"
     },
     "Choose_Anki_model_and_deck": {
-        "message": "Choose Anki model and deck"
+        "message": "Выберите Anki модель и колоду"
     },
     "Model": {
-        "message": "Model"
+        "message": "Модель"
     },
     "Export": {
-        "message": "Export"
+        "message": "Экспортировать"
     }
 }

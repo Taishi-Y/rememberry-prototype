@@ -128,7 +128,7 @@
         "message": "Опис колоди"
     },
     "Translate_with": {
-        "message": "Translate with $1",
+        "message": "Перекласти з $1",
         "placeholders": {
             "ext_name": {
                 "content": "$1"
@@ -139,48 +139,48 @@
         "message": "Оновити"
     },
     "Exporting": {
-        "message": "Exporting"
+        "message": "Експортування"
     },
     "Successfully_exported": {
-        "message": "Successfully exported"
+        "message": "Успішний експорт"
     },
     "Log_in_limit_reached_Please_try_again_later_or_you_another_credentials": {
-        "message": "Log in limit reached. Please try again later or you another credentials."
+        "message": "Кількість можливих спроб авторизації перевищена. Будь ласка, повторіть спробу пізніше або введіть інші дані авторизації."
     },
     "Trying_to_log_in": {
-        "message": "Trying to log in"
+        "message": "Спроба аутентифікації"
     },
     "Incorrect_credentials": {
-        "message": "Incorrect credentials"
+        "message": "Некоректні дані авторизації"
     },
     "Enter_login_and_password": {
-        "message": "Enter login and password"
+        "message": "Введіть свій логін та пароль"
     },
     "Deck_with_this_name_already_exists": {
-        "message": "Deck with this name already exists"
+        "message": "Колода з таким іменем вже існує"
     },
     "Enter_your_Anki_credentials": {
-        "message": "Enter your Anki credentials"
+        "message": "Введіть свої дані автризації Anki"
     },
     "Login": {
-        "message": "Login"
+        "message": "Логін"
     },
     "Password": {
-        "message": "Password"
+        "message": "Пароль"
     },
     "Log_in": {
-        "message": "Log in"
+        "message": "Вхід"
     },
     "Back": {
-        "message": "Back"
+        "message": "Назад"
     },
     "Choose_Anki_model_and_deck": {
-        "message": "Choose Anki model and deck"
+        "message": "Виберіть Anki модель та колоду"
     },
     "Model": {
-        "message": "Model"
+        "message": "Модель"
     },
     "Export": {
-        "message": "Export"
+        "message": "Експортувати"
     }
 }
