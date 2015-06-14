@@ -45,7 +45,7 @@ h3 {
 }
 
 label {
-    display: inline-block;
+    display: inline-table;
     width: 120px;
     padding-right: 10px;
 
