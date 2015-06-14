@@ -23,8 +23,8 @@
 
     "browser_action": {
         "default_icon": {
-            "19": "img/ico/icon19.png",
-            "38": "img/ico/icon38.png"
+            "19": "img/ico/card19.png",
+            "38": "img/ico/card38.png"
         },
         "default_popup": "html/popup.html"
     },
@@ -54,5 +54,11 @@
     "permissions": [
         "storage",
         "contextMenus"
-    ]
+    ],
+
+    "icons": {
+        "16": "img/ico/card16.png",
+        "48": "img/ico/card48.png",
+        "128": "img/ico/card128.png"
+    }
 }
