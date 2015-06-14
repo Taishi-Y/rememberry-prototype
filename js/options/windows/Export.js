@@ -26,7 +26,7 @@ rb.onDomReady.then(function () {
                 cards = Windows.cards_to_export.slice(),
 
                 finish = function () {
-                    Message.show(chrome.i18n.getMessage('Successfully_exported'));
+                    Message.show(chrome.i18n.getMessage('Successfully_exported'), true, 2000);
                     Windows.show('options');
                 },
 

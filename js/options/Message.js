@@ -1,13 +1,14 @@
 var Message;
 
 rb.onDomReady.then(function () {
-    var closable_state = true,
+    var timeout_instance = null,
+        closable_state = true,
         message_el = document.getElementById('message'),
         /**
          * @param message
          * @param [closable]
          */
-        show = function (message, closable) {
+        show = function (message, closable, timeout) {
             closable_state = closable !== false;
 
             if (closable_state) {
@@ -16,6 +17,10 @@ rb.onDomReady.then(function () {
 
             message_el.innerHTML = message;
             rb.show(message_el);
+
+            if (timeout) {
+                timeout_instance = setTimeout(hide, timeout);
+            }
         },
 
         hide = function (by_user) {
@@ -24,6 +29,11 @@ rb.onDomReady.then(function () {
                 closable_state = true;
                 message_el.innerHTML = '';
                 rb.hide(message_el);
+
+                if (timeout_instance !== null) {
+                    clearTimeout(timeout_instance);
+                    timeout_instance = null;
+                }
             }
         };
 

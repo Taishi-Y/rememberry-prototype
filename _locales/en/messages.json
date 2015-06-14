@@ -185,5 +185,8 @@
     },
     "You_are_offline": {
         "message": "You are offline"
+    },
+    "No_cards_in_deck": {
+        "message": "No cards in deck"
     }
 }

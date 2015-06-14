@@ -185,5 +185,8 @@
     },
     "You_are_offline": {
         "message": "Нету соединения с Интернетом"
+    },
+    "No_cards_in_deck": {
+        "message": "В колоде нету карт"
     }
 }

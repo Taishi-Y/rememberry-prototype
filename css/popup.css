@@ -1,13 +1,20 @@
 @import 'common.css';
 
 body {
-    width: 300px;
-    height: 300px;
+    display: flex;
+    width: 340px;
+    min-height: 300px;
+}
+
+#test {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 #message {
     display: flex;
-    height: 100%;
+    flex-grow: 1;
     justify-content: center;
     align-items: center;
 
@@ -15,8 +22,6 @@ body {
 }
 
 #source {
-    height: 30px;
-
     text-align: center;
     font-size: 1.5em;
     line-height: 30px;
@@ -25,35 +30,43 @@ body {
 }
 
 #translation-area {
-    height: 230px;
-    padding: 50px 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    min-height: 150px;
+    padding: 10px 30px;
 
     font-size: 1.5em;
-    text-align: center;
 
     box-sizing: border-box;
 }
 
-#translation {
-
-}
-
 #btns-area {
-    height: 40px;
-
+    flex-shrink: 0;
     text-align: center;
 }
 
 .btn {
     display: inline-block;
-    width: 90px;
+    width: 100px;
+    min-width: 100px;
     height: 40px;
+    padding: 0 10px;
 
     font-size: 1.2em;
     line-height: 40px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 
     border: solid 1px #000;
     cursor: pointer;
+    box-sizing: border-box;
+    overflow: hidden;
+}
+
+.btn:not(:last-child) {
+    margin-right: 10px;
 }
 
 .btn:hover {
@@ -66,6 +79,6 @@ body {
     background-color: #ccc;
 }
 
-#mark-area {
-
+#show-answer-btn {
+    width: auto;
 }

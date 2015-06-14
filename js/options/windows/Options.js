@@ -4,7 +4,8 @@ rb.onDomReady.then(function () {
     (function provideLocalization() {
         window_el.querySelector('#languages-menu h3').innerHTML         = chrome.i18n.getMessage('Languages');
         window_el.querySelector('label[for="source-lang"]').innerHTML   = chrome.i18n.getMessage('Source_language');
-        window_el.querySelector('label[for="target-lang"]').innerHTML   = chrome.i18n.getMessage('Target_language');
+        window_el.querySelector('label[for="target-lang"]').innerHTML =
+            window_el.querySelector('label[for="target-lang"]').title = chrome.i18n.getMessage('Target_language');
 
         window_el.querySelector('#action-menu h3').innerHTML        = chrome.i18n.getMessage('Modifiers');
         window_el.querySelector('label[for="action"]').innerHTML    = chrome.i18n.getMessage('Trigger_action');
@@ -220,25 +221,29 @@ rb.onDomReady.then(function () {
                             break;
                         case 'export':
                             if (navigator.onLine) {
-                                (function () {
-                                    var card_name, card,
-                                        cards = selected_deck.cards,
-                                        cards_to_export = [];
+                                if (Object.keys(selected_deck.cards).length) {
+                                    (function () {
+                                        var card_name, card,
+                                            cards = selected_deck.cards,
+                                            cards_to_export = [];
 
-                                    for (card_name in cards) {
-                                        if (cards.hasOwnProperty(card_name)) {
-                                            card = cards[card_name];
+                                        for (card_name in cards) {
+                                            if (cards.hasOwnProperty(card_name)) {
+                                                card = cards[card_name];
 
-                                            cards_to_export.push({
-                                                orig: card_name,
-                                                translation: card.t.join(', ')
-                                            });
+                                                cards_to_export.push({
+                                                    orig: card_name,
+                                                    translation: card.t.join(', ')
+                                                });
+                                            }
                                         }
-                                    }
 
-                                    Windows.cards_to_export = cards_to_export;
-                                    Windows.show('login');
-                                }());
+                                        Windows.cards_to_export = cards_to_export;
+                                        Windows.show('login');
+                                    }());
+                                } else {
+                                    Message.show(chrome.i18n.getMessage('No_cards_in_deck'));
+                                }
                             } else {
                                 Message.show(chrome.i18n.getMessage('You_are_offline'));
                             }

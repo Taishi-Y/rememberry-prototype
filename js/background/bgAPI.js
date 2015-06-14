@@ -77,7 +77,7 @@ var bgAPI = (function () {
                             sentences = [];
 
                             result.sentences.forEach(function (sentence) {
-                                term = sentence.trans.toLowerCase().replace(/\s|\./g, '');
+                                term = sentence.trans.toLowerCase().replace(/\./g, '');
 
                                 if (term.length && all_terms.indexOf(term) === -1) {
                                     sentences.push(term);
