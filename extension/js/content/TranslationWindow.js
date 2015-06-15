@@ -20,9 +20,9 @@ var TranslationWindow = (function () {
         },
 
         create = function () {
-            var popup_el    = rb.node('<div id="' + BASE_ID + '" hidden></div>'),
+            var popup_el    = rb.DOM.node('<div id="' + BASE_ID + '" hidden></div>'),
                 header_el   = createHeader(),
-                body_el     = rb.node('<div id="' + BASE_ID + '-body"></div>'),
+                body_el     = rb.DOM.node('<div id="' + BASE_ID + '-body"></div>'),
                 footer_el   = createFooter();
 
             popup_el.appendChild(header_el);
@@ -41,8 +41,8 @@ var TranslationWindow = (function () {
         },
 
         createHeader = function () {
-            var header_el = rb.node('<div id="' + BASE_ID + '-header"></div>'),
-                close_btn = rb.node('<div id="' + BASE_ID + '-close-btn">x</div>');
+            var header_el = rb.DOM.node('<div id="' + BASE_ID + '-header"></div>'),
+                close_btn = rb.DOM.node('<div id="' + BASE_ID + '-close-btn">x</div>');
 
             close_btn.addEventListener('click', destroy);
             header_el.appendChild(close_btn);
@@ -51,10 +51,10 @@ var TranslationWindow = (function () {
         },
 
         createFooter = function () {
-            var footer_el = rb.node('<div id="' + BASE_ID + '-footer" hidden></div>'),
-                save_btn = rb.node(
+            var footer_el = rb.DOM.node('<div id="' + BASE_ID + '-footer" hidden></div>'),
+                save_btn = rb.DOM.node(
                         '<button id="' + BASE_ID +'-save-btn">' + chrome.i18n.getMessage('Save') + '</button>'),
-                add_custom_btn = rb.node(
+                add_custom_btn = rb.DOM.node(
                         '<button id="' + BASE_ID + '-custom-btn">' + chrome.i18n.getMessage('Custom') + '</button>');
 
             els.save_btn = save_btn;
@@ -67,9 +67,9 @@ var TranslationWindow = (function () {
         },
 
         createTermLine = function (term, is_checked, editable) {
-            var line_el     = rb.node('<div class="term-line"></div>'),
-                checkbox_el = rb.node('<input type="checkbox" class="term-line-checkbox"/>'),
-                text_el     = rb.node('<span class="term">' + term + '</span>');
+            var line_el     = rb.DOM.node('<div class="term-line"></div>'),
+                checkbox_el = rb.DOM.node('<input type="checkbox" class="term-line-checkbox"/>'),
+                text_el     = rb.DOM.node('<span class="term">' + term + '</span>');
 
             checkbox_el.checked = !!is_checked;
 
@@ -118,7 +118,7 @@ var TranslationWindow = (function () {
 
         show = function (pos) {
             if (!is_shown) {
-                rb.show(els.popup);
+                rb.DOM.show(els.popup);
                 setPosition(pos);
                 document.body.addEventListener('keyup', handleKeyUp, true);
                 is_shown = true;
@@ -127,7 +127,7 @@ var TranslationWindow = (function () {
 
         destroy = function () {
             if (is_shown) {
-                rb.hide([ els.popup, els.footer ]);
+                rb.DOM.hide([ els.popup, els.footer ]);
                 setPosition(null);
                 document.body.removeEventListener('keyup', handleKeyUp, true);
                 reset();
@@ -137,7 +137,7 @@ var TranslationWindow = (function () {
 
         getSection = function (type) {
             if (!els.sections[type]) {
-                els.sections[type] = rb.node('<div class="pos-container">' +
+                els.sections[type] = rb.DOM.node('<div class="pos-container">' +
                                                 '<div class="header">' + type + '</div>' +
                                              '</div>');
 
@@ -173,7 +173,7 @@ var TranslationWindow = (function () {
             }
 
             setLoader(false);
-            rb.show(els.footer);
+            rb.DOM.show(els.footer);
             els.save_btn.focus();
         },
 

@@ -1,21 +1,4 @@
-var JSON_data = (function () {
-    var closure = function (file_name) {
-        var data = AJAX.getJSON('/data/' + file_name + '.json');
-
-        return function () {
-            return data;
-        };
-    };
-
-    return {
-        getLanguages    : closure('languages'),
-        getActions      : closure('actions'),
-        getDefaultConfig: closure('default_config'),
-        getPartsOfSpeech: closure('PoS_enum')
-    };
-}());
-
-Config.init().then(function () {
+ConfigStorage.init().then(function () {
     DeckStorage.init();
 });
 
@@ -26,19 +9,19 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         case 'get':
             switch (message.type) {
                 case 'config':
-                    Config.getConfig().then(sendResponse);
+                    ConfigStorage.getIt().then(sendResponse);
                     break;
                 case 'languages':
-                    JSON_data.getLanguages().then(sendResponse);
+                    JSON_Storage.getLanguages().then(sendResponse);
                     break;
                 case 'actions':
-                    JSON_data.getActions().then(sendResponse);
+                    JSON_Storage.getActions().then(sendResponse);
                     break;
                 case 'PoS':
-                    JSON_data.getPartsOfSpeech().then(sendResponse);
+                    JSON_Storage.getPartsOfSpeech().then(sendResponse);
                     break;
                 case 'cards':
-                    CardsStorage.getCards().then(sendResponse);
+                    CardStorage.getCards().then(sendResponse);
                     break;
                 case 'deck':
                     DeckStorage.getDeck(data).then(sendResponse);
@@ -53,10 +36,10 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         case 'set':
             switch (message.type) {
                 case 'config':
-                    Config.extendConfig(data);
+                    ConfigStorage.extendIt(data);
                     break;
                 case 'cards':
-                    CardsStorage.setCards(data);
+                    CardStorage.setCards(data);
                     break;
                 case 'active-deck':
                     DeckStorage.selectDeck(data);
@@ -71,7 +54,7 @@ chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
         case 'add':
             switch (message.type) {
                 case 'card':
-                    CardsStorage.addCard(data);
+                    CardStorage.addCard(data);
                     break;
                 case 'deck':
                     DeckStorage.createDeck(data.name, data.desc).then(sendResponse);

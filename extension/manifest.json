@@ -3,7 +3,7 @@
 
     "author": "__MSG_author__",
     "name": "__MSG_ext_name__",
-    "version": "0.1",
+    "version": "1.0",
     "default_locale": "uk",
 
     "description": "__MSG_ext_description__",
@@ -11,12 +11,13 @@
     "background": {
         "scripts": [
             "js/utils/common.js",
-            "js/Storage.js",
+            "js/storage/Storage.js",
             "js/utils/AJAX.js",
             "js/content/contentAPI.js",
-            "js/background/Config.js",
-            "js/background/DeckStorage.js",
-            "js/background/CardsStorage.js",
+            "js/storage/ConfigStorage.js",
+            "js/storage/DeckStorage.js",
+            "js/storage/CardStorage.js",
+            "js/storage/JSON_Storage.js",
             "js/background/background.js"
         ]
     },

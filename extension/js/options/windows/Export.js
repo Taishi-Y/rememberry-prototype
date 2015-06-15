@@ -1,4 +1,4 @@
-rb.onDomReady.then(function () {
+rb.DOM.onReady.then(function () {
     var window_el       = document.getElementById('export-window'),
         models_dropdown = document.getElementById('model'),
         decks_dropdown  = document.getElementById('deck'),
@@ -11,12 +11,12 @@ rb.onDomReady.then(function () {
 
             models.forEach(function (model) {
                 models_dropdown.appendChild(
-                    rb.node('<option value="' + model.id + '">' + model.name +'</option>'));
+                    rb.DOM.node('<option value="' + model.id + '">' + model.name +'</option>'));
             });
 
             decks.forEach(function (deck) {
                 decks_dropdown.appendChild(
-                    rb.node('<option value="' + deck + '">' + deck + '</option>'));
+                    rb.DOM.node('<option value="' + deck + '">' + deck + '</option>'));
             });
         },
 
@@ -69,14 +69,14 @@ rb.onDomReady.then(function () {
 
     Windows.add('export', {
         show: function (anki_data) {
-            rb.show(window_el);
+            rb.DOM.show(window_el);
             models_dropdown.focus();
 
             initWithData(anki_data);
         },
 
         hide: function () {
-            rb.hide(window_el);
+            rb.DOM.hide(window_el);
         }
     });
 });

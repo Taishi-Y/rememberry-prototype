@@ -61,4 +61,4 @@ init = function () {
 
 window.addEventListener('error', showError);
 
-rb.onDomReady.then(init);
+rb.DOM.onReady.then(init);

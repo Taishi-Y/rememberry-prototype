@@ -27,14 +27,6 @@ var rb = (function () {
             })
         },
 
-        onDomReady: new Promise(function (resolve) {
-            if (document.readyState !== 'loading') {
-                resolve();
-            } else {
-                document.addEventListener('DOMContentLoaded', resolve);
-            }
-        }),
-
         extend: function (source, target) {
             var prop, t, s, res;
 
@@ -60,23 +52,34 @@ var rb = (function () {
             return source;
         },
 
-        show: visible.bind(null, true),
-        hide: visible.bind(null, false),
+        DOM: {
+            onReady: new Promise(function (resolve) {
+                if (document.readyState !== 'loading') {
+                    resolve();
+                } else {
+                    document.addEventListener('DOMContentLoaded', resolve);
+                }
+            }),
 
-        node: function (html_value) {
-            var container_el = document.createElement('div');
 
-            container_el.innerHTML = html_value;
+            node: function (html_value) {
+                var container_el = document.createElement('div');
 
-            return container_el.children[0];
-        },
+                container_el.innerHTML = html_value;
 
-        selectByValue: function (select_el, value) {
-            var values = Array.prototype.map.call(select_el.children, function (option_el) {
-                return option_el.value;
-            });
+                return container_el.children[0];
+            },
 
-            select_el.selectedIndex = values.indexOf(value);
+            selectByValue: function (select_el, value) {
+                var values = Array.prototype.map.call(select_el.children, function (option_el) {
+                    return option_el.value;
+                });
+
+                select_el.selectedIndex = values.indexOf(value);
+            },
+
+            show: visible.bind(null, true),
+            hide: visible.bind(null, false)
         }
     };
 }());

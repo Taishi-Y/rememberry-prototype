@@ -1,4 +1,4 @@
-rb.onDomReady.then(function () {
+rb.DOM.onReady.then(function () {
     var window_el = document.getElementById('options-window');
 
     (function provideLocalization() {
@@ -35,7 +35,7 @@ rb.onDomReady.then(function () {
                     target_lang = config.target_lang;
 
                 appendOption = function (parent, value, text, active_value) {
-                    var option_el = rb.node('<option value="' + value + '">' + text + '</option>');
+                    var option_el = rb.DOM.node('<option value="' + value + '">' + text + '</option>');
 
                     parent.appendChild(option_el);
 
@@ -82,7 +82,7 @@ rb.onDomReady.then(function () {
                     selected_modifier = config.action.modifier;
 
                 appendOption = function (parent, value, active_value) {
-                    var el = rb.node('<option value="' + value + '">' + value + '</option>');
+                    var el = rb.DOM.node('<option value="' + value + '">' + value + '</option>');
 
                     parent.appendChild(el);
 
@@ -133,7 +133,7 @@ rb.onDomReady.then(function () {
 
             var changeDeck = function (name) {
                     selected_deck = local_decks[name];
-                    rb.selectByValue(deck_select_el, name);
+                    rb.DOM.selectByValue(deck_select_el, name);
 
                     cards_count_el.innerHTML = Object.keys(selected_deck.cards).length;
                     name_el.value = selected_deck.name;
@@ -142,7 +142,7 @@ rb.onDomReady.then(function () {
 
                 appendDeckOption = function (deck) {
                     deck_select_el.appendChild(
-                        rb.node('<option value="' + deck.name + '">' + deck.name + '</option>'));
+                        rb.DOM.node('<option value="' + deck.name + '">' + deck.name + '</option>'));
                 },
 
                 performAction = function (action) {
@@ -192,7 +192,7 @@ rb.onDomReady.then(function () {
                                 name_el.value = '';
                                 desc_el.value = '';
 
-                                rb.show(info_el);
+                                rb.DOM.show(info_el);
                                 name_el.focus();
                             }());
                             break;
@@ -289,7 +289,7 @@ rb.onDomReady.then(function () {
             if (deck_select_el.selectedOptions[0].value === startup_active_deck_name) {
                 changeDeck(startup_active_deck_name);
             } else {
-                rb.selectByValue(deck_select_el, startup_active_deck_name);
+                rb.DOM.selectByValue(deck_select_el, startup_active_deck_name);
                 changeDeck(deck_select_el.selectedOptions[0].value);
             }
         });
@@ -297,11 +297,11 @@ rb.onDomReady.then(function () {
 
     Windows.add('options', {
         show: function () {
-            rb.show(window_el);
+            rb.DOM.show(window_el);
         },
 
         hide: function () {
-            rb.hide(window_el);
+            rb.DOM.hide(window_el);
         }
     });
 

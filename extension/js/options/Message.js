@@ -1,6 +1,6 @@
 var Message;
 
-rb.onDomReady.then(function () {
+rb.DOM.onReady.then(function () {
     var timeout_instance = null,
         closable_state = true,
         message_el = document.getElementById('message'),
@@ -16,7 +16,7 @@ rb.onDomReady.then(function () {
             }
 
             message_el.innerHTML = message;
-            rb.show(message_el);
+            rb.DOM.show(message_el);
 
             if (timeout) {
                 timeout_instance = setTimeout(hide, timeout);
@@ -28,7 +28,7 @@ rb.onDomReady.then(function () {
                 message_el.removeAttribute('closable');
                 closable_state = true;
                 message_el.innerHTML = '';
-                rb.hide(message_el);
+                rb.DOM.hide(message_el);
 
                 if (timeout_instance !== null) {
                     clearTimeout(timeout_instance);

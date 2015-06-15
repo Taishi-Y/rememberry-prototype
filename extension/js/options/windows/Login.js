@@ -1,4 +1,4 @@
-rb.onDomReady.then(function () {
+rb.DOM.onReady.then(function () {
     var window_el   = document.getElementById('login-window'),
         login_el    = document.getElementById('login'),
         password_el = document.getElementById('password'),
@@ -97,12 +97,12 @@ rb.onDomReady.then(function () {
 
     Windows.add('login', {
         show: function () {
-            rb.show(window_el);
+            rb.DOM.show(window_el);
             login_el.focus();
         },
 
         hide: function () {
-            rb.hide(window_el);
+            rb.DOM.hide(window_el);
         }
     });
 });

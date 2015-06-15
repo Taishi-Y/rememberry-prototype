@@ -1,6 +1,6 @@
 var DeckStorage = (function () {
     var init = function () {
-            Config.getConfig().then(function (config) {
+            ConfigStorage.getIt().then(function (config) {
                 if (config.decks.names.length === 0) {
                     createDeck('basic', 'Basic deck').then(function (basic_deck) {
                         selectDeck(basic_deck.name);
@@ -41,7 +41,7 @@ var DeckStorage = (function () {
             data[key] = deck;
 
             Storage.setItem(data).then(function () {
-                Config.getConfig().then(function (config) {
+                ConfigStorage.getIt().then(function (config) {
                     var names = config.decks.names;
 
                     names.splice(names.indexOf(old_name), 1);
@@ -53,7 +53,7 @@ var DeckStorage = (function () {
                         config.decks.active_name = deck.name;
                     }
 
-                    Config.setConfig(config).then(resolve);
+                    ConfigStorage.setIt(config).then(resolve);
                 });
             });
         })},
@@ -65,7 +65,7 @@ var DeckStorage = (function () {
             data[key] = deck;
 
             Storage.setItem(data).then(function () {
-                Config.extendConfig({
+                ConfigStorage.extendIt({
                     decks: {
                         names: [ deck.name ]
                     }
@@ -74,7 +74,7 @@ var DeckStorage = (function () {
         })},
 
         selectDeck = function (name) {
-            Config.extendConfig({ decks: { active_name: name  } });
+            ConfigStorage.extendIt({ decks: { active_name: name  } });
         },
 
         getDeck = function (name) {
@@ -86,7 +86,7 @@ var DeckStorage = (function () {
         },
 
         getDecks = function () { return new Promise(function (resolve) {
-            Config.getConfig().then(function (config) {
+            ConfigStorage.getIt().then(function (config) {
                 var deck_promises = [];
 
                 config.decks.names.forEach(function (deck_name) {
@@ -112,17 +112,17 @@ var DeckStorage = (function () {
 
             Storage.removeItem(getKey(name));
 
-            Config.getConfig().then(function (config) {
+            ConfigStorage.getIt().then(function (config) {
                 var index = config.decks.names.indexOf(name);
 
                 config.decks.names.splice(index, 1);
                 config.decks.active_name = null;
-                Config.setConfig(config).then(resolve);
+                ConfigStorage.setIt(config).then(resolve);
             });
         })},
 
         getActiveDeck = function () { return new Promise(function (resolve) {
-            Config.getConfig().then(function (config) {
+            ConfigStorage.getIt().then(function (config) {
                 getDeck(config.decks.active_name).then(resolve);
             });
         })};

@@ -1,7 +1,6 @@
 Content script:
     - use "Shadow DOM" for Popup
     - position adjustment in case when popup doesn't fit into window view-port
-    - handle too long response time from Google Translate API
     - move to "managed" storage
     - add ability to set limit to possible translation variants
     - limit to translated text size
@@ -12,3 +11,6 @@ Options script:
 On release:
     - use days instead on minutes in SM2 algorithm
     - use within frames
+
+Other:
+    - add proper errors and warnings messages everywhere

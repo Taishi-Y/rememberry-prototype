@@ -1,4 +1,4 @@
-var CardsStorage = (function () {
+var CardStorage = (function () {
     var setCards = function (cards) {
             DeckStorage.getActiveDeck().then(function (active_deck) {
                 active_deck.cards = cards;
