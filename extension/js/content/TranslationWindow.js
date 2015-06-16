@@ -16,7 +16,7 @@ var TranslationWindow = (function () {
 
         state = {
             orig        : null,
-            translation : null
+            translation : nullc
         },
 
         create = function () {
@@ -127,7 +127,7 @@ var TranslationWindow = (function () {
 
         destroy = function () {
             if (is_shown) {
-                rb.DOM.hide([ els.popup, els.footer ]);
+                 trb.DOM.hide([ els.popup, els.footer ]);
                 setPosition(null);
                 document.body.removeEventListener('keyup', handleKeyUp, true);
                 reset();

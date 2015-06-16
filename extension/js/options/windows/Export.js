@@ -24,33 +24,26 @@ rb.DOM.onReady.then(function () {
             var anki_model_id = models_dropdown.selectedOptions[0].value,
                 anki_deck_name = decks_dropdown.selectedOptions[0].value,
                 cards = Windows.cards_to_export.slice(),
-
-                finish = function () {
-                    Message.show(chrome.i18n.getMessage('Successfully_exported'), true, 2000);
-                    Windows.show('options');
-                },
-
-                saveNext = function () {
-                    var next, data;
-
-                    if (cards.length) {
-                        next = cards.shift();
-
-                        data = {
-                            data: JSON.stringify([ [ next.orig, next.translation ], '' ]),
-                            mid : anki_model_id,
-                            deck: anki_deck_name
-                        };
-
-                        AJAX.request('get', 'https://ankiweb.net/edit/save', data).then(saveNext);
-                    } else {
-                        finish();
-                    }
-                };
+                export_sequence = Promise.resolve();
 
             Message.show(chrome.i18n.getMessage('Exporting'), false);
 
-            saveNext();
+            cards.forEach(function (card) {
+                export_sequence = export_sequence.then(function () {
+                    var data = {
+                        data: JSON.stringify([ [ card.orig, card.translation ], '' ]),
+                        mid : anki_model_id,
+                        deck: anki_deck_name
+                    };
+
+                    return AJAX.request('get', 'https://ankiweb.net/edit/save', data);
+                });
+            });
+
+            export_sequence.then(function () {
+                Message.show(chrome.i18n.getMessage('Successfully_exported'), true, 2000);
+                Windows.show('options');
+            });
         };
 
     (function provideLocalization() {

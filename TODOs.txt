@@ -14,3 +14,4 @@ On release:
 
 Other:
     - add proper errors and warnings messages everywhere
+    - replace redundant Promises with chaining

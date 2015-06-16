@@ -13,7 +13,7 @@
             "js/utils/common.js",
             "js/storage/Storage.js",
             "js/utils/AJAX.js",
-            "js/content/contentAPI.js",
+            "js/utils/contentAPI.js",
             "js/storage/ConfigStorage.js",
             "js/storage/DeckStorage.js",
             "js/storage/CardStorage.js",
@@ -41,7 +41,7 @@
 
             "js": [
                 "js/utils/common.js",
-                "js/background/bgAPI.js",
+                "js/utils/bgAPI.js",
                 "js/content/TranslationWindow.js",
                 "js/content/content.js"
             ],

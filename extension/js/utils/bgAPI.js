@@ -130,10 +130,10 @@ var bgAPI = (function () {
     });
     
     return {
-        send: send,
-        receive: receive,
-        add: add,
-        remove: remove,
-        translate: translate
+        send        : send,
+        receive     : receive,
+        add         : add,
+        remove      : remove,
+        translate   : translate
     };
 }());
