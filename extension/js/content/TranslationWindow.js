@@ -16,7 +16,7 @@ var TranslationWindow = (function () {
 
         state = {
             orig        : null,
-            translation : nullc
+            translation : null
         },
 
         create = function () {
@@ -120,6 +120,7 @@ var TranslationWindow = (function () {
             if (!is_shown) {
                 rb.DOM.show(els.popup);
                 setPosition(pos);
+                document.body.addEventListener('click', handleClick, true);
                 document.body.addEventListener('keyup', handleKeyUp, true);
                 is_shown = true;
             }
@@ -127,8 +128,8 @@ var TranslationWindow = (function () {
 
         destroy = function () {
             if (is_shown) {
-                 trb.DOM.hide([ els.popup, els.footer ]);
-                setPosition(null);
+                rb.DOM.hide([ els.popup, els.footer ]);
+                document.body.removeEventListener('click', handleClick, true);
                 document.body.removeEventListener('keyup', handleKeyUp, true);
                 reset();
                 is_shown = false;
@@ -202,10 +203,17 @@ var TranslationWindow = (function () {
             }
         },
 
+        handleClick = function (e) {
+            if (!els.popup.contains(e.target)) {
+                destroy();
+            }
+        },
+
         reset = function () {
             els.body.innerHTML = '';
             els.sections = [];
 
+            setPosition(null);
             setLoader(false);
             state = {};
         },

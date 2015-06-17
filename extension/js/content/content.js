@@ -1,5 +1,3 @@
-console.log('Loaded within', document.location.href);
-
 var init, page_config, showError,
     ERROR_MESSAGE = chrome.i18n.getMessage('no_connection_to_extension', [ chrome.i18n.getMessage('ext_name') ]);
 
@@ -60,5 +58,4 @@ init = function () {
 };
 
 window.addEventListener('error', showError);
-
 rb.DOM.onReady.then(init);

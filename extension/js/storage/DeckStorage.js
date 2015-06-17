@@ -1,9 +1,9 @@
 var DeckStorage = (function () {
     var init = function () {
-            ConfigStorage.getIt().then(function (config) {
+            return ConfigStorage.getIt().then(function (config) {
                 if (config.decks.names.length === 0) {
-                    createDeck('basic', 'Basic deck').then(function (basic_deck) {
-                        selectDeck(basic_deck.name);
+                    return createDeck('basic', 'Basic deck').then(function (basic_deck) {
+                        return selectDeck(basic_deck.name);
                     });
                 }
             });
@@ -13,17 +13,19 @@ var DeckStorage = (function () {
             return 'deck_' + name;
         },
 
-        createDeck = function (name, description) { return new Promise(function (resolve) {
+        createDeck = function (name, description) {
             var new_deck = {
                 name: name,
                 desc: description,
                 cards: {}
             };
 
-            addDeck(new_deck).then(resolve.bind(null, new_deck));
-        })},
+            return addDeck(new_deck).then(function () {
+                return new_deck;
+            });
+        },
 
-        updateDeck = function (deck) { return new Promise(function (resolve) {
+        updateDeck = function (deck) {
             var old_key, old_name, key,
                 data = {};
 
@@ -40,8 +42,8 @@ var DeckStorage = (function () {
             key = getKey(deck.name);
             data[key] = deck;
 
-            Storage.setItem(data).then(function () {
-                ConfigStorage.getIt().then(function (config) {
+            return Storage.setItem(data).then(function () {
+                return ConfigStorage.getIt().then(function (config) {
                     var names = config.decks.names;
 
                     names.splice(names.indexOf(old_name), 1);
@@ -53,28 +55,28 @@ var DeckStorage = (function () {
                         config.decks.active_name = deck.name;
                     }
 
-                    ConfigStorage.setIt(config).then(resolve);
+                    return ConfigStorage.setIt(config);
                 });
             });
-        })},
+        },
 
-        addDeck = function (deck) { return new Promise(function (resolve) {
+        addDeck = function (deck) {
             var data = {},
                 key = getKey(deck.name);
 
             data[key] = deck;
 
-            Storage.setItem(data).then(function () {
-                ConfigStorage.extendIt({
+            return Storage.setItem(data).then(function () {
+                return ConfigStorage.extendIt({
                     decks: {
                         names: [ deck.name ]
                     }
-                }).then(resolve);
+                });
             });
-        })},
+        },
 
         selectDeck = function (name) {
-            ConfigStorage.extendIt({ decks: { active_name: name  } });
+            return ConfigStorage.extendIt({ decks: { active_name: name } });
         },
 
         getDeck = function (name) {
@@ -85,56 +87,51 @@ var DeckStorage = (function () {
             });
         },
 
-        getDecks = function () { return new Promise(function (resolve) {
-            ConfigStorage.getIt().then(function (config) {
-                var deck_promises = [];
-
-                config.decks.names.forEach(function (deck_name) {
-                    deck_promises.push(new Promise(function (resolve) {
-                        getDeck(deck_name).then(resolve)
-                    }));
+        getDecks = function () {
+            return ConfigStorage.getIt().then(function (config) {
+                var deck_promises = config.decks.names.map(function (deck_name) {
+                    return getDeck(deck_name);
                 });
 
-                Promise.all(deck_promises).then(function (result) {
+                return Promise.all(deck_promises).then(function (result) {
                     var obj = {};
 
                     result.forEach(function (deck) {
                         obj[deck.name] = deck;
                     });
 
-                    resolve(obj);
+                    return obj;
                 });
             });
-        })},
+        },
 
-        removeDeck = function (deck) { return new Promise(function (resolve) {
+        removeDeck = function (deck) {
             var name = deck.name;
 
-            Storage.removeItem(getKey(name));
-
-            ConfigStorage.getIt().then(function (config) {
+            return Promise.all([ Storage.removeItem(getKey(name)), ConfigStorage.getIt().then(function (config) {
                 var index = config.decks.names.indexOf(name);
 
                 config.decks.names.splice(index, 1);
                 config.decks.active_name = null;
-                ConfigStorage.setIt(config).then(resolve);
-            });
-        })},
 
-        getActiveDeck = function () { return new Promise(function (resolve) {
-            ConfigStorage.getIt().then(function (config) {
-                getDeck(config.decks.active_name).then(resolve);
+                return ConfigStorage.setIt(config);
+            })]);
+        },
+
+        getActiveDeck = function () {
+            return ConfigStorage.getIt().then(function (config) {
+                return getDeck(config.decks.active_name);
             });
-        })};
+        };
 
     return {
-        init: init,
-        createDeck: createDeck,
-        getDeck: getDeck,
-        getActiveDeck: getActiveDeck,
-        getDecks: getDecks,
-        selectDeck: selectDeck,
-        updateDeck: updateDeck,
-        removeDeck: removeDeck
+        init            : init,
+        createDeck      : createDeck,
+        getDeck         : getDeck,
+        getActiveDeck   : getActiveDeck,
+        getDecks        : getDecks,
+        selectDeck      : selectDeck,
+        updateDeck      : updateDeck,
+        removeDeck      : removeDeck
     };
 }());

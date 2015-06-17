@@ -14,4 +14,4 @@ On release:
 
 Other:
     - add proper errors and warnings messages everywhere
-    - replace redundant Promises with chaining
+    - implement 7th step of SM2 algorithm

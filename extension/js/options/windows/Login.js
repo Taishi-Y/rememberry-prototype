@@ -5,8 +5,8 @@ rb.DOM.onReady.then(function () {
         login_btn   = document.getElementById('anki-login'),
         back_btn    = window_el.getElementsByClassName('back')[0],
 
-        retrieveInfoFromAnki = function () { return new Promise(function (resolve) {
-            AJAX.request('get', 'https://ankiweb.net/edit/').then(function (response) {
+        retrieveInfoFromAnki = function () {
+            return AJAX.request('get', 'https://ankiweb.net/edit/').then(function (response) {
                 var deck_id,
                     decks_array = [],
                     models = JSON.parse(/editor\.models = (.*}]);/.exec(response)[1]),
@@ -25,16 +25,16 @@ rb.DOM.onReady.then(function () {
                     }
                 }
 
-                resolve({
+                return {
                     models: models,
                     decks: decks_array
-                });
+                };
             });
-        })},
+        },
 
-        logoutFromAnki = function () { return new Promise(function (resolve) {
-            AJAX.request('get', 'https://ankiweb.net/account/logout').then(resolve);
-        })},
+        logoutFromAnki = function () {
+            return AJAX.request('get', 'https://ankiweb.net/account/logout');
+        },
 
         loginIntoAnki = function (login, password) { return new Promise(function (resolve, reject) {
             logoutFromAnki().then(function () {

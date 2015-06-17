@@ -34,8 +34,8 @@ var bgAPI = (function () {
         })},
     
         translate = function (text, source, target) { return new Promise(function (resolve, reject) {
-            var parseResult = function (result) { return new Promise(function (resolve) {
-                parts_of_speech_enum.then(function (pos_enum) {
+            var parseResult = function (result) {
+                return parts_of_speech_enum.then(function (pos_enum) {
                     var term, parsed_result, all_terms, sentences,
                         type = text.indexOf(' ') === -1 ? 'word' : 'sentence';
 
@@ -104,9 +104,9 @@ var bgAPI = (function () {
                         }
                     }
 
-                    resolve(parsed_result);
+                    return parsed_result;
                 });
-            })};
+            };
     
             try {
                 chrome.runtime.sendMessage({

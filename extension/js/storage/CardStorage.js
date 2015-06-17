@@ -6,11 +6,11 @@ var CardStorage = (function () {
             });
         },
 
-        getCards = function () { return new Promise(function (resolve) {
-            DeckStorage.getActiveDeck().then(function (active_deck) {
-                resolve(active_deck.cards);
+        getCards = function () {
+            return DeckStorage.getActiveDeck().then(function (active_deck) {
+                return active_deck.cards;
             });
-        })},
+        },
 
         addCard = function (info) {
             getCards().then(function (cards) {
