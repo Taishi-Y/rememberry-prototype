@@ -19,13 +19,7 @@ var CardStorage = (function () {
                     translation = info.translation;
 
                 if (!cards.hasOwnProperty(source)) {
-                    cards[source] = {
-                        t: translation,
-                        n: 0,
-                        i: 0,
-                        d: Date.now(),
-                        ef: 2.5
-                    };
+                    cards[source] = rb.extend({ t: translation}, SM2.getInitData());
                 } else {
                     card = cards[source];
                     card.t = rb.unique(card.t.concat(translation));

@@ -1,5 +1,4 @@
 Content script:
-    - use "Shadow DOM" for Popup
     - position adjustment in case when popup doesn't fit into window view-port
     - move to "managed" storage
     - add ability to set limit to possible translation variants
@@ -15,3 +14,4 @@ On release:
 Other:
     - add proper errors and warnings messages everywhere
     - implement 7th step of SM2 algorithm
+    - ensure config valid on startup

@@ -1,5 +1,15 @@
 var SM2 = {
 
+    getInitData: function () {
+        return {
+            n: 0,
+            i: 0,
+            d: Date.now(),
+            ef: 2.5,
+            q: -1
+        }
+    },
+
     isCardRipened: function (card) {
         var ms_diff, day_diff,
             is_ripened = false;

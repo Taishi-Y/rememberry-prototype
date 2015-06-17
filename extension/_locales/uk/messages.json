@@ -12,7 +12,7 @@
         "message": "Мови"
     },
     "Source_language": {
-        "message": "Вихідна мова"
+        "message": "Мова оригіналу"
     },
     "Target_language": {
         "message": "Мова перекладу"
@@ -160,7 +160,7 @@
         "message": "Колода з таким іменем вже існує"
     },
     "Enter_your_Anki_credentials": {
-        "message": "Введіть свої дані автризації Anki"
+        "message": "Введіть свої дані авторизації Anki"
     },
     "Login": {
         "message": "Логін"

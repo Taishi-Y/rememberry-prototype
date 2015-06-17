@@ -1,4 +1,5 @@
 @import 'common.css';
+@import 'buttons.css';
 
 body {
     display: flex;
@@ -44,39 +45,22 @@ body {
 
 #btns-area {
     flex-shrink: 0;
+    height: 40px;
+
     text-align: center;
+    font-size: 1.2em;
 }
 
 .btn {
-    display: inline-block;
     width: 100px;
     min-width: 100px;
     height: 40px;
-    padding: 0 10px;
 
     font-size: 1.2em;
-    line-height: 40px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    border: solid 1px #000;
-    cursor: pointer;
-    box-sizing: border-box;
-    overflow: hidden;
 }
 
-.btn:not(:last-child) {
+#mark-area .btn:not(:last-child) {
     margin-right: 10px;
-}
-
-.btn:hover {
-    color: #666;
-}
-
-.btn:active {
-    color: #000;
-
-    background-color: #ccc;
 }
 
 #show-answer-btn {

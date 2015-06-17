@@ -13,6 +13,7 @@
             "js/utils/common.js",
             "js/storage/Storage.js",
             "js/utils/AJAX.js",
+            "js/utils/SM2.js",
             "js/utils/contentAPI.js",
             "js/storage/ConfigStorage.js",
             "js/storage/DeckStorage.js",
