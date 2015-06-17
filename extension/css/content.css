@@ -1,22 +1,19 @@
 /* Rememberry Translate Popup */
-#rb-tr-popup {
-    position: absolute;
-    z-index: 1;
+:host {
+    position: absolute !important;
+    z-index: 999999999 !important;
+}
 
+.body {
     min-width: 100px;
     max-width: 300px;
     padding: 15px;
 
-    text-align: left;
-    color: black;
-
     border: 2px solid black;
     background-color: white;
-    user-select: none;
-    -webkit-user-select: none;
 }
 
-#rb-tr-popup-close-btn {
+.close-btn {
     position: absolute;
     right: 5px;
     top: 5px;
@@ -27,33 +24,32 @@
     font-family: fantasy;
     font-size: 16px;
     text-align: center;
-    line-height: 10px; /* Remove after Shadow DOM implementation */
 
     cursor: pointer;
 }
 
-#rb-tr-popup-body {
+.belly {
     min-height: 30px;
     margin-top: 5px;
 }
 
-#rb-tr-popup-body[loading] {
+.belly[loading] {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-#rb-tr-popup-body[loading]:after {
+.belly[loading]:after {
     color: #ccc;
 
     content: '__MSG_Translation__..';
 }
 
-#rb-tr-popup .pos-container:not(:first-child) {
+.pos-container:not(:first-child) {
     margin-top: 10px;
 }
 
-#rb-tr-popup .pos-container .header {
+.pos-container .pos-header {
     color: grey;
     font-size: .9em;
     font-style: italic;
@@ -62,28 +58,28 @@
     border-bottom: 1px dotted #ccc;
 }
 
-#rb-tr-popup .pos-container .term[contenteditable] {
+.pos-container .term[contenteditable] {
     outline: none;
 }
 
-#rb-tr-popup .term-line {
+.term-line {
     margin: 4px 0;
 }
 
-#rb-tr-popup .term-line-checkbox {
+.term-line-checkbox {
     margin-right: 5px !important;
 }
 
-#rb-tr-popup-footer {
+.footer {
     margin-top: 10px;
 }
 
-#rb-tr-popup-footer button:focus {
+.footer button:focus {
     color: blue;
 
     outline: none;
 }
 
-#rb-tr-popup-footer button:not(:last-child) {
+.footer button:not(:last-child) {
     margin-right: 5px;
 }

@@ -1,14 +1,16 @@
 var TranslationWindow = (function () {
     // private members
-    var BASE_ID     = 'rb-tr-popup',
+    var BASE_ID     = 'rememberry-popup',
         tr_id       = 0,    // used to provide translation-response validation (use only latest response)
         is_created  = false,
         is_shown    = false,
+        CSS = AJAX.request('get',
+            'chrome-extension://' + chrome.i18n.getMessage('@@extension_id') + '/css/content.css'),
 
         els = { // DOM elements
-            popup   : null,
+            host    : null,
             header  : null,
-            body    : null,
+            belly   : null,
             footer  : null,
             save_btn: null,
             sections: null
@@ -20,20 +22,32 @@ var TranslationWindow = (function () {
         },
 
         create = function () {
-            var popup_el    = rb.DOM.node('<div id="' + BASE_ID + '" hidden></div>'),
+            var host_el     = rb.DOM.node('<div id="' + BASE_ID + '" hidden></div>'),
+                root_el     = host_el.createShadowRoot(),
+                body_el     = rb.DOM.node('<div class="body"></div>'),
                 header_el   = createHeader(),
-                body_el     = rb.DOM.node('<div id="' + BASE_ID + '-body"></div>'),
-                footer_el   = createFooter();
+                belly_el    = rb.DOM.node('<div class="belly"></div>'),
+                footer_el   = createFooter(),
+                style_el    = document.createElement('style');
 
-            popup_el.appendChild(header_el);
-            popup_el.appendChild(body_el);
-            popup_el.appendChild(footer_el);
+            body_el.appendChild(style_el);
+            body_el.appendChild(style_el);
+            body_el.appendChild(header_el);
+            body_el.appendChild(belly_el);
+            body_el.appendChild(footer_el);
 
-            document.body.appendChild(popup_el);
+            root_el.appendChild(body_el);
 
-            els.popup   = popup_el;
+            CSS.then(function (css_text) {
+                style_el.innerHTML = css_text;
+            });
+
+            document.body.appendChild(host_el);
+
+            els.host    = host_el;
+            els.root    = root_el;
             els.header  = header_el;
-            els.body    = body_el;
+            els.belly   = belly_el;
             els.footer  = footer_el;
             els.sections = [];
 
@@ -41,8 +55,8 @@ var TranslationWindow = (function () {
         },
 
         createHeader = function () {
-            var header_el = rb.DOM.node('<div id="' + BASE_ID + '-header"></div>'),
-                close_btn = rb.DOM.node('<div id="' + BASE_ID + '-close-btn">x</div>');
+            var header_el = rb.DOM.node('<div class="header"></div>'),
+                close_btn = rb.DOM.node('<div class="close-btn">x</div>');
 
             close_btn.addEventListener('click', destroy);
             header_el.appendChild(close_btn);
@@ -51,11 +65,15 @@ var TranslationWindow = (function () {
         },
 
         createFooter = function () {
-            var footer_el = rb.DOM.node('<div id="' + BASE_ID + '-footer" hidden></div>'),
+            var footer_el = rb.DOM.node('<div class="footer" hidden></div>'),
                 save_btn = rb.DOM.node(
-                        '<button id="' + BASE_ID +'-save-btn">' + chrome.i18n.getMessage('Save') + '</button>'),
+                        '<button class="save-btn">' +
+                            chrome.i18n.getMessage('Save') +
+                        '</button>'),
                 add_custom_btn = rb.DOM.node(
-                        '<button id="' + BASE_ID + '-custom-btn">' + chrome.i18n.getMessage('Custom') + '</button>');
+                        '<button class="custom-btn">' +
+                            chrome.i18n.getMessage('Custom') +
+                        '</button>');
 
             els.save_btn = save_btn;
             save_btn.addEventListener('click', handleSave);
@@ -118,7 +136,7 @@ var TranslationWindow = (function () {
 
         show = function (pos) {
             if (!is_shown) {
-                rb.DOM.show(els.popup);
+                rb.DOM.show(els.host);
                 setPosition(pos);
                 document.body.addEventListener('click', handleClick, true);
                 document.body.addEventListener('keyup', handleKeyUp, true);
@@ -128,7 +146,7 @@ var TranslationWindow = (function () {
 
         destroy = function () {
             if (is_shown) {
-                rb.DOM.hide([ els.popup, els.footer ]);
+                rb.DOM.hide([ els.host, els.footer ]);
                 document.body.removeEventListener('click', handleClick, true);
                 document.body.removeEventListener('keyup', handleKeyUp, true);
                 reset();
@@ -138,11 +156,12 @@ var TranslationWindow = (function () {
 
         getSection = function (type) {
             if (!els.sections[type]) {
-                els.sections[type] = rb.DOM.node('<div class="pos-container">' +
-                                                '<div class="header">' + type + '</div>' +
-                                             '</div>');
+                els.sections[type] = rb.DOM.node(
+                    '<div class="pos-container">' +
+                        '<div class="pos-header">' + type + '</div>' +
+                    '</div>');
 
-                els.body.appendChild(els.sections[type]);
+                els.belly.appendChild(els.sections[type]);
             }
 
             return els.sections[type];
@@ -182,9 +201,9 @@ var TranslationWindow = (function () {
             var LOADING_ATTR_NAME = 'loading';
 
             if (set_active) {
-                els.body.setAttribute(LOADING_ATTR_NAME, '');
+                els.belly.setAttribute(LOADING_ATTR_NAME, '');
             } else {
-                els.body.removeAttribute(LOADING_ATTR_NAME);
+                els.belly.removeAttribute(LOADING_ATTR_NAME);
             }
         },
 
@@ -193,8 +212,8 @@ var TranslationWindow = (function () {
             pos.x = pos.x !== undefined ? pos.x + 'px' : '';
             pos.y = pos.y !== undefined ? pos.y + 'px' : '';
 
-            els.popup.style.left = pos.x;
-            els.popup.style.top  = pos.y;
+            els.host.style.left = pos.x;
+            els.host.style.top  = pos.y;
         },
 
         handleKeyUp = function (e) {
@@ -204,13 +223,13 @@ var TranslationWindow = (function () {
         },
 
         handleClick = function (e) {
-            if (!els.popup.contains(e.target)) {
+            if (els.host !== e.target) {
                 destroy();
             }
         },
 
         reset = function () {
-            els.body.innerHTML = '';
+            els.belly.innerHTML = '';
             els.sections = [];
 
             setPosition(null);

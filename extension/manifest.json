@@ -42,10 +42,10 @@
             "js": [
                 "js/utils/common.js",
                 "js/utils/bgAPI.js",
+                "js/utils/AJAX.js",
                 "js/content/TranslationWindow.js",
                 "js/content/content.js"
             ],
-            "css": [ "css/content.css" ],
 
             "run_at": "document_start",
             "all_frames": false
@@ -61,5 +61,9 @@
         "16": "img/ico/card16.png",
         "48": "img/ico/card48.png",
         "128": "img/ico/card128.png"
-    }
+    },
+
+    "web_accessible_resources": [
+        "css/content.css"
+    ]
 }
