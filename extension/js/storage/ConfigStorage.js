@@ -3,13 +3,17 @@ var ConfigStorage = (function () {
             return getIt().then(function (config) {
                 if (!config) {
                     return setIt('default');
+                } else {
+                    return JSON_Storage.getDefaultConfig().then(function (default_config) {
+                        return setIt(rb.override(config, default_config, { new_only: true }));
+                    });
                 }
             });
         },
 
         extendIt = function (ext_config) {
             return getIt().then(function (old_config) {
-                return setIt(rb.extend(old_config, ext_config));
+                return setIt(rb.override(old_config, ext_config, { concat_arrays: true }));
             });
         },
 

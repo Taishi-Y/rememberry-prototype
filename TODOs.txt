@@ -14,4 +14,3 @@ On release:
 Other:
     - add proper errors and warnings messages everywhere
     - implement 7th step of SM2 algorithm
-    - ensure config valid on startup

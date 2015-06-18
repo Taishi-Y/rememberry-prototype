@@ -26,26 +26,50 @@ var rb = (function () {
                 return self.indexOf(value) === index;
             })
         },
+        /**
+         * Extracts data from target to source object in configurable way
+         * @param {Object}  source                  Object to be modified
+         * @param {Object}  target                  Object, that possess data used for source modification
+         * @param {Object}  [config]                Configuration. All options are false by default
+         * @param {Boolean} [config.new_only]       Extend source object with only new properties from target object
+         * @param {Boolean} [config.concat_arrays]  Concatenate array properties (possible if new_only is false)
+         * @returns {Object}
+         */
+        override: function (source, target, config) {
+            var prop, t, s;
 
-        extend: function (source, target) {
-            var prop, t, s, res;
+            config = config || {};
 
             for (prop in target) {
                 if (target.hasOwnProperty(prop)) {
                     s = source[prop];
                     t = target[prop];
 
-                    if (typeof t === 'object' && typeof s === 'object') {
-                        if (Array.isArray(s) && Array.isArray(t)) {
-                            s = s.concat(t);
-                        } else {
-                            s = rb.extend(s, t);
+                    if (config.new_only) {
+                        if (!source.hasOwnProperty(prop)) {
+                            s = t;
+                        } else if (typeof s === 'object' && typeof t === 'object') {
+                            s = rb.override(s, t, config);
                         }
                     } else {
-                        s = t;
+                        if (typeof s === 'object' && typeof t === 'object') {
+                            if (Array.isArray(s) && Array.isArray(t)) {
+                                if (config.concat_arrays) {
+                                    s = s.concat(t);
+                                } else {
+                                    s = t;
+                                }
+                            } else {
+                                s = rb.override(s, t, config);
+                            }
+                        } else {
+                            s = t;
+                        }
                     }
 
-                    source[prop] = s;
+                    if (source[prop] !== s) {
+                        source[prop] = s;
+                    }
                 }
             }
 
