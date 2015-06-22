@@ -9,8 +9,6 @@ Options script:
 
 On release:
     - use days instead on minutes in SM2 algorithm
-    - use within frames
 
 Other:
     - add proper errors and warnings messages everywhere
-    - implement 7th step of SM2 algorithm

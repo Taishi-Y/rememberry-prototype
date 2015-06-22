@@ -15,7 +15,17 @@ rb.DOM.onReady.then(function () {
     }());
 
     bgAPI.receive('cards').then(function (cards) {
-        var getCardInfo, showNextCard, init, handleResponse, saveChanges, setState, current;
+        var showNextCard, init, handleResponse, saveChanges, setState, current,
+
+            repeat_cards = [],
+            ripened_cards = Object.keys(cards).map(function (card_name) {
+                    return {
+                        name: card_name,
+                        card: cards[card_name]
+                    };
+                }).filter(function (card_data) {
+                    return SM2.isCardRipened(card_data.card);
+                });
 
         init = function () {
             rb.DOM.hide(message_el);
@@ -27,7 +37,7 @@ rb.DOM.onReady.then(function () {
                 var quality = e.target.dataset.quality;
 
                 if (quality) {
-                    handleResponse(quality);
+                    handleResponse(Number(quality));
                 }
             });
         };
@@ -54,30 +64,21 @@ rb.DOM.onReady.then(function () {
         };
 
         handleResponse = function (quality) {
-            SM2.updateCardWithQuality(current.card, quality);
-            saveChanges();
+            if (!current.is_repeated) {
+                SM2.evoluteCard(current.card, quality);
+                saveChanges();
+            }
+
+            if (quality === 3) {
+                current.is_repeated = true;
+                repeat_cards.push(current);
+            }
+
             showNextCard();
         };
 
-        getCardInfo = function () {
-            var source, card;
-
-            for (source in cards) {
-                if (cards.hasOwnProperty(source)) {
-                    card = cards[source];
-
-                    if (SM2.isCardRipened(card)) {
-                        return {
-                            name: source,
-                            card: card
-                        };
-                    }
-                }
-            }
-        };
-
         showNextCard = function () {
-            var card_info = getCardInfo();
+            var card_info = ripened_cards.shift() || repeat_cards.shift();
 
             if (card_info) {
                 setState('answer');

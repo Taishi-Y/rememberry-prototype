@@ -25,7 +25,12 @@ var SM2 = {
         return is_ripened;
     },
 
-    updateCardWithQuality: function (card, quality) {
+    /**
+     *
+     * @param {Object} card
+     * @param {Number} quality
+     */
+    evoluteCard: function (card, quality) {
         if (quality !== 4) {
             card.ef = Math.max(1.3, card.ef - .8 + .28 * quality - .02 * Math.pow(quality, 2));
             card.ef = Number(card.ef.toFixed(2));
@@ -41,7 +46,7 @@ var SM2 = {
                 card.i = 6;
                 break;
             default:
-                card.i = card.i * card.ef;
+                card.i *= card.ef;
                 card.i = Number(card.i.toFixed(2));
         }
 
