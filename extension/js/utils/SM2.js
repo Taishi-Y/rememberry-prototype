@@ -5,21 +5,21 @@ var SM2 = {
             n: 0,
             i: 0,
             d: Date.now(),
-            ef: 2.5,
-            q: -1
+            ef: 2.5
         }
     },
 
     isCardRipened: function (card) {
-        var ms_diff, day_diff,
+        var ms_diff, step_diff,
+            TIME_STEP = 1000 */* 60 * 60 * */24,
             is_ripened = false;
 
         if (card.n === 0) {
             is_ripened = true;
         } else {
             ms_diff     = Date.now() - card.d;
-            day_diff    = ms_diff / (1000 */* 60 * 60 * */24);
-            is_ripened  = card.i <= day_diff;
+            step_diff    = ms_diff / (TIME_STEP);
+            is_ripened  = card.i <= step_diff;
         }
 
         return is_ripened;
