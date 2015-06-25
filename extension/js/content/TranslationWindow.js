@@ -25,7 +25,7 @@ var TranslationWindow = (function () {
             var host_el     = rb.DOM.node('<div id="' + BASE_ID + '" hidden></div>'),
                 root_el     = host_el.createShadowRoot(),
                 body_el     = rb.DOM.node('<div class="body"></div>'),
-                header_el   = createHeader(),
+                header_el   = rb.DOM.node('<div class="header"></div>'),
                 belly_el    = rb.DOM.node('<div class="belly"></div>'),
                 footer_el   = createFooter(),
                 style_el    = document.createElement('style');
@@ -52,16 +52,6 @@ var TranslationWindow = (function () {
             els.sections = [];
 
             is_created = true;
-        },
-
-        createHeader = function () {
-            var header_el = rb.DOM.node('<div class="header"></div>'),
-                close_btn = rb.DOM.node('<div class="close-btn">x</div>');
-
-            close_btn.addEventListener('click', destroy);
-            header_el.appendChild(close_btn);
-
-            return header_el;
         },
 
         createFooter = function () {

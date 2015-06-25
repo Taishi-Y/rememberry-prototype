@@ -48,6 +48,10 @@
                 "js/content/content.js"
             ],
 
+            "css": [
+                "css/fonts.css"
+            ],
+
             "run_at": "document_start",
             "all_frames": true
         }
@@ -65,6 +69,7 @@
     },
 
     "web_accessible_resources": [
-        "css/content.css"
+        "css/content.css",
+        "fonts/*"
     ]
 }

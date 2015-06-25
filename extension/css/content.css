@@ -9,8 +9,20 @@
     max-width: 300px;
     padding: 15px;
 
+    font-family: "Kurale", Verdana, sans-serif;
+    letter-spacing: initial;
+    font-weight: initial;
+    font-style: initial;
+    color: initial;
+    font-size: initial;
+    line-height: initial;
+
     border: 2px solid black;
     background-color: white;
+}
+
+.body * {
+    font-family: inherit !important;
 }
 
 .close-btn {

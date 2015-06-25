@@ -11,7 +11,7 @@ var SM2 = {
 
     isCardRipened: function (card) {
         var ms_diff, step_diff,
-            TIME_STEP = 1000 */* 60 * 60 * */24,
+            TIME_STEP = 1000 * 60 * 60 * 24,
             is_ripened = false;
 
         if (card.n === 0) {
