@@ -1,0 +1,14 @@
+{
+  "name": "rememberry",
+  "homepage": "https://github.com/skyiea/rememberry",
+  "private": true,
+  "devDependencies": {
+    "css-loader": "^0.15.1",
+    "grunt": "^0.4.5",
+    "less": "^2.5.1",
+    "less-loader": "^2.2.0",
+    "node-libs-browser": "^0.5.2",
+    "style-loader": "^0.12.3",
+    "webpack": "^1.9.12"
+  }
+}
