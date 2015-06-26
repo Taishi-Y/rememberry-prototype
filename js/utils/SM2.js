@@ -1,4 +1,4 @@
-var SM2 = {
+module.exports = {
 
     getInitData: function () {
         return {

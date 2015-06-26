@@ -1,3 +1,8 @@
+var ConfigStorage = require('../storage/ConfigStorage'),
+    DeckStorage = require('../storage/DeckStorage'),
+    CardStorage = require('../storage/CardStorage'),
+    JSON_Storage = require('../storage/JSON_Storage');
+
 ConfigStorage.init().then(function () {
     DeckStorage.init();
 });

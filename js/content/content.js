@@ -1,11 +1,18 @@
+var rb = require('../utils/common'),
+    bgAPI = require('../utils/bgAPI'),
+    TranslationWindow = require('./TranslationWindow');
+
+require('../../less/fonts.less');
+
 var init, page_config, showError,
+    props = {},
     ERROR_MESSAGE = chrome.i18n.getMessage('no_connection_to_extension', [ chrome.i18n.getMessage('ext_name') ]);
 
 showError = function (e) {
     if (e.message.indexOf('Error connecting to extension') !== -1) {
         setTimeout(function () {
             alert(ERROR_MESSAGE);
-        }, 0);
+        });
     }
 };
 
@@ -26,6 +33,8 @@ init = function () {
             document.addEventListener(new_config.action.name, handleEvent);
 
             page_config = new_config;
+            props.source_lang = page_config.source_lang;
+            props.target_lang = page_config.target_lang;
         };
 
     bgAPI.receive([ 'config', 'PoS' ]).spread(function (new_config) {
@@ -56,6 +65,8 @@ init = function () {
         }
     });
 };
+
+TranslationWindow.init(props);
 
 window.addEventListener('error', showError);
 rb.DOM.onReady.then(init);

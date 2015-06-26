@@ -1,4 +1,4 @@
-var contentAPI = {
+module.exports = {
 
     send: function (type, data) {
         chrome.tabs.query({}, function (tabs) {

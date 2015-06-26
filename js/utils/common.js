@@ -1,18 +1,20 @@
 // common library, used by all extension script
 // contain syntax sugar staff
-var visible = function (is_visible, els) {
-    if (!Array.isArray(els)) {
-        els = [ els ];
-    }
+var rb,
 
-    els.forEach(function (el) {
-        if (is_visible) {
-            el.removeAttribute('hidden');
-        } else {
-            el.setAttribute('hidden', '');
+    visible = function (is_visible, els) {
+        if (!Array.isArray(els)) {
+            els = [ els ];
         }
-    });
-};
+
+        els.forEach(function (el) {
+            if (is_visible) {
+                el.removeAttribute('hidden');
+            } else {
+                el.setAttribute('hidden', '');
+            }
+        });
+    };
 
 Promise.prototype.spread = Promise.prototype.spread || function (fn) {
     return this.then(function (args) {
@@ -20,7 +22,7 @@ Promise.prototype.spread = Promise.prototype.spread || function (fn) {
     });
 };
 
-module.exports = {
+rb = {
     /**
      * Creates array with unique values of input one
      * @param {Array} array
@@ -111,3 +113,5 @@ module.exports = {
         hide: visible.bind(null, false)
     }
 };
+
+module.exports = rb;

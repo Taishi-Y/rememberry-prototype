@@ -103,8 +103,8 @@ var window_el, login_el, password_el, login_btn, back_btn, props,
     })};
 
 module.exports = {
-    init: function (new_props) {
-        props = new_props;
+    init: function (initial_props) {
+        props = initial_props;
         initDOM();
     },
 

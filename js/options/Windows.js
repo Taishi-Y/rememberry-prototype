@@ -6,9 +6,7 @@ var rb = require('../utils/common'),
     LoginWindow = require('./windows/Login'),
     ExportWindow = require('./windows/Export');
 
-require('../../less/options.less');
-
-var active, cards_to_export,
+var Windows, active, cards_to_export,
 
     windows = {
         options : OptionsWindow,
@@ -16,7 +14,7 @@ var active, cards_to_export,
         'export': ExportWindow
     };
 
-var Windows = {
+Windows = {
     init: function () {
         Message.init();
 

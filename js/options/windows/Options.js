@@ -301,8 +301,8 @@ var window_el, props,
     };
 
 module.exports = {
-    init: function (new_props) {
-        props = new_props;
+    init: function (initial_props) {
+        props = initial_props;
         initDOM();
     },
 

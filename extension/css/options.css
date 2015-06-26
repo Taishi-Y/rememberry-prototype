@@ -1,99 +1,76 @@
-@import 'common.css';
-
+[hidden] {
+  display: none !important;
+}
 #message {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 40px;
-
-    font-size: 16px;
-
-    background-color: rgba(255, 255, 255, .9);
-    cursor: pointer;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  font-size: 16px;
+  background-color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
 }
-
 #message[closable]:before {
-    position: absolute;
-    top: 10px;
-    right: 20px;
-
-    font-size: 24px;
-
-    content: 'x';
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  font-size: 24px;
+  content: 'x';
 }
-
 .menu {
-    padding-top: 5px;
+  padding-top: 5px;
 }
-
 .menu:not(:last-child) {
-    padding-bottom: 15px;
-
-    border-bottom: 1px solid grey;
+  padding-bottom: 15px;
+  border-bottom: 1px solid grey;
 }
-
 h3 {
-    margin: 0 0 20px;
-
-    font-weight: bold;
+  margin: 0 0 20px;
+  font-weight: bold;
 }
-
 label {
-    display: inline-table;
-    width: 120px;
-    padding-right: 10px;
-
-    text-align: right;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    overflow: hidden;
+  display: inline-table;
+  width: 120px;
+  padding-right: 10px;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
-
 select {
-    width: 150px;
+  width: 150px;
 }
-
 textarea {
-    resize: none;
+  resize: none;
 }
-
 .btn-area {
-    text-align: center;
+  text-align: center;
 }
-
 button {
-    width: 160px;
-    height: 24px;
-
-    text-overflow: ellipsis;
-    white-space: nowrap;
-
-    overflow: hidden;
-    cursor: pointer;
+  width: 160px;
+  height: 24px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
 }
-
 button:nth-child(2n + 1) {
-    margin: 2px 5px 2px 0;
+  margin: 2px 5px 2px 0;
 }
-
 #deck-info {
-    margin: 10px 0;
+  margin: 10px 0;
 }
-
 #desc-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
 }
-
 #cards-count {
-    font-family: monospace;
-    font-size: 16px;
+  font-family: monospace;
+  font-size: 16px;
 }

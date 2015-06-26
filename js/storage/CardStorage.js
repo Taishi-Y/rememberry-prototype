@@ -1,38 +1,37 @@
-var CardStorage = (function () {
-    var setCards = function (cards) {
-            DeckStorage.getActiveDeck().then(function (active_deck) {
-                active_deck.cards = cards;
-                DeckStorage.updateDeck(active_deck);
-            });
-        },
+var DeckStorage = require('./DeckStorage');
 
-        getCards = function () {
-            return DeckStorage.getActiveDeck().then(function (active_deck) {
-                return active_deck.cards;
-            });
-        },
+var setCards = function (cards) {
+        DeckStorage.getActiveDeck().then(function (active_deck) {
+            active_deck.cards = cards;
+            DeckStorage.updateDeck(active_deck);
+        });
+    },
 
-        addCard = function (info) {
-            getCards().then(function (cards) {
-                var card,
-                    source = info.orig,
-                    translation = info.translation;
+    getCards = function () {
+        return DeckStorage.getActiveDeck().then(function (active_deck) {
+            return active_deck.cards;
+        });
+    },
 
-                if (!cards.hasOwnProperty(source)) {
-                    cards[source] = rb.override({ t: translation }, SM2.getInitData());
-                } else {
-                    card = cards[source];
-                    card.t = rb.unique(card.t.concat(translation));
-                }
+    addCard = function (info) {
+        getCards().then(function (cards) {
+            var card,
+                source = info.orig,
+                translation = info.translation;
 
-                setCards(cards);
-            });
-        };
+            if (!cards.hasOwnProperty(source)) {
+                cards[source] = rb.override({ t: translation }, SM2.getInitData());
+            } else {
+                card = cards[source];
+                card.t = rb.unique(card.t.concat(translation));
+            }
 
-    // public API
-    return {
-        addCard: addCard,
-        setCards: setCards,
-        getCards: getCards
+            setCards(cards);
+        });
     };
-}());
+
+module.exports = {
+    addCard: addCard,
+    setCards: setCards,
+    getCards: getCards
+};

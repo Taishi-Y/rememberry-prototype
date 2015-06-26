@@ -10,16 +10,7 @@
 
     "background": {
         "scripts": [
-            "js/utils/common.js",
-            "js/storage/Storage.js",
-            "js/utils/AJAX.js",
-            "js/utils/SM2.js",
-            "js/utils/contentAPI.js",
-            "js/storage/ConfigStorage.js",
-            "js/storage/DeckStorage.js",
-            "js/storage/CardStorage.js",
-            "js/storage/JSON_Storage.js",
-            "js/background/background.js"
+            "js/background.js"
         ]
     },
 
@@ -41,11 +32,7 @@
             "matches": [ "*://*/*" ],
 
             "js": [
-                "js/utils/common.js",
-                "js/utils/bgAPI.js",
-                "js/utils/AJAX.js",
-                "js/content/TranslationWindow.js",
-                "js/content/content.js"
+                "js/content.js"
             ],
 
             "css": [

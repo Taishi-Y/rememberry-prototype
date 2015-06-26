@@ -1,0 +1,68 @@
+@import 'common';
+@import 'buttons';
+
+body {
+    display: flex;
+    width: 340px;
+    min-height: 300px;
+}
+
+#test {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+#message {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+
+    font-size: 1.7em;
+}
+
+#source {
+    text-align: center;
+    font-size: 1.5em;
+    line-height: 30px;
+
+    border-bottom: 1px solid #000;
+}
+
+#translation-area {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1;
+    min-height: 150px;
+    padding: 10px 30px;
+
+    font-size: 1.5em;
+
+    box-sizing: border-box;
+}
+
+#btns-area {
+    flex-shrink: 0;
+    height: 40px;
+
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.btn {
+    width: 100px;
+    min-width: 100px;
+    height: 40px;
+
+    font-size: 1.2em;
+}
+
+#mark-area .btn:not(:last-child) {
+    margin-right: 10px;
+}
+
+#show-answer-btn {
+    width: auto;
+}

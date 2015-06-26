@@ -1,3 +1,9 @@
+var rb = require('../utils/common'),
+    bgAPI = require('../utils/bgAPI'),
+    SM2 = require('../utils/SM2');
+
+require('../../less/popup.less');
+
 rb.DOM.onReady.then(function () {
     var message_el      = document.getElementById('message'),
         test_el         = document.getElementById('test'),

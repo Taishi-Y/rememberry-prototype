@@ -67,8 +67,8 @@ var window_el, models_dropdown, decks_dropdown, export_btn, back_btn, cards_to_e
     };
 
 module.exports = {
-    init: function (new_props) {
-        props = new_props;
+    init: function (initial_props) {
+        props = initial_props;
         initDOM();
     },
 
