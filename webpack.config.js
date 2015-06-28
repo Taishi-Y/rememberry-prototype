@@ -1,4 +1,5 @@
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
+var ExtractTextPlugin = require('extract-text-webpack-plugin'),
+    ext_path = 'extension/';
 
 module.exports = {
     entry: {
@@ -9,21 +10,21 @@ module.exports = {
     },
     output: {
         path: __dirname,
-        filename: 'extension/js/[name].js'
+        filename: ext_path + 'js/[name].js'
     },
     module: {
         loaders: [
             {
-                test: /\.less$/,
-                loader: ExtractTextPlugin.extract('style-loader', 'css-loader!less-loader')
+                test: /^((?!(\.extract)).)+\.less$/,
+                loader: 'style!css!less'
             },
             {
-                test: /\.woff2$/,
-                loader: 'url-loader?limit=0'
+                test: /\.extract\.less$/,
+                loader: ExtractTextPlugin.extract('style', 'css!less')
             }
         ]
     },
     plugins: [
-        new ExtractTextPlugin('extension/css/[name].css')
+        new ExtractTextPlugin(ext_path + 'css/[name].css')
     ]
 };

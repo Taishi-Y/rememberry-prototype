@@ -1,0 +1,90 @@
+@import (reference) 'vars';
+
+/* Rememberry Translate Popup */
+:host {
+    position: absolute !important;
+    z-index: 999999999 !important;
+}
+
+.body {
+    min-width: 100px;
+    max-width: 300px;
+    padding: 15px;
+
+    font-family: Georgia, monospace;
+    letter-spacing: initial;
+    font-weight: initial;
+    font-style: initial;
+    color: initial;
+    font-size: initial;
+    line-height: initial;
+
+    border: 2px solid black;
+    background-color: white;
+
+    * {
+        font-family: inherit !important;
+    }
+
+    .belly {
+        min-height: 30px;
+        margin-top: 5px;
+
+        &[loading] {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            &:after {
+                @message: ~'__MSG_Translation__';
+
+                color: #ccc;
+
+                content: '@{message}..';
+            }
+        }
+
+        .pos-container {
+            &:not(:first-child) {
+                margin-top: 10px;
+            }
+
+            .pos-header {
+                color: grey;
+                font-size: .9em;
+                font-style: italic;
+                text-align: right;
+
+                border-bottom: 1px dotted #ccc;
+            }
+
+            .term-line {
+                margin: 4px 0;
+
+                .term-line-checkbox {
+                    margin-right: 5px !important;
+                }
+
+                .term[contenteditable] {
+                    outline: none;
+                }
+            }
+        }
+    }
+
+    .footer {
+        margin-top: 10px;
+
+        button {
+            &:focus {
+                color: blue;
+
+                outline: none;
+            }
+
+            &:not(:last-child) {
+                margin-right: 5px;
+            }
+        }
+    }
+}

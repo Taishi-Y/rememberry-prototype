@@ -3,7 +3,7 @@
 
     "author": "__MSG_author__",
     "name": "__MSG_ext_name__",
-    "version": "1.0",
+    "version": "0.1",
     "default_locale": "uk",
 
     "description": "__MSG_ext_description__",
@@ -35,10 +35,6 @@
                 "js/content.js"
             ],
 
-            "css": [
-                "css/fonts.css"
-            ],
-
             "run_at": "document_start",
             "all_frames": true
         }
@@ -56,7 +52,6 @@
     },
 
     "web_accessible_resources": [
-        "css/content.css",
-        "fonts/*"
+        "css/content.css"
     ]
 }

@@ -34,12 +34,11 @@ var props,
             footer_el   = createFooter(),
             style_el    = document.createElement('style');
 
-        body_el.appendChild(style_el);
-        body_el.appendChild(style_el);
         body_el.appendChild(header_el);
         body_el.appendChild(belly_el);
         body_el.appendChild(footer_el);
 
+        root_el.appendChild(style_el);
         root_el.appendChild(body_el);
 
         CSS.then(function (css_text) {

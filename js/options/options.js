@@ -1,4 +1,4 @@
-var rb = require('../utils/common.js'),
+var rb = require('../utils/common'),
     Windows = require('./Windows');
 
 require('../../less/options.less');

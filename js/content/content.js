@@ -2,7 +2,7 @@ var rb = require('../utils/common'),
     bgAPI = require('../utils/bgAPI'),
     TranslationWindow = require('./TranslationWindow');
 
-require('../../less/fonts.less');
+require('../../less/content.extract.less');
 
 var init, page_config, showError,
     props = {},
@@ -10,7 +10,7 @@ var init, page_config, showError,
 
 showError = function (e) {
     if (e.message.indexOf('Error connecting to extension') !== -1) {
-        setTimeout(function () {
+        window.setTimeout(function () {
             alert(ERROR_MESSAGE);
         });
     }
