@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/js/options.min.js"></script>
+</head>
+<body>
+    <div id="message" hidden></div>
+    <div id="options-window" class="window" hidden>
+        <div class="menu" id="languages-menu">
+            <h3></h3>
+            <label for="source-lang"></label><select id="source-lang"></select>
+            <br/><br/>
+            <label for="target-lang"></label><select id="target-lang"></select>
+        </div>
+        <div class="menu" id="action-menu">
+            <h3></h3>
+            <label for="action"></label><select id="action"></select>
+            <br/><br/>
+            <label for="modifier"></label><select id="modifier"></select>
+        </div>
+        <div class="menu" id="deck-menu">
+            <h3></h3>
+            <label for="selected-deck"></label><select id="selected-deck"></select>
+            <div id="deck-info">
+                <label for="deck-name"></label><input type="text" id="deck-name"/>
+                <br/><br/>
+                <div id="desc-container">
+                    <label for="deck-desc"></label><textarea id="deck-desc"></textarea>
+                </div>
+                <label for="cards-count"></label><span id="cards-count"></span>
+            </div>
+            <div class="btn-area">
+                <button data-action="add"></button>
+                <button data-action="remove"></button>
+                <button data-action="clear"></button>
+                <button data-action="activate"></button>
+                <button data-action="export"></button>
+                <button data-action="update"></button>
+            </div>
+        </div>
+    </div>
+    <div id="login-window" hidden class="window">
+        <h3></h3>
+        <label for="login"></label><input type="text" id="login"/>
+        <br/><br/>
+        <label for="password"></label><input type="password" id="password"/>
+        <br/><br/>
+        <div class="btn-area">
+            <button id="anki-login"></button>
+            <button class="back"></button>
+        </div>
+    </div>
+    <div id="export-window" hidden class="window">
+        <h3></h3>
+        <label for="model"></label><select id="model"></select>
+        <br/><br/>
+        <label for="deck"></label><select id="deck"></select>
+        <br/><br/>
+        <div class="btn-area">
+            <button id="export-btn"></button>
+            <button class="back"></button>
+        </div>
+    </div>
+</body>
+</html>

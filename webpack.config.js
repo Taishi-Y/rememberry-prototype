@@ -1,7 +1,9 @@
 var ExtractTextPlugin = require('extract-text-webpack-plugin'),
-    ext_path = 'extension/';
+    app_path = __dirname + '/app',
+    output_path = 'extension/';
 
 module.exports = {
+    context: app_path,
     entry: {
         options     : './js/options/options.js',
         content     : './js/content/content.js',
@@ -9,8 +11,8 @@ module.exports = {
         background  : './js/background/background.js'
     },
     output: {
-        path: __dirname,
-        filename: ext_path + 'js/[name].js'
+        path: output_path,
+        filename: 'js/[name].min.js'
     },
     module: {
         loaders: [
@@ -21,10 +23,17 @@ module.exports = {
             {
                 test: /\.extract\.less$/,
                 loader: ExtractTextPlugin.extract('style', 'css!less')
+            },
+            {
+                test: /\.json$/,
+                loader: 'json'
             }
         ]
     },
+    resolve: {
+        root: app_path
+    },
     plugins: [
-        new ExtractTextPlugin(ext_path + 'css/[name].css')
+        new ExtractTextPlugin('css/[name].min.css')
     ]
 };
