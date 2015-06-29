@@ -10,6 +10,7 @@
 
     "background": {
         "scripts": [
+            "js/wp-init.min.js",
             "js/background.min.js"
         ]
     },
@@ -32,6 +33,7 @@
             "matches": [ "*://*/*" ],
 
             "js": [
+                "js/wp-init.min.js",
                 "js/content.min.js"
             ],
 

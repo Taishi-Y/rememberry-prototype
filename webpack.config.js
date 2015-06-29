@@ -1,6 +1,7 @@
-var ExtractTextPlugin = require('extract-text-webpack-plugin'),
+var webpack = require('webpack'),
+    ExtractTextPlugin = require('extract-text-webpack-plugin'),
     app_path = __dirname + '/app',
-    output_path = 'extension/';
+    build_path = 'extension/';
 
 module.exports = {
     context: app_path,
@@ -11,7 +12,7 @@ module.exports = {
         background  : './js/background/background.js'
     },
     output: {
-        path: output_path,
+        path: build_path,
         filename: 'js/[name].min.js'
     },
     module: {
@@ -22,7 +23,7 @@ module.exports = {
             },
             {
                 test: /\.extract\.less$/,
-                loader: ExtractTextPlugin.extract('style', 'css!less')
+                loader: ExtractTextPlugin.extract('style', 'css?minimize!less')
             },
             {
                 test: /\.json$/,
@@ -34,6 +35,12 @@ module.exports = {
         root: app_path
     },
     plugins: [
-        new ExtractTextPlugin('css/[name].min.css')
+        new ExtractTextPlugin('css/[name].min.css'),
+        new webpack.optimize.CommonsChunkPlugin('js/wp-init.min.js'),
+        new webpack.optimize.UglifyJsPlugin({
+            compress: {
+                warnings: false
+            }
+        })
     ]
 };

@@ -2,9 +2,6 @@
   "name": "rememberry",
   "homepage": "https://github.com/skyiea/rememberry",
   "private": true,
-  "scripts": {
-    "start": "webpack --config webpack.config.js --watch"
-  },
   "devDependencies": {
     "css-loader": "^0.15.1",
     "extract-text-webpack-plugin": "^0.8.2",
