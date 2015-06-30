@@ -7,8 +7,5 @@ Content script:
 Options script:
     - disallow "ctrlKey" modifier on Mac platform
 
-On release:
-    - use days instead on minutes in SM2 algorithm
-
 Other:
     - add proper errors and warnings messages everywhere

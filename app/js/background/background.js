@@ -95,3 +95,16 @@ chrome.contextMenus.create({
         chrome.tabs.sendMessage(tab.id, { method: 'translate', type: 'selection' });
     }
 });
+
+chrome.contextMenus.create({
+    title: 'Translate desired text',
+    contexts: [ 'browser_action' ],
+
+    onclick: function () {
+        var text_to_translate = prompt('Enter text to translate');
+
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+            chrome.tabs.sendMessage(tabs[0].id, { method: 'translate', type: 'text', data: text_to_translate });
+        });
+    }
+});

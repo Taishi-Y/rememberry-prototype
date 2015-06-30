@@ -21,7 +21,7 @@ init = function () {
             var modifier = page_config.action.modifier;
 
             if (modifier === 'none' || e[modifier]) {
-                TranslationWindow.translateSelection();
+                TranslationWindow.translateText();
             }
         },
 
@@ -55,7 +55,10 @@ init = function () {
             case 'translate':
                 switch (message.type) {
                     case 'selection':
-                        TranslationWindow.translateSelection();
+                        TranslationWindow.translateText();
+                        break;
+                    case 'text':
+                        TranslationWindow.translateText(message.data);
                         break;
                     default:
                 }

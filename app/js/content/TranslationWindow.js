@@ -201,12 +201,11 @@ var props,
     },
 
     setPosition = function (pos) {
-        pos = pos || {};
-        pos.x = pos.x !== undefined ? pos.x + 'px' : '';
-        pos.y = pos.y !== undefined ? pos.y + 'px' : '';
-
-        els.host.style.left = pos.x;
-        els.host.style.top  = pos.y;
+        if (pos) {
+            rb.extend(els.host.style, pos);
+        } else {
+            els.host.removeAttribute('style');
+        }
     },
 
     handleKeyUp = function (e) {
@@ -264,12 +263,33 @@ module.exports = {
         props = initial_props;
     },
 
-    translateSelection: function () {
+    translateText: function (text) {
         var text_range, rect, pos, selection, selected_text;
 
         if (navigator.onLine) {
-            selection = document.getSelection();
-            selected_text = selection.toString().trim();
+            if (text) {
+                pos = {
+                    position: 'fixed',
+                    top: '0px',
+                    right: '0px'
+                };
+            } else {
+                selection = document.getSelection();
+                selected_text = selection.toString().trim();
+
+                if (selected_text.length) {
+                    text_range = selection.getRangeAt(0);
+                    rect = text_range.getBoundingClientRect();
+
+                    pos = {
+                        position: 'absolute',
+                        top: window.scrollY + rect.bottom + 'px',
+                        left: window.scrollX + rect.left + 'px'
+                    };
+
+                    text = selected_text;
+                }
+            }
 
             if (!is_created) {
                 create();
@@ -279,27 +299,19 @@ module.exports = {
                 destroy();
             }
 
-            if (selected_text.length) {
+            if (text.length) {
                 state.orig = selected_text;
-
-                text_range = selection.getRangeAt(0);
-                rect = text_range.getBoundingClientRect();
-
-                pos = {
-                    x: window.scrollX + rect.left,
-                    y: window.scrollY + rect.bottom
-                };
 
                 show(pos);
                 setLoader(true);
 
-                if (selected_text.length < 3) {
-                    selected_text += '..';
+                if (text.length < 3) {
+                    text += '..';
                 }
 
                 (function (id) {
                     //setTimeout(function () {
-                    bgAPI.translate(selected_text, props.source_lang, props.target_lang)
+                    bgAPI.translate(text, props.source_lang, props.target_lang)
                         .then(function () {
                             if (id === tr_id) {
                                 handleResponse.apply(null, arguments);
