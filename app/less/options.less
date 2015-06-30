@@ -16,84 +16,90 @@
 
     background-color: rgba(255, 255, 255, .9);
     cursor: pointer;
+
+    &[closable]:before {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+
+        font-size: 24px;
+
+        content: 'x';
+    }
 }
 
-#message[closable]:before {
-    position: absolute;
-    top: 10px;
-    right: 20px;
+.window {
+    .menu {
+        padding-top: 5px;
 
-    font-size: 24px;
+        &:not(:last-child) {
+            padding-bottom: 15px;
 
-    content: 'x';
-}
+            border-bottom: 1px solid grey;
+        }
+    }
 
-.menu {
-    padding-top: 5px;
-}
+    h3 {
+        margin: 0 0 20px;
 
-.menu:not(:last-child) {
-    padding-bottom: 15px;
+        font-weight: bold;
+    }
 
-    border-bottom: 1px solid grey;
-}
+    label {
+        display: inline-table;
+        width: 120px;
+        padding-right: 10px;
 
-h3 {
-    margin: 0 0 20px;
+        text-align: right;
+        text-overflow: ellipsis;
+        white-space: nowrap;
 
-    font-weight: bold;
-}
+        overflow: hidden;
+    }
 
-label {
-    display: inline-table;
-    width: 120px;
-    padding-right: 10px;
+    select {
+        width: 150px;
+    }
 
-    text-align: right;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    textarea {
+        resize: none;
+    }
 
-    overflow: hidden;
-}
+    .btn-area {
+        text-align: center;
 
-select {
-    width: 150px;
-}
+        button {
+            width: 160px;
+            height: 24px;
 
-textarea {
-    resize: none;
-}
+            text-overflow: ellipsis;
+            white-space: nowrap;
 
-.btn-area {
-    text-align: center;
-}
+            overflow: hidden;
+            cursor: pointer;
 
-button {
-    width: 160px;
-    height: 24px;
+            &:nth-child(2n + 1) {
+                margin: 2px 5px 2px 0;
+            }
+        }
+    }
 
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    &.options-window {
+        .deck-menu {
+            .deck-info {
+                margin: 10px 0;
 
-    overflow: hidden;
-    cursor: pointer;
-}
+                .desc-container {
+                    display: flex;
+                    align-items: center;
+                    margin-bottom: 5px;
+                }
 
-button:nth-child(2n + 1) {
-    margin: 2px 5px 2px 0;
-}
-
-#deck-info {
-    margin: 10px 0;
-}
-
-#desc-container {
-    display: flex;
-    align-items: center;
-    margin-bottom: 5px;
-}
-
-#cards-count {
-    font-family: monospace;
-    font-size: 16px;
+                .cards-count {
+                    font-family: monospace;
+                    font-size: 16px;
+                }
+            }
+        }
+    }
 }

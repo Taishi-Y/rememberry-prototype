@@ -4,7 +4,7 @@ var rb = require('js/utils/common'),
 var window_el, props,
 
     initDOM = function () {
-        window_el = document.getElementById('options-window');
+        window_el = document.querySelector('.options-window');
 
         (function provideLocalization() {
             window_el.querySelector('#languages-menu h3').innerHTML         = chrome.i18n.getMessage('Languages');
@@ -16,17 +16,17 @@ var window_el, props,
             window_el.querySelector('label[for="action"]').innerHTML    = chrome.i18n.getMessage('Trigger_action');
             window_el.querySelector('label[for="modifier"]').innerHTML  = chrome.i18n.getMessage('Key_modifier');
 
-            window_el.querySelector('#deck-menu h3').innerHTML                              = chrome.i18n.getMessage('Decks');
-            window_el.querySelector('#deck-menu label[for="selected-deck"]').innerHTML      = chrome.i18n.getMessage('Deck');
+            window_el.querySelector('.deck-menu h3').innerHTML                              = chrome.i18n.getMessage('Decks');
+            window_el.querySelector('.deck-menu label[for="selected-deck"]').innerHTML      = chrome.i18n.getMessage('Deck');
             window_el.querySelector('.btn-area button[data-action="activate"]').innerHTML   = chrome.i18n.getMessage('Make_active');
             window_el.querySelector('.btn-area button[data-action="add"]').innerHTML        = chrome.i18n.getMessage('Add');
             window_el.querySelector('.btn-area button[data-action="remove"]').innerHTML     = chrome.i18n.getMessage('Remove');
             window_el.querySelector('.btn-area button[data-action="clear"]').innerHTML      = chrome.i18n.getMessage('Clear');
             window_el.querySelector('.btn-area button[data-action="export"]').innerHTML     = chrome.i18n.getMessage('Export_to_Anki');
             window_el.querySelector('.btn-area button[data-action="update"]').innerHTML     = chrome.i18n.getMessage('Update');
-            window_el.querySelector('#deck-info label[for="cards-count"]').innerHTML        = chrome.i18n.getMessage('Cards_count');
-            window_el.querySelector('#deck-info label[for="deck-name"]').innerHTML          = chrome.i18n.getMessage('Deck_name');
-            window_el.querySelector('#deck-info label[for="deck-desc"]').innerHTML          = chrome.i18n.getMessage('Deck_description');
+            window_el.querySelector('.deck-info label[for="cards-count"]').innerHTML        = chrome.i18n.getMessage('Cards_count');
+            window_el.querySelector('.deck-info label[for="deck-name"]').innerHTML          = chrome.i18n.getMessage('Deck_name');
+            window_el.querySelector('.deck-info label[for="deck-desc"]').innerHTML          = chrome.i18n.getMessage('Deck_description');
         }());
 
         (function initLanguageMenu() {
@@ -130,8 +130,8 @@ var window_el, props,
                 var deck_name, selected_deck,
                     startup_active_deck_name    = config.decks.active_name,
                     deck_select_el              = document.getElementById('selected-deck'),
-                    info_el                     = document.getElementById('deck-info'),
-                    cards_count_el              = document.getElementById('cards-count'),
+                    info_el                     = window_el.querySelector('.deck-info'),
+                    cards_count_el              = window_el.querySelector('.cards-count'),
                     name_el                     = document.getElementById('deck-name'),
                     desc_el                     = document.getElementById('deck-desc'),
                     btn_area_el                 = window_el.getElementsByClassName('btn-area')[0];

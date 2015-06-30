@@ -6,7 +6,7 @@
 </head>
 <body>
     <div id="message" hidden></div>
-    <div id="options-window" class="window" hidden>
+    <div class="window options-window" hidden>
         <div class="menu" id="languages-menu">
             <h3></h3>
             <label for="source-lang"></label><select id="source-lang"></select>
@@ -19,16 +19,16 @@
             <br/><br/>
             <label for="modifier"></label><select id="modifier"></select>
         </div>
-        <div class="menu" id="deck-menu">
+        <div class="menu deck-menu">
             <h3></h3>
             <label for="selected-deck"></label><select id="selected-deck"></select>
-            <div id="deck-info">
+            <div class="deck-info">
                 <label for="deck-name"></label><input type="text" id="deck-name"/>
                 <br/><br/>
-                <div id="desc-container">
+                <div class="desc-container">
                     <label for="deck-desc"></label><textarea id="deck-desc"></textarea>
                 </div>
-                <label for="cards-count"></label><span id="cards-count"></span>
+                <label for="cards-count"></label><span class="cards-count"></span>
             </div>
             <div class="btn-area">
                 <button data-action="add"></button>
