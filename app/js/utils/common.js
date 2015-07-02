@@ -38,35 +38,33 @@ rb = {
      */
     override(source, target, config = {}) {
         for (let prop in target) {
-            if (target.hasOwnProperty(prop)) {
-                let s = source[prop],
-                    t = target[prop];
+            let s = source[prop],
+                t = target[prop];
 
-                if (config.new_only) {
-                    if (!source.hasOwnProperty(prop)) {
-                        s = t;
-                    } else if (typeof s === 'object' && typeof t === 'object') {
+            if (config.new_only) {
+                if (!source.hasOwnProperty(prop)) {
+                    s = t;
+                } else if (typeof s === 'object' && typeof t === 'object') {
+                    s = rb.override(s, t, config);
+                }
+            } else {
+                if (typeof s === 'object' && typeof t === 'object') {
+                    if (Array.isArray(s) && Array.isArray(t)) {
+                        if (config.concat_arrays) {
+                            s = s.concat(t);
+                        } else {
+                            s = t;
+                        }
+                    } else {
                         s = rb.override(s, t, config);
                     }
                 } else {
-                    if (typeof s === 'object' && typeof t === 'object') {
-                        if (Array.isArray(s) && Array.isArray(t)) {
-                            if (config.concat_arrays) {
-                                s = s.concat(t);
-                            } else {
-                                s = t;
-                            }
-                        } else {
-                            s = rb.override(s, t, config);
-                        }
-                    } else {
-                        s = t;
-                    }
+                    s = t;
                 }
+            }
 
-                if (source[prop] !== s) {
-                    source[prop] = s;
-                }
+            if (source[prop] !== s) {
+                source[prop] = s;
             }
         }
 

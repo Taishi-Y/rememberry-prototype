@@ -5,9 +5,7 @@ let request = (type, url, data, headers) => new Promise((resolve, reject) => {
                 let URI_data = [];
 
                 for (let key in obj) {
-                    if (obj.hasOwnProperty(key)) {
-                        URI_data.push(key + '=' + encodeURIComponent(obj[key]));
-                    }
+                    URI_data.push(key + '=' + encodeURIComponent(obj[key]));
                 }
 
                 return URI_data.join('&');

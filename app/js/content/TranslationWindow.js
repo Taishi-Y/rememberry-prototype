@@ -1,6 +1,7 @@
 import rb from 'js/utils/common';
 import bgAPI from 'js/utils/bgAPI';
 import AJAX from 'js/utils/AJAX';
+import showError from './showError';
 
 // private members
 const BASE_ID = 'rememberry-popup';
@@ -163,22 +164,20 @@ let props,
         state.translation = [];
 
         for (let type in translation) {
-            if (translation.hasOwnProperty(type)) {
-                let data = translation[type],
-                    section_el = getSection(data.name),
-                    { terms } = data;
+            let data = translation[type],
+                section_el = getSection(data.name),
+                { terms } = data;
 
-                terms.forEach(term => {
-                    let term_line = createTermLine(term, checked);
+            terms.forEach(term => {
+                let term_line = createTermLine(term, checked);
 
-                    state.translation.push(term_line);
-                    section_el.appendChild(term_line.el);
+                state.translation.push(term_line);
+                section_el.appendChild(term_line.el);
 
-                    if (checked) {
-                        checked = false;
-                    }
-                });
-            }
+                if (checked) {
+                    checked = false;
+                }
+            });
         }
 
         setLoader(false);
@@ -308,13 +307,14 @@ export default {
                 ((id => {
                     //setTimeout(() => {
                     bgAPI.translate(text, props.source_lang, props.target_lang)
-                        .then((...args) => {
+                        .then(result => {
                             if (id === tr_id) {
-                                handleResponse(...args);
+                                handleResponse(result);
                             }
-                        }, (...args) => {
+                        }, e => {
                             if (id === tr_id) {
-                                destroy(...args);
+                                destroy();
+                                showError(e);
                             }
                         });
                     //}, 2000);

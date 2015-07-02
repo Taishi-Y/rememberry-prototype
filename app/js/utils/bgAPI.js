@@ -28,31 +28,32 @@ let parts_of_speech_enum,
         chrome.runtime.sendMessage({ method: 'remove', type, data }, resolve);
     }),
 
-    translate = (text, source, target) => new Promise((resolve, reject) => {
+    translate = (text, source, target) => new Promise(resolve => {
         let parseResult = result =>
             parts_of_speech_enum.then(pos_enum => {
-                let term, parsed_result, all_terms, sentences,
+                let parsed_result,
                     type = text.includes(' ') ? 'sentence' : 'word';
 
                 if (type === 'word') {
+                    let sentences,
+                        all_terms = [];
+
                     parsed_result = {};
-                    all_terms = [];
 
                     if (result.dict) {
                         result.dict.sort((a, b) => a.pos_enum > b.pos_enum);
 
                         result.dict.forEach(entry => {
-                            let pos_name,
-                                terms = entry.terms
-                                        .map(term => term.toLowerCase())
-                                        .filter(term => all_terms.indexOf(term) === -1);
+                            let terms = entry.terms
+                                            .map(term => term.toLowerCase())
+                                            .filter(term => all_terms.indexOf(term) === -1);
 
                             if (terms.length) {
-                                pos_name = pos_enum[entry.pos_enum - 1];
+                                let pos_name = pos_enum[entry.pos_enum - 1];
 
                                 parsed_result[pos_name] = {
                                     name: pos_name.trim().length ?
-                                        chrome.i18n.getMessage(pos_name.replace(/\s/g, '_')) : '',
+                                            chrome.i18n.getMessage(pos_name.replace(/\s/g, '_')) : '',
                                     terms
                                 };
 
@@ -65,7 +66,7 @@ let parts_of_speech_enum,
                         sentences = [];
 
                         result.sentences.forEach(sentence => {
-                            term = sentence.trans.toLowerCase().replace(/\./g, '');
+                            let term = sentence.trans.toLowerCase().replace(/\./g, '');
 
                             if (term.length && all_terms.indexOf(term) === -1) {
                                 sentences.push(term);
@@ -93,8 +94,7 @@ let parts_of_speech_enum,
                 return parsed_result;
             });
 
-        try {
-            chrome.runtime.sendMessage({
+        chrome.runtime.sendMessage({
                 method: 'translate',
                 data: {
                     text,
@@ -104,10 +104,6 @@ let parts_of_speech_enum,
             }, result => {
                 parseResult(result).then(resolve);
             });
-        } catch (e) {
-            reject();
-            showError(e);
-        }
     });
 
 parts_of_speech_enum = receive('PoS').then(PoS => PoS.enum);

@@ -1,20 +1,12 @@
 import rb from 'js/utils/common';
 import bgAPI from 'js/utils/bgAPI';
 import TranslationWindow from './TranslationWindow';
+import showError from './showError';
 
 import 'less/content.extract.less';
 
-let init, page_config, showError,
-    props = {},
-    ERROR_MESSAGE = chrome.i18n.getMessage('no_connection_to_extension', [ chrome.i18n.getMessage('ext_name') ]);
-
-showError = e => {
-    if (e.message.includes('Error connecting to extension')) {
-        window.setTimeout(() => {
-            window.alert(ERROR_MESSAGE);
-        });
-    }
-};
+let init, page_config,
+    props = {};
 
 init = () => {
     let handleEvent = e => {

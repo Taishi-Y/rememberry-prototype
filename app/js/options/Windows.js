@@ -1,6 +1,3 @@
-import rb from 'js/utils/common';
-import AJAX from 'js/utils/AJAX';
-import bgAPI from 'js/utils/bgAPI';
 import Message from './Message';
 import OptionsWindow from './windows/Options';
 import LoginWindow from './windows/Login';
@@ -43,7 +40,7 @@ Windows = {
                 Message.show(chrome.i18n.getMessage('Successfully_exported'), true, 2000);
                 Windows.show('options');
             }
-        })
+        });
     },
 
     show(name, ...data_args) {

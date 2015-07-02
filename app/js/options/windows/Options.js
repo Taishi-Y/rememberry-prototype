@@ -234,14 +234,12 @@ let window_el, props,
                                                 cards_to_export = [];
 
                                             for (let card_name in cards) {
-                                                if (cards.hasOwnProperty(card_name)) {
-                                                    let card = cards[card_name];
+                                                let card = cards[card_name];
 
-                                                    cards_to_export.push({
-                                                        orig: card_name,
-                                                        translation: card.t.join(', ')
-                                                    });
-                                                }
+                                                cards_to_export.push({
+                                                    orig: card_name,
+                                                    translation: card.t.join(', ')
+                                                });
                                             }
 
                                             props.onExportStart(cards_to_export);
@@ -286,9 +284,7 @@ let window_el, props,
                 });
 
                 for (let deck_name in local_decks) {
-                    if (local_decks.hasOwnProperty(deck_name)) {
-                        appendDeckOption(local_decks[deck_name]);
-                    }
+                    appendDeckOption(local_decks[deck_name]);
                 }
 
                 if (deck_select_el.selectedOptions[0].value === startup_active_deck_name) {

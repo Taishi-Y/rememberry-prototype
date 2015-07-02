@@ -14,13 +14,13 @@ let setCards = cards =>
 
     addCard = info =>
         getCards().then(cards => {
-            let card,
-                { source, translation } = info;
+            let { source, translation } = info;
 
             if (!cards.hasOwnProperty(source)) {
                 cards[source] = rb.override({ t: translation }, SM2.getInitData());
             } else {
-                card = cards[source];
+                let card = cards[source];
+
                 card.t = rb.unique(card.t.concat(translation));
             }
 

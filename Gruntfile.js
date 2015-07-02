@@ -32,7 +32,7 @@ module.exports = function (grunt) {
         },
 
         watch: {
-            files: [ 'Gruntfile.js', 'webpack.config.js', app_path + '**' ],
+            files: [ 'Gruntfile.js', 'webpack.config.js', '.eslintrc', app_path + '**' ],
             tasks: [ 'build' ]
         }
     });

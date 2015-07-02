@@ -16,9 +16,7 @@ let window_el, login_el, password_el, login_btn, back_btn, props,
             }));
 
             for (let deck_id in decks) {
-                if (decks.hasOwnProperty(deck_id)) {
-                    decks_array.push(decks[deck_id].name);
-                }
+                decks_array.push(decks[deck_id].name);
             }
 
             return {

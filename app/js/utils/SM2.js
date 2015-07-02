@@ -6,12 +6,13 @@ export default {
             i: 0,
             d: Date.now(),
             ef: 2.5
-        }
+        };
     },
 
     isCardRipened(card) {
+        const TIME_STEP = 1000 * 60 * 60 * 24;
+
         let ms_diff, step_diff,
-            TIME_STEP = 1000 * 60 * 60 * 24,
             is_ripened = false;
 
         if (card.n === 0) {
