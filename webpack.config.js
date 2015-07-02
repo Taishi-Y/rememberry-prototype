@@ -1,7 +1,8 @@
-var webpack = require('webpack'),
-    ExtractTextPlugin = require('extract-text-webpack-plugin'),
-    app_path = __dirname + '/app',
-    build_path = 'extension/';
+var webpack             = require('webpack'),
+    ExtractTextPlugin   = require('extract-text-webpack-plugin');
+
+var app_path    = __dirname + '/app',
+    build_path  = 'extension/';
 
 module.exports = {
     context: app_path,
@@ -18,6 +19,11 @@ module.exports = {
     module: {
         loaders: [
             {
+                test: /\.js$/,
+                exclude: /node_modules/,
+                loader: 'babel!eslint'
+            },
+            {
                 test: /^((?!(\.extract)).)+\.less$/,
                 loader: 'style!css!less'
             },
@@ -31,8 +37,12 @@ module.exports = {
             }
         ]
     },
+    eslint: {
+        configFile: '.eslintrc'
+    },
     resolve: {
-        root: app_path
+        root: app_path,
+        extensions: [ '', '.js' ]
     },
     plugins: [
         new ExtractTextPlugin('css/[name].min.css'),

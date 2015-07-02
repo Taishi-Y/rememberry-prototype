@@ -1,10 +1,60 @@
-var rb = require('js/utils/common'),
-    Message = require('../Message'),
-    AJAX = require('js/utils/AJAX');
+import rb from 'js/utils/common';
+import Message from '../Message';
+import AJAX from 'js/utils/AJAX';
 
-var window_el, login_el, password_el, login_btn, back_btn, props,
+let window_el, login_el, password_el, login_btn, back_btn, props,
 
-    initDOM = function () {
+    retrieveInfoFromAnki = () =>
+        AJAX.request('get', 'https://ankiweb.net/edit/').then(response => {
+            let decks_array = [],
+                models = JSON.parse(/editor\.models = (.*}]);/.exec(response)[1]),
+                decks = JSON.parse(/editor\.decks = (.*}});/.exec(response)[1]);
+
+            models = models.map(model => ({
+                id: model.id,
+                name: model.name
+            }));
+
+            for (let deck_id in decks) {
+                if (decks.hasOwnProperty(deck_id)) {
+                    decks_array.push(decks[deck_id].name);
+                }
+            }
+
+            return {
+                models,
+                decks: decks_array
+            };
+        }),
+
+    logoutFromAnki = () => AJAX.request('get', 'https://ankiweb.net/account/logout'),
+
+    loginIntoAnki = (login, password) => new Promise((resolve, reject) => {
+        logoutFromAnki().then(() => {
+            AJAX.request('post', 'https://ankiweb.net/account/login', {
+                submitted: 1,
+                username: login,
+                password
+            }).then(
+                anki_html => {
+                    if (!anki_html.includes('Logout')) {
+                        reject();
+                    } else {
+                        resolve();
+                    }
+                },
+                error_string => {
+                    let auth_limit_error = error_string.includes('Auth limit reached');
+
+                    if (auth_limit_error) {
+                        Message.show(chrome.i18n.getMessage(
+                            'Log_in_limit_reached_Please_try_again_later_or_your_another_credentials'));
+                    }
+                });
+        });
+    }),
+
+    initDOM = () => {
         window_el   = document.getElementById('login-window');
         login_el    = document.getElementById('login');
         password_el = document.getElementById('password');
@@ -19,21 +69,21 @@ var window_el, login_el, password_el, login_btn, back_btn, props,
             window_el.querySelector('.back').innerHTML                  = chrome.i18n.getMessage('Back');
         }());
 
-        login_btn.addEventListener('click', function () {
-            var login_val = login_el.value.trim(),
+        login_btn.addEventListener('click', () => {
+            let login_val = login_el.value.trim(),
                 password_val = password_el.value.trim();
 
             if (login_val && password_val) {
                 Message.show(chrome.i18n.getMessage('Trying_to_log_in'), false);
 
                 loginIntoAnki(login_val, password_val).then(
-                        function () {
-                            retrieveInfoFromAnki().then(function (data) {
+                        () => {
+                            retrieveInfoFromAnki().then(data => {
                                 Message.hide();
                                 props.onLogin(data);
                             });
                         },
-                        function () {
+                        () => {
                             Message.show(chrome.i18n.getMessage('Incorrect_credentials'));
                         });
             } else {
@@ -41,79 +91,23 @@ var window_el, login_el, password_el, login_btn, back_btn, props,
             }
         });
 
-        back_btn.addEventListener('click', function () {
+        back_btn.addEventListener('click', () => {
             props.onBack();
         });
-    },
+    };
 
-    retrieveInfoFromAnki = function () {
-        return AJAX.request('get', 'https://ankiweb.net/edit/').then(function (response) {
-            var deck_id,
-                decks_array = [],
-                models = JSON.parse(/editor\.models = (.*}]);/.exec(response)[1]),
-                decks = JSON.parse(/editor\.decks = (.*}});/.exec(response)[1]);
-
-            models = models.map(function (model) {
-                return {
-                    id: model.id,
-                    name: model.name
-                };
-            });
-
-            for (deck_id in decks) {
-                if (decks.hasOwnProperty(deck_id)) {
-                    decks_array.push(decks[deck_id].name);
-                }
-            }
-
-            return {
-                models: models,
-                decks: decks_array
-            };
-        });
-    },
-
-    logoutFromAnki = function () {
-        return AJAX.request('get', 'https://ankiweb.net/account/logout');
-    },
-
-    loginIntoAnki = function (login, password) { return new Promise(function (resolve, reject) {
-        logoutFromAnki().then(function () {
-            AJAX.request('post', 'https://ankiweb.net/account/login', {
-                submitted: 1,
-                username: login,
-                password: password
-            }).then(
-                function (anki_html) {
-                    if (anki_html.indexOf('Logout') === -1) {
-                        reject();
-                    } else {
-                        resolve();
-                    }
-                },
-                function (error_string) {
-                    var auth_limit_error = error_string.indexOf('Auth limit reached') !== -1;
-
-                    if (auth_limit_error) {
-                        Message.show(chrome.i18n.getMessage(
-                            'Log_in_limit_reached_Please_try_again_later_or_your_another_credentials'));
-                    }
-                });
-        });
-    })};
-
-module.exports = {
-    init: function (initial_props) {
+export default {
+    init(initial_props) {
         props = initial_props;
         initDOM();
     },
 
-    show: function () {
+    show() {
         rb.DOM.show(window_el);
         login_el.focus();
     },
 
-    hide: function () {
+    hide() {
         rb.DOM.hide(window_el);
     }
 };

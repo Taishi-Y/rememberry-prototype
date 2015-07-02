@@ -1,34 +1,27 @@
-var Storage = require('./Storage'),
-    ConfigStorage = require('./ConfigStorage');
+import Storage from './Storage';
+import ConfigStorage from './ConfigStorage';
 
-var init = function () {
-        return ConfigStorage.getIt().then(function (config) {
+let init = () =>
+        ConfigStorage.getIt().then(config => {
             if (config.decks.names.length === 0) {
-                return createDeck('basic', 'Basic deck').then(function (basic_deck) {
-                    return selectDeck(basic_deck.name);
-                });
+                return createDeck('basic', 'Basic deck').then(basic_deck => selectDeck(basic_deck.name));
             }
-        });
-    },
+        }),
 
-    getKey = function (name) {
-        return 'deck_' + name;
-    },
+    getKey = name => 'deck_' + name,
 
-    createDeck = function (name, description) {
-        var new_deck = {
-            name: name,
+    createDeck = (name, description) => {
+        let new_deck = {
+            name,
             desc: description,
             cards: {}
         };
 
-        return addDeck(new_deck).then(function () {
-            return new_deck;
-        });
+        return addDeck(new_deck).then(() => new_deck);
     },
 
-    updateDeck = function (deck) {
-        var old_key, old_name, key,
+    updateDeck = deck => {
+        let old_key, old_name, key,
             data = {};
 
         if (deck.new_name) {
@@ -44,9 +37,9 @@ var init = function () {
         key = getKey(deck.name);
         data[key] = deck;
 
-        return Storage.setItem(data).then(function () {
-            return ConfigStorage.getIt().then(function (config) {
-                var names = config.decks.names;
+        return Storage.setItem(data).then(() =>
+            ConfigStorage.getIt().then(config => {
+                let { names } = config.decks;
 
                 names.splice(names.indexOf(old_name), 1);
                 names.push(deck.name);
@@ -58,60 +51,51 @@ var init = function () {
                 }
 
                 return ConfigStorage.setIt(config);
-            });
-        });
+            })
+        );
     },
 
-    addDeck = function (deck) {
-        var data = {},
+    addDeck = deck => {
+        let data = {},
             key = getKey(deck.name);
 
         data[key] = deck;
 
-        return Storage.setItem(data).then(function () {
-            return ConfigStorage.extendIt({
-                decks: {
-                    names: [ deck.name ]
-                }
-            });
-        });
+        return Storage.setItem(data).then(() => ConfigStorage.extendIt({
+            decks: {
+                names: [ deck.name ]
+            }
+        }));
     },
 
-    selectDeck = function (name) {
-        return ConfigStorage.extendIt({ decks: { active_name: name } });
+    selectDeck = name => ConfigStorage.extendIt({ decks: { active_name: name } }),
+
+    getDeck = name => {
+        let key = getKey(name);
+
+        return Storage.getItem(key).then(result => result[key]);
     },
 
-    getDeck = function (name) {
-        var key = getKey(name);
+    getDecks = () =>
+        ConfigStorage.getIt().then(config => {
+            let deck_promises = config.decks.names.map(deck_name => getDeck(deck_name));
 
-        return Storage.getItem(key).then(function (result) {
-            return result[key];
-        });
-    },
+            return Promise.all(deck_promises).then(result => {
+                let obj = {};
 
-    getDecks = function () {
-        return ConfigStorage.getIt().then(function (config) {
-            var deck_promises = config.decks.names.map(function (deck_name) {
-                return getDeck(deck_name);
-            });
-
-            return Promise.all(deck_promises).then(function (result) {
-                var obj = {};
-
-                result.forEach(function (deck) {
+                result.forEach(deck => {
                     obj[deck.name] = deck;
                 });
 
                 return obj;
             });
-        });
-    },
+        }),
 
-    removeDeck = function (deck) {
-        var name = deck.name;
+    removeDeck = deck => {
+        let { name } = deck;
 
-        return Promise.all([ Storage.removeItem(getKey(name)), ConfigStorage.getIt().then(function (config) {
-            var index = config.decks.names.indexOf(name);
+        return Promise.all([ Storage.removeItem(getKey(name)), ConfigStorage.getIt().then(config => {
+            let index = config.decks.names.indexOf(name);
 
             config.decks.names.splice(index, 1);
             config.decks.active_name = null;
@@ -120,19 +104,15 @@ var init = function () {
         })]);
     },
 
-    getActiveDeck = function () {
-        return ConfigStorage.getIt().then(function (config) {
-            return getDeck(config.decks.active_name);
-        });
-    };
+    getActiveDeck = () => ConfigStorage.getIt().then(config => getDeck(config.decks.active_name));
 
-module.exports = {
-    init            : init,
-    createDeck      : createDeck,
-    getDeck         : getDeck,
-    getActiveDeck   : getActiveDeck,
-    getDecks        : getDecks,
-    selectDeck      : selectDeck,
-    updateDeck      : updateDeck,
-    removeDeck      : removeDeck
+export default {
+    init,
+    createDeck,
+    getDeck,
+    getActiveDeck,
+    getDecks,
+    selectDeck,
+    updateDeck,
+    removeDeck
 };

@@ -1,11 +1,11 @@
-var rb = require('js/utils/common'),
-    bgAPI = require('js/utils/bgAPI'),
-    SM2 = require('js/utils/SM2');
+import rb from 'js/utils/common';
+import bgAPI from 'js/utils/bgAPI';
+import SM2 from 'js/utils/SM2';
 
-require('less/popup.less');
+import 'less/popup.less';
 
-rb.DOM.onReady.then(function () {
-    var message_el      = document.getElementById('message'),
+rb.DOM.onReady.then(() => {
+    let message_el      = document.getElementById('message'),
         test_el         = document.getElementById('test'),
         source_el       = document.getElementById('source'),
         translation_el  = document.getElementById('translation'),
@@ -20,27 +20,25 @@ rb.DOM.onReady.then(function () {
         document.querySelector('#mark-area [data-quality="3"]').innerHTML = chrome.i18n.getMessage('Hard');
     }());
 
-    bgAPI.receive('cards').then(function (cards) {
-        var showNextCard, init, handleResponse, saveChanges, setState, current,
+    bgAPI.receive('cards').then(cards => {
+        let showNextCard, init, handleResponse, saveChanges, setState, current,
 
             repeat_cards = [],
-            ripened_cards = Object.keys(cards).map(function (card_name) {
-                    return {
+            ripened_cards = Object.keys(cards)
+                    .map(card_name => ({
                         name: card_name,
                         card: cards[card_name]
-                    };
-                }).filter(function (card_data) {
-                    return SM2.isCardRipened(card_data.card);
-                });
+                    }))
+                    .filter(card_data => SM2.isCardRipened(card_data.card));
 
-        init = function () {
+        init = () => {
             rb.DOM.hide(message_el);
             rb.DOM.show(test_el);
 
             show_answer_btn.addEventListener('click', setState.bind(null, 'assess'));
 
-            mark_area.addEventListener('click', function (e) {
-                var quality = e.target.dataset.quality;
+            mark_area.addEventListener('click', e => {
+                let quality = e.target.dataset.quality;
 
                 if (quality) {
                     handleResponse(Number(quality));
@@ -48,7 +46,7 @@ rb.DOM.onReady.then(function () {
             });
         };
 
-        setState = function (state) {
+        setState = state => {
             switch (state) {
                 case 'answer':
                     rb.DOM.show(show_answer_btn);
@@ -69,7 +67,7 @@ rb.DOM.onReady.then(function () {
             }
         };
 
-        handleResponse = function (quality) {
+        handleResponse = quality => {
             if (!current.is_repeated) {
                 SM2.evoluteCard(current.card, quality);
                 saveChanges();
@@ -83,8 +81,8 @@ rb.DOM.onReady.then(function () {
             showNextCard();
         };
 
-        showNextCard = function () {
-            var card_info = ripened_cards.shift() || repeat_cards.shift();
+        showNextCard = () => {
+            let card_info = ripened_cards.shift() || repeat_cards.shift();
 
             if (card_info) {
                 setState('answer');
@@ -97,7 +95,7 @@ rb.DOM.onReady.then(function () {
             }
         };
 
-        saveChanges = function () {
+        saveChanges = () => {
             bgAPI.send('cards', cards);
         };
 

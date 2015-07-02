@@ -1,9 +1,10 @@
-var rb = require('js/utils/common'),
-    bgAPI = require('js/utils/bgAPI');
+import rb from 'js/utils/common';
+import bgAPI from 'js/utils/bgAPI';
+import Message from 'js/options/Message';
 
-var window_el, props,
+let window_el, props,
 
-    initDOM = function () {
+    initDOM = () => {
         window_el = document.querySelector('.options-window');
 
         (function provideLocalization() {
@@ -30,17 +31,17 @@ var window_el, props,
         }());
 
         (function initLanguageMenu() {
-            bgAPI.receive([ 'config', 'languages' ]).spread(function (config, languages) {
-                var source_lang_el = document.getElementById('source-lang'),
+            bgAPI.receive([ 'config', 'languages' ]).spread((config, languages) => {
+                let source_lang_el = document.getElementById('source-lang'),
                     target_lang_el = document.getElementById('target-lang');
 
                 (function fillMenusWithLanguages() {
-                    var code, language, appendOption,
+                    let appendOption,
                         source_lang = config.source_lang,
                         target_lang = config.target_lang;
 
-                    appendOption = function (parent, value, text, active_value) {
-                        var option_el = rb.DOM.node('<option value="' + value + '">' + text + '</option>');
+                    appendOption = (parent, value, text, active_value) => {
+                        let option_el = rb.DOM.node(`<option value="${value}">${text}</option>`);
 
                         parent.appendChild(option_el);
 
@@ -51,21 +52,22 @@ var window_el, props,
 
                     appendOption(source_lang_el, 'auto', chrome.i18n.getMessage('Detect'), source_lang);
 
-                    for (code in languages) {
-                        language = languages[code];
+                    for (let code in languages) {
+                        let language = languages[code];
+
                         appendOption(source_lang_el, code, language, source_lang);
                         appendOption(target_lang_el, code, language, target_lang);
                     }
                 }());
 
                 (function listenOnChange() {
-                    source_lang_el.addEventListener('change', function () {
+                    source_lang_el.addEventListener('change', () => {
                         bgAPI.send('config', {
                             source_lang: source_lang_el.children[source_lang_el.selectedIndex].value
                         });
                     });
 
-                    target_lang_el.addEventListener('change', function () {
+                    target_lang_el.addEventListener('change', () => {
                         bgAPI.send('config', {
                             target_lang: target_lang_el.children[target_lang_el.selectedIndex].value
                         });
@@ -75,19 +77,19 @@ var window_el, props,
         }());
 
         (function initActionMenu() {
-            bgAPI.receive([ 'config', 'actions' ]).spread(function (config, actions) {
-                var names_el = document.getElementById('action'),
+            bgAPI.receive([ 'config', 'actions' ]).spread((config, actions) => {
+                let names_el = document.getElementById('action'),
                     modifiers_el = document.getElementById('modifier');
 
                 (function fillMenusWithActions() {
-                    var i, l, appendOption,
+                    let i, l, appendOption,
                         event_names = actions.names,
                         modifiers = actions.modifiers,
                         selected_event_name = config.action.name,
                         selected_modifier = config.action.modifier;
 
-                    appendOption = function (parent, value, active_value) {
-                        var el = rb.DOM.node('<option value="' + value + '">' + value + '</option>');
+                    appendOption = (parent, value, active_value) => {
+                        let el = rb.DOM.node(`<option value="${value}">${value}</option>`);
 
                         parent.appendChild(el);
 
@@ -106,7 +108,7 @@ var window_el, props,
                 }());
 
                 (function listenOnChange() {
-                    names_el.addEventListener('change', function () {
+                    names_el.addEventListener('change', () => {
                         bgAPI.send('config', {
                             action: {
                                 name: names_el.selectedOptions[0].value
@@ -114,7 +116,7 @@ var window_el, props,
                         });
                     });
 
-                    modifiers_el.addEventListener('change', function () {
+                    modifiers_el.addEventListener('change', () => {
                         bgAPI.send('config', {
                             action: {
                                 modifier: modifiers_el.selectedOptions[0].value
@@ -126,8 +128,8 @@ var window_el, props,
         }());
 
         (function initDeckMenu() {
-            bgAPI.receive([ 'config', 'decks' ]).spread(function (config, local_decks) {
-                var deck_name, selected_deck,
+            bgAPI.receive([ 'config', 'decks' ]).spread((config, local_decks) => {
+                let selected_deck,
                     startup_active_deck_name    = config.decks.active_name,
                     deck_select_el              = document.getElementById('selected-deck'),
                     info_el                     = window_el.querySelector('.deck-info'),
@@ -136,7 +138,7 @@ var window_el, props,
                     desc_el                     = document.getElementById('deck-desc'),
                     btn_area_el                 = window_el.getElementsByClassName('btn-area')[0];
 
-                var changeDeck = function (name) {
+                let changeDeck = name => {
                         selected_deck = local_decks[name];
                         rb.DOM.selectByValue(deck_select_el, name);
 
@@ -145,19 +147,19 @@ var window_el, props,
                         desc_el.value = selected_deck.desc;
                     },
 
-                    appendDeckOption = function (deck) {
+                    appendDeckOption = deck => {
                         deck_select_el.appendChild(
-                                rb.DOM.node('<option value="' + deck.name + '">' + deck.name + '</option>'));
+                                rb.DOM.node(`<option value="${deck.name}">${deck.name}</option>`));
                     },
 
-                    performAction = function (action) {
+                    performAction = action => {
                         switch (action) {
                             case 'activate':
                                 bgAPI.send('active-deck', selected_deck.name);
                                 break;
                             case 'add':
-                                (function () {
-                                    var listener = function (e) {
+                                ((() => {
+                                    let listener = e => {
                                             if (e.keyCode === 13 && name_el.value.trim().length) {
                                                 if (!local_decks.hasOwnProperty(name_el.value)) {
                                                     create(name_el.value);
@@ -170,7 +172,7 @@ var window_el, props,
                                             }
                                         },
 
-                                        clearInput = function () {
+                                        clearInput = () => {
                                             if (name_el.value === '') {
                                                 changeDeck(deck_select_el.selectedOptions[0].value);
                                             }
@@ -179,11 +181,11 @@ var window_el, props,
                                             name_el.removeEventListener('blur', clearInput);
                                         },
 
-                                        create = function (name) {
+                                        create = name => {
                                             bgAPI.add('deck', {
-                                                name: name,
+                                                name,
                                                 desc: ''
-                                            }).then(function (new_deck) {
+                                            }).then(new_deck => {
                                                 local_decks[name] = new_deck;
                                                 appendDeckOption(new_deck);
                                                 changeDeck(name);
@@ -199,23 +201,23 @@ var window_el, props,
 
                                     rb.DOM.show(info_el);
                                     name_el.focus();
-                                }());
+                                })());
                                 break;
                             case 'remove':
                                 if (Object.keys(local_decks).length > 1) {
-                                    (function (deck_to_remove) {
-                                        bgAPI.remove('deck', deck_to_remove).then(function () {
-                                            var first_deck_name;
+                                    ((deck_to_remove => {
+                                        bgAPI.remove('deck', deck_to_remove).then(() => {
+                                            let first_deck_name;
 
                                             delete local_decks[deck_to_remove.name];
                                             deck_select_el.removeChild(
-                                                    deck_select_el.querySelector('option[value="' + deck_to_remove.name + '"]'));
+                                                    deck_select_el.querySelector(`option[value="${deck_to_remove.name}"]`));
 
                                             first_deck_name = Object.keys(local_decks)[0];
                                             changeDeck(first_deck_name);
                                             performAction('activate');
                                         });
-                                    }(selected_deck));
+                                    })(selected_deck));
                                 }
 
                                 break;
@@ -225,16 +227,15 @@ var window_el, props,
                                 bgAPI.send('deck', selected_deck);
                                 break;
                             case 'export':
-                                if (navigator.onLine) {
+                                if (window.navigator.onLine) {
                                     if (Object.keys(selected_deck.cards).length) {
-                                        (function () {
-                                            var card_name, card,
-                                                cards = selected_deck.cards,
+                                        ((() => {
+                                            let cards = selected_deck.cards,
                                                 cards_to_export = [];
 
-                                            for (card_name in cards) {
+                                            for (let card_name in cards) {
                                                 if (cards.hasOwnProperty(card_name)) {
-                                                    card = cards[card_name];
+                                                    let card = cards[card_name];
 
                                                     cards_to_export.push({
                                                         orig: card_name,
@@ -244,7 +245,7 @@ var window_el, props,
                                             }
 
                                             props.onExportStart(cards_to_export);
-                                        }());
+                                        })());
                                     } else {
                                         Message.show(chrome.i18n.getMessage('No_cards_in_deck'));
                                     }
@@ -254,11 +255,11 @@ var window_el, props,
 
                                 break;
                             case 'update':
-                                (function () {
-                                    var deck_to_update = JSON.parse(JSON.stringify(selected_deck)),
+                                ((() => {
+                                    let deck_to_update = JSON.parse(JSON.stringify(selected_deck)),
                                         old_name = selected_deck.name,
                                         option_el = deck_select_el.querySelector(
-                                                'option[value="' + selected_deck.name + '"]');
+                                                `option[value="${selected_deck.name}"]`);
 
                                     deck_to_update.new_name = selected_deck.name = option_el.value = option_el.innerHTML =
                                             name_el.value;
@@ -267,24 +268,24 @@ var window_el, props,
                                     local_decks[name_el.value] = selected_deck;
 
                                     bgAPI.send('deck', deck_to_update);
-                                }());
+                                })());
 
                                 break;
                             default:
                         }
                     };
 
-                deck_select_el.addEventListener('change', function () {
+                deck_select_el.addEventListener('change', () => {
                     changeDeck(deck_select_el.selectedOptions[0].value);
                 });
 
-                btn_area_el.addEventListener('click', function (e) {
+                btn_area_el.addEventListener('click', e => {
                     if (e.target.tagName.toLowerCase() === 'button') {
                         performAction(e.target.dataset.action);
                     }
                 });
 
-                for (deck_name in local_decks) {
+                for (let deck_name in local_decks) {
                     if (local_decks.hasOwnProperty(deck_name)) {
                         appendDeckOption(local_decks[deck_name]);
                     }
@@ -300,17 +301,17 @@ var window_el, props,
         }());
     };
 
-module.exports = {
-    init: function (initial_props) {
+export default {
+    init(initial_props) {
         props = initial_props;
         initDOM();
     },
 
-    show: function () {
+    show() {
         rb.DOM.show(window_el);
     },
 
-    hide: function () {
+    hide() {
         rb.DOM.hide(window_el);
     }
 };

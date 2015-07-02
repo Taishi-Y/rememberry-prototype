@@ -1,12 +1,12 @@
-var rb = require('js/utils/common'),
-    AJAX = require('js/utils/AJAX'),
-    bgAPI = require('js/utils/bgAPI'),
-    Message = require('./Message'),
-    OptionsWindow = require('./windows/Options'),
-    LoginWindow = require('./windows/Login'),
-    ExportWindow = require('./windows/Export');
+import rb from 'js/utils/common';
+import AJAX from 'js/utils/AJAX';
+import bgAPI from 'js/utils/bgAPI';
+import Message from './Message';
+import OptionsWindow from './windows/Options';
+import LoginWindow from './windows/Login';
+import ExportWindow from './windows/Export';
 
-var Windows, active, cards_to_export,
+let Windows, active, cards_to_export,
 
     windows = {
         options : OptionsWindow,
@@ -15,47 +15,45 @@ var Windows, active, cards_to_export,
     };
 
 Windows = {
-    init: function () {
+    init() {
         Message.init();
 
         windows.options.init({
-            onExportStart: function (cards) {
+            onExportStart(cards) {
                 cards_to_export = cards;
                 Windows.show('login');
             }
         });
 
         windows.login.init({
-            onBack: function () {
+            onBack() {
                 Windows.show('options');
                 cards_to_export = null;
             },
-            onLogin: function (data) {
+            onLogin(data) {
                 Windows.show('export', data, cards_to_export);
             }
         });
 
         windows.export.init({
-            onBack: function () {
+            onBack() {
                 Windows.show('login');
             },
-            onSuccess: function () {
+            onSuccess() {
                 Message.show(chrome.i18n.getMessage('Successfully_exported'), true, 2000);
                 Windows.show('options');
             }
         })
     },
 
-    show: function (name) {
-        var data_args = Array.prototype.slice.call(arguments, 1);
-
+    show(name, ...data_args) {
         if (active) {
             active.hide();
         }
 
         active = windows[name];
-        active.show.apply(active, data_args);
+        active.show(active, ...data_args);
     }
 };
 
-module.exports = Windows;
+export default Windows;

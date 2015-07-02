@@ -1,31 +1,31 @@
-var rb = require('js/utils/common'),
-    bgAPI = require('js/utils/bgAPI'),
-    TranslationWindow = require('./TranslationWindow');
+import rb from 'js/utils/common';
+import bgAPI from 'js/utils/bgAPI';
+import TranslationWindow from './TranslationWindow';
 
-require('less/content.extract.less');
+import 'less/content.extract.less';
 
-var init, page_config, showError,
+let init, page_config, showError,
     props = {},
     ERROR_MESSAGE = chrome.i18n.getMessage('no_connection_to_extension', [ chrome.i18n.getMessage('ext_name') ]);
 
-showError = function (e) {
-    if (e.message.indexOf('Error connecting to extension') !== -1) {
-        window.setTimeout(function () {
-            alert(ERROR_MESSAGE);
+showError = e => {
+    if (e.message.includes('Error connecting to extension')) {
+        window.setTimeout(() => {
+            window.alert(ERROR_MESSAGE);
         });
     }
 };
 
-init = function () {
-    var handleEvent = function (e) {
-            var modifier = page_config.action.modifier;
+init = () => {
+    let handleEvent = e => {
+            let { modifier } = page_config.action;
 
             if (modifier === 'none' || e[modifier]) {
                 TranslationWindow.translateText();
             }
         },
 
-        initConfig = function (new_config) {
+        initConfig = new_config => {
             if (page_config && page_config.action.name !== new_config.action.name) {
                 document.removeEventListener(page_config.action.name, handleEvent);
             }
@@ -37,11 +37,9 @@ init = function () {
             props.target_lang = page_config.target_lang;
         };
 
-    bgAPI.receive([ 'config', 'PoS' ]).spread(function (new_config) {
-        initConfig(new_config);
-    });
+    bgAPI.receive([ 'config', 'PoS' ]).spread(new_config => initConfig(new_config));
 
-    chrome.runtime.onMessage.addListener(function (message) {
+    chrome.runtime.onMessage.addListener(message => {
         switch (message.method) {
             case 'set':
                 switch (message.type) {

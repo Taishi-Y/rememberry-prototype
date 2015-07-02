@@ -1,9 +1,9 @@
-var rb = require('js/utils/common'),
-    Windows = require('./Windows');
+import rb from 'js/utils/common';
+import Windows from './Windows';
 
-require('less/options.less');
+import 'less/options.less';
 
-rb.DOM.onReady.then(function () {
+rb.DOM.onReady.then(() => {
     Windows.init();
     Windows.show('options');
 });

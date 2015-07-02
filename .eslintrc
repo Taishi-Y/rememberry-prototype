@@ -1,0 +1,37 @@
+{
+  "ecmaFeatures": {
+    "modules": true,
+    "jsx": false
+  },
+  "env": {
+    "node": true,
+    "es6": true
+  },
+  "globals": {
+    "document": false,
+    "window": false,
+    "chrome": false,
+    "XMLHttpRequest": false
+  },
+  "rules": {
+    "strict": 2,
+    "curly": 0,
+    "quotes": 0,
+    "comma-spacing": 0,
+    "semi": 0,
+    "no-mixed-requires": 0,
+    "camelcase": 0,
+    "eol-last": 0,
+    "no-debugger": 0,
+    "no-trailing-spaces": 0,
+    "no-underscore-dangle": 0,
+    "no-multi-spaces": 0,
+    "no-unused-vars": 0,
+    "space-infix-ops": 0,
+
+    "key-spacing": 0,
+    "no-alert": 0,
+    "no-use-before-define": 0,
+    "no-loop-func": 0
+  }
+}

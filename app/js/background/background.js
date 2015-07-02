@@ -1,15 +1,13 @@
-var ConfigStorage = require('js/storage/ConfigStorage'),
-    DeckStorage = require('js/storage/DeckStorage'),
-    CardStorage = require('js/storage/CardStorage'),
-    JSON_Storage = require('js/storage/JSON_Storage'),
-    AJAX = require('js/utils/AJAX');
+import ConfigStorage from 'js/storage/ConfigStorage';
+import DeckStorage from 'js/storage/DeckStorage';
+import CardStorage from 'js/storage/CardStorage';
+import JSON_Storage from 'js/storage/JSON_Storage';
+import AJAX from 'js/utils/AJAX';
 
-ConfigStorage.init().then(function () {
-    DeckStorage.init();
-});
+ConfigStorage.init().then(() => DeckStorage.init());
 
-chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-    var data = message.data;
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    let { data } = message;
 
     switch (message.method) {
         case 'get':
@@ -91,7 +89,7 @@ chrome.contextMenus.create({
     title: chrome.i18n.getMessage('Translate_with', [ chrome.i18n.getMessage('ext_name') ]),
     contexts: [ 'selection' ],
 
-    onclick: function (info, tab) {
+    onclick(info, tab) {
         chrome.tabs.sendMessage(tab.id, { method: 'translate', type: 'selection' });
     }
 });
@@ -100,10 +98,10 @@ chrome.contextMenus.create({
     title: 'Translate desired text',
     contexts: [ 'browser_action' ],
 
-    onclick: function () {
-        var text_to_translate = prompt('Enter text to translate');
+    onclick() {
+        let text_to_translate = window.prompt('Enter text to translate');
 
-        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
             chrome.tabs.sendMessage(tabs[0].id, { method: 'translate', type: 'text', data: text_to_translate });
         });
     }

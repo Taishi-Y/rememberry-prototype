@@ -1,10 +1,11 @@
-var rb = require('js/utils/common'),
-    bgAPI = require('js/utils/bgAPI'),
-    AJAX = require('js/utils/AJAX');
+import rb from 'js/utils/common';
+import bgAPI from 'js/utils/bgAPI';
+import AJAX from 'js/utils/AJAX';
 
 // private members
-var props,
-    BASE_ID     = 'rememberry-popup',
+const BASE_ID = 'rememberry-popup';
+
+let props,
     tr_id       = 0,    // used to provide translation-response validation (use only latest response)
     is_created  = false,
     is_shown    = false,
@@ -25,8 +26,8 @@ var props,
         translation : null
     },
 
-    create = function () {
-        var host_el     = rb.DOM.node('<div id="' + BASE_ID + '" hidden></div>'),
+    create = () => {
+        let host_el     = rb.DOM.node(`<div id="${BASE_ID}" hidden></div>`),
             root_el     = host_el.createShadowRoot(),
             body_el     = rb.DOM.node('<div class="body"></div>'),
             header_el   = rb.DOM.node('<div class="header"></div>'),
@@ -41,7 +42,7 @@ var props,
         root_el.appendChild(style_el);
         root_el.appendChild(body_el);
 
-        CSS.then(function (css_text) {
+        CSS.then((css_text) => {
             style_el.innerHTML = css_text;
         });
 
@@ -57,8 +58,8 @@ var props,
         is_created = true;
     },
 
-    createFooter = function () {
-        var footer_el = rb.DOM.node('<div class="footer" hidden></div>'),
+    createFooter = () => {
+        let footer_el = rb.DOM.node('<div class="footer" hidden></div>'),
             save_btn = rb.DOM.node(
                     '<button class="save-btn">' +
                         chrome.i18n.getMessage('Save') +
@@ -77,17 +78,17 @@ var props,
         return footer_el;
     },
 
-    createTermLine = function (term, is_checked, editable) {
-        var line_el     = rb.DOM.node('<div class="term-line"></div>'),
+    createTermLine = (term, is_checked, editable) => {
+        let line_el     = rb.DOM.node('<div class="term-line"></div>'),
             checkbox_el = rb.DOM.node('<input type="checkbox" class="term-line-checkbox"/>'),
-            text_el     = rb.DOM.node('<span class="term">' + term + '</span>');
+            text_el     = rb.DOM.node(`<span class="term">${term}</span>`);
 
         checkbox_el.checked = !!is_checked;
 
         if (editable) {
             text_el.setAttribute('contenteditable', 'true');
 
-            text_el.addEventListener('keypress', function (e) {
+            text_el.addEventListener('keypress', e => {
                 if (e.keyCode === 13) { // Enter key-code
                     e.preventDefault();
                     els.save_btn.focus();
@@ -95,14 +96,14 @@ var props,
             });
         }
 
-        checkbox_el.addEventListener('click', function (e) {
+        checkbox_el.addEventListener('click', e => {
             e.stopPropagation();
         });
 
         line_el.appendChild(checkbox_el);
         line_el.appendChild(text_el);
 
-        line_el.addEventListener('click', function () {
+        line_el.addEventListener('click', () => {
             if (!editable) {
                 checkbox_el.checked = !checkbox_el.checked;
             } else {
@@ -113,21 +114,17 @@ var props,
         return {
             el: line_el,
 
-            getText: function () {
-                return text_el.innerText;
-            },
+            getText: () => text_el.innerText,
 
-            focus: function () {
+            focus() {
                 text_el.focus();
             },
 
-            isChecked: function () {
-                return checkbox_el.checked;
-            }
+            isChecked: () => checkbox_el.checked
         };
     },
 
-    show = function (pos) {
+    show = pos => {
         if (!is_shown) {
             rb.DOM.show(els.host);
             setPosition(pos);
@@ -137,7 +134,7 @@ var props,
         }
     },
 
-    destroy = function () {
+    destroy = () => {
         if (is_shown) {
             rb.DOM.hide([ els.host, els.footer ]);
             document.body.removeEventListener('click', handleClick, true);
@@ -147,12 +144,12 @@ var props,
         }
     },
 
-    getSection = function (type) {
+    getSection = type => {
         if (!els.sections[type]) {
             els.sections[type] = rb.DOM.node(
-                '<div class="pos-container">' +
-                    '<div class="pos-header">' + type + '</div>' +
-                '</div>');
+                `<div class="pos-container">
+                    <div class="pos-header">${type}</div>
+                </div>`);
 
             els.belly.appendChild(els.sections[type]);
         }
@@ -160,20 +157,19 @@ var props,
         return els.sections[type];
     },
 
-    handleResponse = function (translation) {
-        var type, data, terms, section_el,
-            checked = true;
+    handleResponse = translation => {
+        let checked = true;
 
         state.translation = [];
 
-        for (type in translation) {
+        for (let type in translation) {
             if (translation.hasOwnProperty(type)) {
-                data = translation[type];
-                section_el = getSection(data.name);
-                terms = data.terms;
+                let data = translation[type],
+                    section_el = getSection(data.name),
+                    { terms } = data;
 
-                terms.forEach(function (term) {
-                    var term_line = createTermLine(term, checked);
+                terms.forEach(term => {
+                    let term_line = createTermLine(term, checked);
 
                     state.translation.push(term_line);
                     section_el.appendChild(term_line.el);
@@ -190,8 +186,8 @@ var props,
         els.save_btn.focus();
     },
 
-    setLoader = function (set_active) {
-        var LOADING_ATTR_NAME = 'loading';
+    setLoader = set_active => {
+        let LOADING_ATTR_NAME = 'loading';
 
         if (set_active) {
             els.belly.setAttribute(LOADING_ATTR_NAME, '');
@@ -200,27 +196,27 @@ var props,
         }
     },
 
-    setPosition = function (pos) {
+    setPosition = pos => {
         if (pos) {
-            rb.extend(els.host.style, pos);
+            rb.override(els.host.style, pos);
         } else {
             els.host.removeAttribute('style');
         }
     },
 
-    handleKeyUp = function (e) {
+    handleKeyUp = e => {
         if (e.keyCode === 27) { // Escape key code
             destroy();
         }
     },
 
-    handleClick = function (e) {
+    handleClick = e => {
         if (els.host !== e.target) {
             destroy();
         }
     },
 
-    reset = function () {
+    reset = () => {
         els.belly.innerHTML = '';
         els.sections = [];
 
@@ -229,10 +225,10 @@ var props,
         state = {};
     },
 
-    handleSave = function () {
-        var checked_terms = [];
+    handleSave = () => {
+        let checked_terms = [];
 
-        state.translation.forEach(function (term) {
+        state.translation.forEach(term => {
             if (term.isChecked() && term.getText().trim().length) {
                 checked_terms.push(term.getText());
             }
@@ -246,27 +242,27 @@ var props,
 
             destroy();
         } else {
-            alert(chrome.i18n.getMessage('Make_your_choice'));
+            window.alert(chrome.i18n.getMessage('Make_your_choice'));
         }
     },
 
-    addCustomTranslation = function () {
-        var term = createTermLine('', true, true);
+    addCustomTranslation = () => {
+        let term = createTermLine('', true, true);
 
         getSection(chrome.i18n.getMessage('Custom').toLowerCase()).appendChild(term.el);
         term.focus();
         state.translation.push(term);
     };
 
-module.exports = {
-    init: function (initial_props) {
+export default {
+    init(initial_props) {
         props = initial_props;
     },
 
-    translateText: function (text) {
-        var text_range, rect, pos, selection, selected_text;
+    translateText(text) {
+        if (window.navigator.onLine) {
+            let pos;
 
-        if (navigator.onLine) {
             if (text) {
                 pos = {
                     position: 'fixed',
@@ -274,12 +270,12 @@ module.exports = {
                     right: '0px'
                 };
             } else {
-                selection = document.getSelection();
-                selected_text = selection.toString().trim();
+                let selection = document.getSelection(),
+                    selected_text = selection.toString().trim();
 
                 if (selected_text.length) {
-                    text_range = selection.getRangeAt(0);
-                    rect = text_range.getBoundingClientRect();
+                    let text_range = selection.getRangeAt(0),
+                        rect = text_range.getBoundingClientRect();
 
                     pos = {
                         position: 'absolute',
@@ -300,7 +296,7 @@ module.exports = {
             }
 
             if (text.length) {
-                state.orig = selected_text;
+                state.orig = text;
 
                 show(pos);
                 setLoader(true);
@@ -309,23 +305,23 @@ module.exports = {
                     text += '..';
                 }
 
-                (function (id) {
-                    //setTimeout(function () {
+                ((id => {
+                    //setTimeout(() => {
                     bgAPI.translate(text, props.source_lang, props.target_lang)
-                        .then(function () {
+                        .then((...args) => {
                             if (id === tr_id) {
-                                handleResponse.apply(null, arguments);
+                                handleResponse(...args);
                             }
-                        }, function () {
+                        }, (...args) => {
                             if (id === tr_id) {
-                                destroy.apply(null, arguments);
+                                destroy(...args);
                             }
                         });
                     //}, 2000);
-                }(++tr_id));
+                })(++tr_id));
             }
         } else {
-            alert(chrome.i18n.getMessage('You_are_offline'));
+            window.alert(chrome.i18n.getMessage('You_are_offline'));
         }
     }
 };

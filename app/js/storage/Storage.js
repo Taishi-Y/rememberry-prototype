@@ -1,16 +1,8 @@
-var type = 'sync',
+let type = 'sync',
     db = chrome.storage[type];
 
-module.exports = {
-    setItem: function (data) { return new Promise(function (resolve) {
-        db.set(data, resolve);
-    })},
-
-    getItem: function (names) { return new Promise(function (resolve) {
-        db.get(names, resolve);
-    })},
-
-    removeItem: function (name) { return new Promise(function (resolve) {
-        db.remove(name, resolve);
-    })}
+export default {
+    setItem     : data => new Promise(resolve => { db.set(data, resolve) }),
+    getItem     : names => new Promise(resolve => { db.get(names, resolve) }),
+    removeItem  : name => new Promise(resolve => { db.remove(name, resolve) })
 };

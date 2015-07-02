@@ -1,13 +1,11 @@
-// common library, used by all extension script
-// contain syntax sugar staff
-var rb,
+let rb,
 
-    visible = function (is_visible, els) {
+    visible = (is_visible, els) => {
         if (!Array.isArray(els)) {
             els = [ els ];
         }
 
-        els.forEach(function (el) {
+        els.forEach(el => {
             if (is_visible) {
                 el.removeAttribute('hidden');
             } else {
@@ -28,11 +26,7 @@ rb = {
      * @param {Array} array
      * @returns {Array}
      */
-    unique: function (array) {
-        return array.filter(function (value, index, self) {
-            return self.indexOf(value) === index;
-        })
-    },
+    unique: array => array.filter((value, index, self) => self.indexOf(value) === index),
     /**
      * Extracts data from target to source object in configurable way
      * @param {Object}  source                  Object to be modified
@@ -42,15 +36,11 @@ rb = {
      * @param {Boolean} [config.concat_arrays]  Concatenate array properties (possible if new_only is false)
      * @returns {Object}
      */
-    override: function (source, target, config) {
-        var prop, t, s;
-
-        config = config || {};
-
-        for (prop in target) {
+    override(source, target, config = {}) {
+        for (let prop in target) {
             if (target.hasOwnProperty(prop)) {
-                s = source[prop];
-                t = target[prop];
+                let s = source[prop],
+                    t = target[prop];
 
                 if (config.new_only) {
                     if (!source.hasOwnProperty(prop)) {
@@ -84,7 +74,7 @@ rb = {
     },
 
     DOM: {
-        onReady: new Promise(function (resolve) {
+        onReady: new Promise(resolve => {
             if (document.readyState !== 'loading') {
                 resolve();
             } else {
@@ -93,18 +83,16 @@ rb = {
         }),
 
 
-        node: function (html_value) {
-            var container_el = document.createElement('div');
+        node(html_value) {
+            let container_el = document.createElement('div');
 
             container_el.innerHTML = html_value;
 
             return container_el.children[0];
         },
 
-        selectByValue: function (select_el, value) {
-            var values = Array.prototype.map.call(select_el.children, function (option_el) {
-                return option_el.value;
-            });
+        selectByValue(select_el, value) {
+            let values = Array.prototype.map.call(select_el.children, option_el => option_el.value);
 
             select_el.selectedIndex = values.indexOf(value);
         },
@@ -114,4 +102,4 @@ rb = {
     }
 };
 
-module.exports = rb;
+export default rb;

@@ -1,23 +1,21 @@
-var DeckStorage = require('./DeckStorage');
+import rb from 'js/utils/common';
+import SM2 from 'js/utils/SM2';
+import DeckStorage from './DeckStorage';
 
-var setCards = function (cards) {
-        DeckStorage.getActiveDeck().then(function (active_deck) {
+let setCards = cards =>
+        DeckStorage.getActiveDeck().then(active_deck => {
             active_deck.cards = cards;
-            DeckStorage.updateDeck(active_deck);
-        });
-    },
 
-    getCards = function () {
-        return DeckStorage.getActiveDeck().then(function (active_deck) {
-            return active_deck.cards;
-        });
-    },
+            return DeckStorage.updateDeck(active_deck);
+        }),
 
-    addCard = function (info) {
-        getCards().then(function (cards) {
-            var card,
-                source = info.orig,
-                translation = info.translation;
+    getCards = () =>
+        DeckStorage.getActiveDeck().then(active_deck => active_deck.cards),
+
+    addCard = info =>
+        getCards().then(cards => {
+            let card,
+                { source, translation } = info;
 
             if (!cards.hasOwnProperty(source)) {
                 cards[source] = rb.override({ t: translation }, SM2.getInitData());
@@ -26,12 +24,11 @@ var setCards = function (cards) {
                 card.t = rb.unique(card.t.concat(translation));
             }
 
-            setCards(cards);
+            return setCards(cards);
         });
-    };
 
-module.exports = {
-    addCard: addCard,
-    setCards: setCards,
-    getCards: getCards
+export default {
+    addCard,
+    setCards,
+    getCards
 };

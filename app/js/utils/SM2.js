@@ -1,6 +1,6 @@
-module.exports = {
+export default {
 
-    getInitData: function () {
+    getInitData() {
         return {
             n: 0,
             i: 0,
@@ -9,8 +9,8 @@ module.exports = {
         }
     },
 
-    isCardRipened: function (card) {
-        var ms_diff, step_diff,
+    isCardRipened(card) {
+        let ms_diff, step_diff,
             TIME_STEP = 1000 * 60 * 60 * 24,
             is_ripened = false;
 
@@ -30,7 +30,7 @@ module.exports = {
      * @param {Object} card
      * @param {Number} quality
      */
-    evoluteCard: function (card, quality) {
+    evoluteCard(card, quality) {
         if (quality !== 4) {
             card.ef = Math.max(1.3, card.ef - .8 + .28 * quality - .02 * Math.pow(quality, 2));
             card.ef = Number(card.ef.toFixed(2));

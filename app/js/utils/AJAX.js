@@ -1,11 +1,10 @@
-var request = function (type, url, data, headers) { return new Promise(function (resolve, reject) {
-        var xhr = new XMLHttpRequest(),
+let request = (type, url, data, headers) => new Promise((resolve, reject) => {
+        let xhr = new XMLHttpRequest(),
 
-            toURI = function (obj) {
-                var key,
-                    URI_data = [];
+            toURI = obj => {
+                let URI_data = [];
 
-                for (key in obj) {
+                for (let key in obj) {
                     if (obj.hasOwnProperty(key)) {
                         URI_data.push(key + '=' + encodeURIComponent(obj[key]));
                     }
@@ -14,15 +13,15 @@ var request = function (type, url, data, headers) { return new Promise(function 
                 return URI_data.join('&');
             },
 
-            setHeaders = function () {
+            setHeaders = () => {
                 if (headers) {
-                    Object.keys(headers).forEach(function (name) {
+                    Object.keys(headers).forEach(name => {
                         xhr.setRequestHeader(name, headers[name]);
                     });
                 }
             };
 
-        xhr.onreadystatechange = function () {
+        xhr.onreadystatechange = () => {
             if (xhr.readyState === 4) {
                 if (xhr.status === 200) {
                     resolve(xhr.response);
@@ -48,24 +47,22 @@ var request = function (type, url, data, headers) { return new Promise(function 
             setHeaders();
             xhr.send(toURI(data));
         }
-    })},
+    }),
 
-    getJSON = function (path, data, headers) {
-        return request('get', path, data, headers).then(JSON.parse);
-    },
+    getJSON = (path, data, headers) => request('get', path, data, headers).then(JSON.parse),
 
-    translate = function (text, source_lang, target_lang) {
-        var params = 'client=mt&' +
-                        'text=' + text + '&' +
-                        (source_lang === 'auto' ? '' : ('sl=' + source_lang + '&')) +
-                        'tl=' + target_lang,
+    translate = (text, source_lang, target_lang) => {
+        let params = `client=mt&` +
+                        `text=${text}&` +
+                        `${(source_lang === 'auto' ? '' : `sl=${source_lang}&`)}` +
+                        `tl=${target_lang}`,
             url = 'http://translate.google.ru/translate_a/t?' + params;
 
         return getJSON(url, null, { 'Accept': 'application/json, text/javascript, */*; q=0.01' });
     };
 
-module.exports = {
-    request     : request,
-    getJSON     : getJSON,
-    translate   : translate
+export default {
+    request,
+    getJSON,
+    translate
 };

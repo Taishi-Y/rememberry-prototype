@@ -1,15 +1,54 @@
-var rb = require('js/utils/common'),
-    Message = require('../Message'),
-    AJAX = require('js/utils/AJAX');
+import rb from 'js/utils/common';
+import Message from '../Message';
+import AJAX from 'js/utils/AJAX';
 
-var window_el, models_dropdown, decks_dropdown, export_btn, back_btn, cards_to_export, props,
+let window_el, models_dropdown, decks_dropdown, export_btn, back_btn, cards_to_export, props,
 
-    initDOM = function () {
-        window_el       = document.getElementById('export-window'),
-        models_dropdown = document.getElementById('model'),
-        decks_dropdown  = document.getElementById('deck'),
-        export_btn      = document.getElementById('export-btn'),
-        back_btn        = window_el.getElementsByClassName('back')[0],
+    exportData = () => {
+        let anki_model_id = models_dropdown.selectedOptions[0].value,
+            anki_deck_name = decks_dropdown.selectedOptions[0].value,
+            cards = cards_to_export.slice(),
+            export_sequence = Promise.resolve();
+
+        Message.show(chrome.i18n.getMessage('Exporting'), false);
+
+        cards.forEach(card => {
+            export_sequence = export_sequence.then(() => {
+                let data = {
+                    data: JSON.stringify([ [ card.orig, card.translation ], '' ]),
+                    mid : anki_model_id,
+                    deck: anki_deck_name
+                };
+
+                return AJAX.request('get', 'https://ankiweb.net/edit/save', data);
+            });
+        });
+
+        export_sequence.then(() => {
+            props.onSuccess();
+        });
+    },
+
+    initWithData = data => {
+        let { models, decks } = data;
+
+        models.forEach(model => {
+            models_dropdown.appendChild(
+                rb.DOM.node(`<option value="${model.id}">${model.name}</option>`));
+        });
+
+        decks.forEach(deck => {
+            decks_dropdown.appendChild(
+                rb.DOM.node(`<option value="${deck}">${deck}</option>`));
+        });
+    },
+
+    initDOM = () => {
+        window_el       = document.getElementById('export-window');
+        models_dropdown = document.getElementById('model');
+        decks_dropdown  = document.getElementById('deck');
+        export_btn      = document.getElementById('export-btn');
+        back_btn        = window_el.getElementsByClassName('back')[0];
 
         // provide localization
         window_el.querySelector('h3').innerHTML                 = chrome.i18n.getMessage('Choose_Anki_model_and_deck');
@@ -21,58 +60,18 @@ var window_el, models_dropdown, decks_dropdown, export_btn, back_btn, cards_to_e
         // add event listeners
         export_btn.addEventListener('click', exportData);
 
-        back_btn.addEventListener('click', function () {
+        back_btn.addEventListener('click', () => {
             props.onBack();
-        });
-    },
-
-    initWithData = function (data) {
-        var models = data.models,
-            decks = data.decks;
-
-        models.forEach(function (model) {
-            models_dropdown.appendChild(
-                rb.DOM.node('<option value="' + model.id + '">' + model.name +'</option>'));
-        });
-
-        decks.forEach(function (deck) {
-            decks_dropdown.appendChild(
-                rb.DOM.node('<option value="' + deck + '">' + deck + '</option>'));
-        });
-    },
-
-    exportData = function () {
-        var anki_model_id = models_dropdown.selectedOptions[0].value,
-            anki_deck_name = decks_dropdown.selectedOptions[0].value,
-            cards = cards_to_export.slice(),
-            export_sequence = Promise.resolve();
-
-        Message.show(chrome.i18n.getMessage('Exporting'), false);
-
-        cards.forEach(function (card) {
-            export_sequence = export_sequence.then(function () {
-                var data = {
-                    data: JSON.stringify([ [ card.orig, card.translation ], '' ]),
-                    mid : anki_model_id,
-                    deck: anki_deck_name
-                };
-
-                return AJAX.request('get', 'https://ankiweb.net/edit/save', data);
-            });
-        });
-
-        export_sequence.then(function () {
-            props.onSuccess();
         });
     };
 
-module.exports = {
-    init: function (initial_props) {
+export default {
+    init(initial_props) {
         props = initial_props;
         initDOM();
     },
 
-    show: function (anki_data, cards) {
+    show(anki_data, cards) {
         rb.DOM.show(window_el);
         models_dropdown.focus();
 
@@ -80,7 +79,7 @@ module.exports = {
         initWithData(anki_data);
     },
 
-    hide: function () {
+    hide() {
         rb.DOM.hide(window_el);
     }
 };
