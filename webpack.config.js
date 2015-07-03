@@ -7,15 +7,20 @@ var app_path    = __dirname + '/app',
 module.exports = {
     context: app_path,
     entry: {
-        options     : './js/options/options.js',
-        content     : './js/content/content.js',
-        popup       : './js/popup/popup.js',
-        background  : './js/background/background.js'
+        options     : './js/options/options',
+        content     : './js/content/content',
+        popup       : './js/popup/popup',
+        background  : './js/background/background'
     },
     output: {
         path: build_path,
         filename: 'js/[name].min.js'
     },
+    externals: [
+        {
+            react: 'React'
+        }
+    ],
     module: {
         loaders: [
             {
@@ -46,7 +51,7 @@ module.exports = {
     },
     plugins: [
         new ExtractTextPlugin('css/[name].min.css'),
-        new webpack.optimize.CommonsChunkPlugin('js/wp-init.min.js'),
+        new webpack.optimize.CommonsChunkPlugin({ name: 'wp-init' }),
         new webpack.optimize.UglifyJsPlugin({
             compress: {
                 warnings: false

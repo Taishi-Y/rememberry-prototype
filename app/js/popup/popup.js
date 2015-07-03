@@ -1,3 +1,4 @@
+import React from 'react';
 import rb from 'js/utils/common';
 import bgAPI from 'js/utils/bgAPI';
 import SM2 from 'js/utils/SM2';

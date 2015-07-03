@@ -14,15 +14,23 @@ module.exports = function (grunt) {
 
         copy: {
             main: {
-                expand: true,
-                cwd: app_path,
-                src: [
-                    '_locales/**',
-                    'img/**',
-                    'html/**',
-                    'manifest.json'
-                ],
-                dest: build_path
+                files: [
+                    {
+                        expand: true,
+                        cwd: app_path,
+                        src: [
+                            '_locales/**',
+                            'img/**',
+                            'html/**',
+                            'manifest.json'
+                        ],
+                        dest: build_path
+                    },
+                    {
+                        src: 'node_modules/react/dist/react.min.js',
+                        dest: build_path + 'js/vendor/react.min.js'
+                    }
+                ]
             }
         },
 
