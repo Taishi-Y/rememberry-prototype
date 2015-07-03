@@ -4,14 +4,14 @@ import AJAX from 'js/utils/AJAX';
 import showError from './showError';
 
 // private members
-const BASE_ID = 'rememberry-popup';
+const BASE_ID = 'rememberry-popup',
+      CSS = AJAX.request(AJAX.METHODS.GET,
+         'chrome-extension://' + chrome.i18n.getMessage('@@extension_id') + '/css/content.min.css');
 
 let props,
     tr_id       = 0,    // used to provide translation-response validation (use only latest response)
     is_created  = false,
     is_shown    = false,
-    CSS = AJAX.request('get',
-        'chrome-extension://' + chrome.i18n.getMessage('@@extension_id') + '/css/content.min.css'),
 
     els = { // DOM elements
         host    : null,
@@ -164,11 +164,10 @@ let props,
         state.translation = [];
 
         for (let type in translation) {
-            let data = translation[type],
-                section_el = getSection(data.name),
-                { terms } = data;
+            let { name, terms } = translation[type],
+                section_el = getSection(name);
 
-            terms.forEach(term => {
+            for (let term of terms) {
                 let term_line = createTermLine(term, checked);
 
                 state.translation.push(term_line);
@@ -177,7 +176,7 @@ let props,
                 if (checked) {
                     checked = false;
                 }
-            });
+            }
         }
 
         setLoader(false);
@@ -186,7 +185,7 @@ let props,
     },
 
     setLoader = set_active => {
-        let LOADING_ATTR_NAME = 'loading';
+        const LOADING_ATTR_NAME = 'loading';
 
         if (set_active) {
             els.belly.setAttribute(LOADING_ATTR_NAME, '');
@@ -227,11 +226,11 @@ let props,
     handleSave = () => {
         let checked_terms = [];
 
-        state.translation.forEach(term => {
+        for (let term of state.translation) {
             if (term.isChecked() && term.getText().trim().length) {
                 checked_terms.push(term.getText());
             }
-        });
+        }
 
         if (checked_terms.length) {
             bgAPI.add('card', {
@@ -295,6 +294,24 @@ export default {
             }
 
             if (text.length) {
+                let startTranslate = () => {
+                    let request_id = ++tr_id;
+
+                    //window.setTimeout(() => {
+                    bgAPI.translate(text, props.source_lang, props.target_lang)
+                        .then(result => {
+                                  if (request_id === tr_id) {
+                                      handleResponse(result);
+                                  }
+                              }, e => {
+                                  if (request_id === tr_id) {
+                                      destroy();
+                                      showError(e);
+                                  }
+                              });
+                    //}, 1000);
+                };
+
                 state.orig = text;
 
                 show(pos);
@@ -304,21 +321,7 @@ export default {
                     text += '..';
                 }
 
-                ((id => {
-                    //setTimeout(() => {
-                    bgAPI.translate(text, props.source_lang, props.target_lang)
-                        .then(result => {
-                            if (id === tr_id) {
-                                handleResponse(result);
-                            }
-                        }, e => {
-                            if (id === tr_id) {
-                                destroy();
-                                showError(e);
-                            }
-                        });
-                    //}, 2000);
-                })(++tr_id));
+                startTranslate();
             }
         } else {
             window.alert(chrome.i18n.getMessage('You_are_offline'));

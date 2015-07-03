@@ -1,4 +1,9 @@
-let request = (type, url, data, headers) => new Promise((resolve, reject) => {
+const METHODS = Object.freeze({
+    GET : Symbol(),
+    POST: Symbol()
+});
+
+let request = (method, url, data, headers) => new Promise((resolve, reject) => {
         let xhr = new XMLHttpRequest(),
 
             toURI = obj => {
@@ -13,9 +18,9 @@ let request = (type, url, data, headers) => new Promise((resolve, reject) => {
 
             setHeaders = () => {
                 if (headers) {
-                    Object.keys(headers).forEach(name => {
+                    for (let name of Object.keys(headers)) {
                         xhr.setRequestHeader(name, headers[name]);
-                    });
+                    }
                 }
             };
 
@@ -29,7 +34,7 @@ let request = (type, url, data, headers) => new Promise((resolve, reject) => {
             }
         };
 
-        if (type === 'get') {
+        if (method === METHODS.GET) {
             if (data) {
                 data = toURI(data);
                 url += '?' + data;
@@ -38,7 +43,7 @@ let request = (type, url, data, headers) => new Promise((resolve, reject) => {
             xhr.open('GET', url);
             setHeaders();
             xhr.send();
-        } else if (type === 'post') {
+        } else if (method === METHODS.POST) {
             xhr.open('POST', url);
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
             xhr.setRequestHeader('Accept', '*/*');
@@ -47,7 +52,7 @@ let request = (type, url, data, headers) => new Promise((resolve, reject) => {
         }
     }),
 
-    getJSON = (path, data, headers) => request('get', path, data, headers).then(JSON.parse),
+    getJSON = (path, data, headers) => request(METHODS.GET, path, data, headers).then(JSON.parse),
 
     translate = (text, source_lang, target_lang) => {
         let params = `client=mt&` +
@@ -60,6 +65,7 @@ let request = (type, url, data, headers) => new Promise((resolve, reject) => {
     };
 
 export default {
+    METHODS,
     request,
     getJSON,
     translate

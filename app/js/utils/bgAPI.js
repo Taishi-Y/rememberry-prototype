@@ -43,10 +43,10 @@ let parts_of_speech_enum,
                     if (result.dict) {
                         result.dict.sort((a, b) => a.pos_enum > b.pos_enum);
 
-                        result.dict.forEach(entry => {
+                        for (let entry of result.dict) {
                             let terms = entry.terms
-                                            .map(term => term.toLowerCase())
-                                            .filter(term => all_terms.indexOf(term) === -1);
+                                    .map(term => term.toLowerCase())
+                                    .filter(term => all_terms.indexOf(term) === -1);
 
                             if (terms.length) {
                                 let pos_name = pos_enum[entry.pos_enum - 1];
@@ -59,19 +59,19 @@ let parts_of_speech_enum,
 
                                 all_terms = all_terms.concat(terms);
                             }
-                        });
+                        }
                     }
 
                     if (result.sentences) {
                         sentences = [];
 
-                        result.sentences.forEach(sentence => {
+                        for (let sentence of result.sentences) {
                             let term = sentence.trans.toLowerCase().replace(/\./g, '');
 
                             if (term.length && all_terms.indexOf(term) === -1) {
                                 sentences.push(term);
                             }
-                        });
+                        };
 
                         if (sentences.length) {
                             parsed_result.sentence = {

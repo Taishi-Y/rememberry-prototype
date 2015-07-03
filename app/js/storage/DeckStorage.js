@@ -2,8 +2,8 @@ import Storage from './Storage';
 import ConfigStorage from './ConfigStorage';
 
 let init = () =>
-        ConfigStorage.getIt().then(config => {
-            if (config.decks.names.length === 0) {
+        ConfigStorage.getIt().then(({ decks: { names }}) => {
+            if (names.length === 0) {
                 return createDeck('basic', 'Basic deck').then(basic_deck => selectDeck(basic_deck.name));
             }
         }),
@@ -55,18 +55,12 @@ let init = () =>
         );
     },
 
-    addDeck = deck => {
-        let data = {},
-            key = getKey(deck.name);
-
-        data[key] = deck;
-
-        return Storage.setItem(data).then(() => ConfigStorage.extendIt({
+    addDeck = deck =>
+        Storage.setItem({ [ getKey(deck.name) ]: deck }).then(() => ConfigStorage.extendIt({
             decks: {
                 names: [ deck.name ]
             }
-        }));
-    },
+        })),
 
     selectDeck = name => ConfigStorage.extendIt({ decks: { active_name: name } }),
 
@@ -77,34 +71,31 @@ let init = () =>
     },
 
     getDecks = () =>
-        ConfigStorage.getIt().then(config => {
-            let deck_promises = config.decks.names.map(deck_name => getDeck(deck_name));
+        ConfigStorage.getIt().then(({ decks: { names } }) => {
+            let deck_promises = names.map(deck_name => getDeck(deck_name));
 
             return Promise.all(deck_promises).then(result => {
                 let obj = {};
 
-                result.forEach(deck => {
+                for (let deck of result) {
                     obj[deck.name] = deck;
-                });
+                }
 
                 return obj;
             });
         }),
 
-    removeDeck = deck => {
-        let { name } = deck;
-
-        return Promise.all([ Storage.removeItem(getKey(name)), ConfigStorage.getIt().then(config => {
+    removeDeck = ({ name }) =>
+        Promise.all([ Storage.removeItem(getKey(name)), ConfigStorage.getIt().then(config => {
             let index = config.decks.names.indexOf(name);
 
             config.decks.names.splice(index, 1);
             config.decks.active_name = null;
 
             return ConfigStorage.setIt(config);
-        })]);
-    },
+        })]),
 
-    getActiveDeck = () => ConfigStorage.getIt().then(config => getDeck(config.decks.active_name));
+    getActiveDeck = () => ConfigStorage.getIt().then(({ decks: { active_name }}) => getDeck(active_name));
 
 export default {
     init,

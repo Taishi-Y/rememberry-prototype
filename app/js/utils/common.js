@@ -5,13 +5,13 @@ let rb,
             els = [ els ];
         }
 
-        els.forEach(el => {
+        for (let el of els) {
             if (is_visible) {
                 el.removeAttribute('hidden');
             } else {
                 el.setAttribute('hidden', '');
             }
-        });
+        }
     };
 
 Promise.prototype.spread = Promise.prototype.spread || function (fn) {

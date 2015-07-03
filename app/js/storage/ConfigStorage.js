@@ -19,7 +19,7 @@ let init = () => getIt().then(
                 JSON_Storage.getDefaultConfig() :
                 new_config;
 
-        Storage.setItem({ config: config }).then(() => {
+        Storage.setItem({ config }).then(() => {
             resolve();
             contentAPI.send('config', config);
         });

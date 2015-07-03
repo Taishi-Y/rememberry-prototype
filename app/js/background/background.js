@@ -6,12 +6,10 @@ import AJAX from 'js/utils/AJAX';
 
 ConfigStorage.init().then(() => DeckStorage.init());
 
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    let { data } = message;
-
-    switch (message.method) {
+chrome.runtime.onMessage.addListener(({ method, type, data }, sender, sendResponse) => {
+    switch (method) {
         case 'get':
-            switch (message.type) {
+            switch (type) {
                 case 'config':
                     ConfigStorage.getIt().then(sendResponse);
                     break;
@@ -38,7 +36,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
             break;
         case 'set':
-            switch (message.type) {
+            switch (type) {
                 case 'config':
                     ConfigStorage.extendIt(data);
                     break;
@@ -56,7 +54,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
             break;
         case 'add':
-            switch (message.type) {
+            switch (type) {
                 case 'card':
                     CardStorage.addCard(data);
                     break;
@@ -68,7 +66,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 
             break;
         case 'remove':
-            switch (message.type) {
+            switch (type) {
                 case 'deck':
                     DeckStorage.removeDeck(data).then(sendResponse);
                     break;

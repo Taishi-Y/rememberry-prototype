@@ -5,7 +5,7 @@ import AJAX from 'js/utils/AJAX';
 let window_el, login_el, password_el, login_btn, back_btn, props,
 
     retrieveInfoFromAnki = () =>
-        AJAX.request('get', 'https://ankiweb.net/edit/').then(response => {
+        AJAX.request(AJAX.METHODS.GET, 'https://ankiweb.net/edit/').then(response => {
             let decks_array = [],
                 models = JSON.parse(/editor\.models = (.*}]);/.exec(response)[1]),
                 decks = JSON.parse(/editor\.decks = (.*}});/.exec(response)[1]);
@@ -25,11 +25,11 @@ let window_el, login_el, password_el, login_btn, back_btn, props,
             };
         }),
 
-    logoutFromAnki = () => AJAX.request('get', 'https://ankiweb.net/account/logout'),
+    logoutFromAnki = () => AJAX.request(AJAX.METHODS.GET, 'https://ankiweb.net/account/logout'),
 
     loginIntoAnki = (login, password) => new Promise((resolve, reject) => {
         logoutFromAnki().then(() => {
-            AJAX.request('post', 'https://ankiweb.net/account/login', {
+            AJAX.request(AJAX.METHODS.POST, 'https://ankiweb.net/account/login', {
                 submitted: 1,
                 username: login,
                 password

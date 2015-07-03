@@ -12,7 +12,7 @@ let window_el, models_dropdown, decks_dropdown, export_btn, back_btn, cards_to_e
 
         Message.show(chrome.i18n.getMessage('Exporting'), false);
 
-        cards.forEach(card => {
+        for (let card of cards) {
             export_sequence = export_sequence.then(() => {
                 let data = {
                     data: JSON.stringify([ [ card.orig, card.translation ], '' ]),
@@ -20,27 +20,25 @@ let window_el, models_dropdown, decks_dropdown, export_btn, back_btn, cards_to_e
                     deck: anki_deck_name
                 };
 
-                return AJAX.request('get', 'https://ankiweb.net/edit/save', data);
+                return AJAX.request(AJAX.METHODS.GET, 'https://ankiweb.net/edit/save', data);
             });
-        });
+        }
 
         export_sequence.then(() => {
             props.onSuccess();
         });
     },
 
-    initWithData = data => {
-        let { models, decks } = data;
-
-        models.forEach(model => {
+    initWithData = ({ models, decks }) => {
+        for (let model of models) {
             models_dropdown.appendChild(
                 rb.DOM.node(`<option value="${model.id}">${model.name}</option>`));
-        });
+        }
 
-        decks.forEach(deck => {
+        for (let deck of decks) {
             decks_dropdown.appendChild(
                 rb.DOM.node(`<option value="${deck}">${deck}</option>`));
-        });
+        }
     },
 
     initDOM = () => {
