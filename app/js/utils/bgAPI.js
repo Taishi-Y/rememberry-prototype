@@ -71,7 +71,7 @@ let parts_of_speech_enum,
                             if (term.length && all_terms.indexOf(term) === -1) {
                                 sentences.push(term);
                             }
-                        };
+                        }
 
                         if (sentences.length) {
                             parsed_result.sentence = {
