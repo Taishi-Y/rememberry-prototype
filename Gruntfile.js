@@ -45,6 +45,6 @@ module.exports = function (grunt) {
         }
     });
 
-    grunt.registerTask('build', [ 'clean', 'webpack:build', 'copy' ]);
+    grunt.registerTask('build', [ 'clean', 'webpack', 'copy' ]);
     grunt.registerTask('default', [ 'build', 'watch' ]);
 };

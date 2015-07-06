@@ -26,7 +26,8 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: 'babel!eslint'
+                loader: 'uglify!babel!eslint'
+                //loader: 'babel!eslint'
             },
             {
                 test: /^((?!(\.extract)).)+\.less$/,
@@ -51,11 +52,10 @@ module.exports = {
     },
     plugins: [
         new ExtractTextPlugin('css/[name].min.css'),
-        new webpack.optimize.CommonsChunkPlugin({ name: 'wp-init' }),
-        new webpack.optimize.UglifyJsPlugin({
-            compress: {
-                warnings: false
-            }
-        })
-    ]
+        new webpack.optimize.CommonsChunkPlugin({ name: 'wp-init' })
+    ],
+    stats: {
+        chunks: true,
+        chunkModules: true
+    }
 };
