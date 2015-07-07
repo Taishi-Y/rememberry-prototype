@@ -1,7 +1,8 @@
 import React from 'react';
-import classnames from 'classnames';
 import bgAPI from 'js/utils/bgAPI';
 import LanguagesMenu from './LanguagesMenu';
+import ActionsMenu from './ActionsMenu';
+import DecksMenu from './DecksMenu';
 
 let Settings = React.createClass({
 
@@ -19,42 +20,33 @@ let Settings = React.createClass({
     },
 
     render() {
-        return this.state.is_loading ?
-            <div>Loading</div> :
-            <div className={classnames(this.props.className, 'settings-window')}>
-                <LanguagesMenu
-                    className="menu"
-                    languages={this.state.languages}
-                    source_lang={this.state.config.source_lang}
-                    target_lang={this.state.config.target_lang}
-                />
-                <div className="menu" id="action-menu">
-                    <h3></h3>
-                    <label for="action"></label><select id="action"></select>
-                    <br/><br/>
-                    <label for="modifier"></label><select id="modifier"></select>
+        if (this.state.is_loading) {
+            return (
+                <div>Loading</div>
+            );
+        } else {
+            let { config } = this.state;
+
+            return (
+                <div className={this.props.className}>
+                    <LanguagesMenu
+                        className="menu"
+                        languages={this.state.languages}
+                        source_lang={config.source_lang}
+                        target_lang={config.target_lang}
+                    />
+                    <ActionsMenu
+                        className="menu"
+                        actions={this.state.actions}
+                        active_action={config.action}
+                    />
+                    <DecksMenu
+                        className="menu"
+                        decks={this.state.decks}
+                    />
                 </div>
-                <div className="menu deck-menu">
-                    <h3></h3>
-                    <label for="selected-deck"></label><select id="selected-deck"></select>
-                    <div className="deck-info">
-                        <label for="deck-name"></label><input type="text" id="deck-name"/>
-                        <br/><br/>
-                        <div className="desc-container">
-                            <label for="deck-desc"></label><textarea id="deck-desc"></textarea>
-                        </div>
-                        <label for="cards-count"></label><span className="cards-count"></span>
-                    </div>
-                    <div className="btn-area">
-                        <button data-action="add"></button>
-                        <button data-action="remove"></button>
-                        <button data-action="clear"></button>
-                        <button data-action="activate"></button>
-                        <button data-action="export"></button>
-                        <button data-action="update"></button>
-                    </div>
-                </div>
-            </div>;
+            );
+        }
     }
 });
 

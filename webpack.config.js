@@ -26,8 +26,8 @@ module.exports = {
             {
                 test: /\.js$/,
                 exclude: /node_modules/,
-                loader: 'uglify!babel!eslint'
-                //loader: 'babel!eslint'
+                //loader: 'uglify!babel!eslint'
+                loader: 'babel!eslint'
             },
             {
                 test: /^((?!(\.extract)).)+\.less$/,

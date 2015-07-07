@@ -1,35 +1,26 @@
 import React from 'react';
-import classnames from 'classnames';
+import rb from 'js/utils/common';
 
 let LanguagesMenu = React.createClass({
 
-    createOption() {
-
-    },
-
-    createSourceLangList() {
-        let list = [],
-            active_source_lang = this.props.config.source_lang;
-
-        list.push(createOption('auto', chrome.i18n.getMessage('Detect'), ))
-    },
-
     render() {
+        let { languages } = this.props,
+
+            createLangOptions = () => Object.keys(languages).map((code, index) =>
+                <option key={index} value={code}>{languages[code]}</option>);
+
         return (
-            <div className={classnames(this.props.className, 'languages-menu')}>
+            <div className={this.props.className}>
                 <h3>{chrome.i18n.getMessage('Languages')}</h3>
                 <label>{chrome.i18n.getMessage('Source_language')}</label>
-                <select>
-                {
-                    Object.keys(this.props.languages).map((lang, index) => {
-                        let name = this.props.languages[lang];
-
-                        return <option key={index} value={lang}>{name}</option>;
-                    })
-                }
+                <select value={this.props.source_lang}>
+                    <option value="auto">{chrome.i18n.getMessage('Detect')}</option>
+                    {createLangOptions()}
                 </select>
                 <label>{chrome.i18n.getMessage('Target_language')}</label>
-                <select></select>
+                <select value={this.props.target_lang}>
+                    {createLangOptions()}
+                </select>
             </div>
         );
     }
