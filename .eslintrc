@@ -3,6 +3,9 @@
         "browser": true,
         "es6": true
     },
+    "plugins": [
+        "react"
+    ],
     "globals": {
         "chrome": false
     },

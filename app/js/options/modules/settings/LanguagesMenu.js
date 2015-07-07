@@ -1,5 +1,4 @@
 import React from 'react';
-import rb from 'js/utils/common';
 
 let LanguagesMenu = React.createClass({
 

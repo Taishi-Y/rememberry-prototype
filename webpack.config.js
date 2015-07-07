@@ -55,7 +55,7 @@ module.exports = {
         new webpack.optimize.CommonsChunkPlugin({ name: 'wp-init' })
     ],
     stats: {
-        chunks: true,
-        chunkModules: true
+        chunks: false,
+        chunkModules: false
     }
 };
