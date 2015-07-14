@@ -14,7 +14,7 @@ let setCards = cards =>
 
     addCard = info =>
         getCards().then(cards => {
-            let { source, translation } = info;
+            let { orig: source, translation } = info;
 
             if (!cards.hasOwnProperty(source)) {
                 cards[source] = rb.override({ t: translation }, SM2.getInitData());
