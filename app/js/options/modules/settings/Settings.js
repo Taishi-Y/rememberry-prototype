@@ -3,6 +3,7 @@ import bgAPI from 'js/utils/bgAPI';
 import LanguagesMenu from './LanguagesMenu';
 import ActionsMenu from './ActionsMenu';
 import DecksMenu from './DecksMenu';
+import { StorageModel } from 'js/storage/Storage';
 
 let Settings = React.createClass({
 
@@ -13,10 +14,16 @@ let Settings = React.createClass({
     },
 
     componentWillMount() {
-        bgAPI.receive([ 'config', 'languages', 'actions', 'decks' ])
-            .spread((config, languages, actions, decks) => {
-                this.setState({ is_loading: false, config, languages, actions, decks });
+        if (this.state.is_loading) {
+            bgAPI.receive([ 'config', 'languages', 'actions', 'decks' ])
+                .spread((config, languages, actions, decks) => {
+                    this.setState({ is_loading: false, config, languages, actions, decks });
+                });
+
+            StorageModel.on('CONFIG_CHANGE', config => {
+                this.setState({ config });
             });
+        }
     },
 
     render() {
