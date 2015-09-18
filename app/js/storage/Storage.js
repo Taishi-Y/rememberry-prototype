@@ -1,4 +1,4 @@
-const type = 'sync',
+const type = 'local',
     db = chrome.storage[type];
 
 export default {
