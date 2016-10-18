@@ -55,13 +55,20 @@ let request = (method, url, data, headers) => new Promise((resolve, reject) => {
     getJSON = (path, data, headers) => request(METHODS.GET, path, data, headers).then(JSON.parse),
 
     translate = (text, source_lang, target_lang) => {
-        let params = `client=mt&` +
-                        `text=${text}&` +
-                        `${(source_lang === 'auto' ? '' : `sl=${source_lang}&`)}` +
-                        `tl=${target_lang}`,
-            url = 'http://translate.google.ru/translate_a/t?' + params;
+        const params = [
+            'client=gtx',
+            `sl=${source_lang}`,
+            `tl=${target_lang}`,
+            'hl=en-US',
+            'dt=t',
+            'dt=bd',
+            'dj=1',
+            'source=input',
+            'tk=29979.29979',
+            `q=${text}`
+        ].join('&');
 
-        return getJSON(url, null, { 'Accept': 'application/json, text/javascript, */*; q=0.01' });
+        return getJSON(`https://translate.googleapis.com/translate_a/single?${params}`);
     };
 
 export default {
